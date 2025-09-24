@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import WidgetConfiguration from "@/components/widget/WidgetConfiguration";
 
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -33,6 +34,9 @@ const Settings = () => {
       </div>
 
       <div className="space-y-6">
+        {/* Widget Configuration Section */}
+        <WidgetConfiguration />
+
         {/* Daily Updates Section */}
         <Card className="p-6 bg-gradient-card border-primary/10">
           <div className="flex items-center mb-4">

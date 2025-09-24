@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:gravity="center">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/widget_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_centerInParent="true" />
+
+    <!-- Content Overlay -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="12dp">
+
+        <!-- Header -->
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Today's Verse"
+            android:textSize="10sp"
+            android:textColor="#FFFFFF"
+            android:alpha="0.8"
+            android:gravity="start"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Arabic Text -->
+        <TextView
+            android:id="@+id/arabic_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:fontFamily="@font/amiri"
+            android:lineSpacingMultiplier="1.2"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <!-- English Text (Hidden for small widget) -->
+        <TextView
+            android:id="@+id/english_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="8sp"
+            android:textColor="#FFFFFF"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone" />
+
+        <!-- Reference -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/verse_reference"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Al-Fatiha 1:1"
+                android:textSize="8sp"
+                android:textColor="#FFFFFF"
+                android:alpha="0.7"
+                android:gravity="start" />
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/ic_circle"
+                android:backgroundTint="#FFFFFF"
+                android:alpha="0.2" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

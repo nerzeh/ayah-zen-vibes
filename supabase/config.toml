@@ -1,1 +1,4 @@
 project_id = "gatxeplorffzrepiwkdz"
+
+[functions.daily-verse-widget]
+verify_jwt = false
