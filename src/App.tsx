@@ -1,38 +1,52 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
+import ErrorBoundary from "@/components/ui/error-boundary";
 import Index from "./pages/Index";
 import Library from "./pages/Library";
+import Favorites from "./pages/Favorites";
 import Customize from "./pages/Customize";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 3,
+    },
+  },
+});
 
-const App = () => {
+function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <ErrorBoundary>
       <BrowserRouter>
-        <TooltipProvider delayDuration={300}>
-          <div className="min-h-screen bg-background">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/customize" element={<Customize />} />
-              <Route path="/settings" element={<Settings />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-          <Toaster />
-          <Sonner />
-        </TooltipProvider>
+        <QueryClientProvider client={queryClient}>
+          <AccessibilityProvider>
+            <TooltipProvider delayDuration={300}>
+              <div className="min-h-screen bg-background">
+                <main id="main-content">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/library" element={<Library />} />
+                    <Route path="/favorites" element={<Favorites />} />
+                    <Route path="/customize" element={<Customize />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </div>
+              <Toaster />
+            </TooltipProvider>
+          </AccessibilityProvider>
+        </QueryClientProvider>
       </BrowserRouter>
-    </QueryClientProvider>
+    </ErrorBoundary>
   );
-};
+}
 
 export default App;

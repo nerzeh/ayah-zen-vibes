@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Search, Heart, BookOpen, Filter } from "lucide-react";
+import { Search, Heart, BookOpen, Filter, Share2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useVerses, useFavoriteVerse } from "@/hooks/useVerses";
 import { useToast } from "@/hooks/use-toast";
+import ShareDialog from "@/components/sharing/ShareDialog";
+import LoadingScreen from "@/components/ui/loading-screen";
+import { useAccessibility } from "@/components/accessibility/AccessibilityProvider";
 
 const categories = [
   { name: "All", value: "" },
@@ -25,6 +28,7 @@ const Library = () => {
   const { data: verses, isLoading } = useVerses();
   const favoriteVerse = useFavoriteVerse();
   const { toast } = useToast();
+  const { announceToScreenReader } = useAccessibility();
 
   const filteredVerses = verses?.filter(verse => {
     const matchesSearch = verse.arabic_text.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -36,6 +40,7 @@ const Library = () => {
   const handleFavorite = async (verseId: number) => {
     try {
       await favoriteVerse.mutateAsync(verseId);
+      announceToScreenReader("Verse added to favorites");
       toast({
         title: "Added to favorites",
         description: "This verse has been saved to your favorites",
@@ -50,13 +55,7 @@ const Library = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-6 pb-24">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading verses..." fullScreen />;
   }
 
   return (
@@ -78,6 +77,7 @@ const Library = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary bg-card"
+          aria-label="Search verses"
         />
       </div>
 
@@ -125,15 +125,31 @@ const Library = () => {
                 >
                   {verse.theme_category}
                 </Badge>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleFavorite(verse.id)}
-                  className="text-muted-foreground hover:text-accent"
-                  disabled={favoriteVerse.isPending}
-                >
-                  <Heart className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <ShareDialog 
+                    verse={verse}
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground hover:text-primary"
+                        aria-label="Share verse"
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleFavorite(verse.id)}
+                    className="text-muted-foreground hover:text-accent"
+                    disabled={favoriteVerse.isPending}
+                    aria-label="Add to favorites"
+                  >
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Arabic Text */}

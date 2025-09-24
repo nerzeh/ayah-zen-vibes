@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import WidgetConfiguration from "@/components/widget/WidgetConfiguration";
 import AutomationSettings from "@/components/automation/AutomationSettings";
+import AccessibilitySettings from "@/components/accessibility/AccessibilitySettings";
 
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -40,6 +41,9 @@ const Settings = () => {
 
         {/* Widget Configuration Section */}
         <WidgetConfiguration />
+
+        {/* Accessibility Section */}
+        <AccessibilitySettings />
 
         {/* Daily Updates Section */}
         <Card className="p-6 bg-gradient-card border-primary/10">
