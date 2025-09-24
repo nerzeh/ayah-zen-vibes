@@ -7,7 +7,7 @@ import { useRandomVerse, useFavoriteVerse, type Verse } from "@/hooks/useVerses"
 import { WallpaperGenerator as WallpaperEngine, WallpaperOptions, getDeviceScreenDimensions, downloadWallpaper } from "@/lib/wallpaperEngine";
 import WallpaperCustomizer from "./WallpaperCustomizer";
 
-const WallpaperGenerator = () => {
+const WallpaperView = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showCustomizer, setShowCustomizer] = useState(false);
   const [generatedWallpaper, setGeneratedWallpaper] = useState<string | null>(null);
@@ -255,4 +255,4 @@ const WallpaperGenerator = () => {
   );
 };
 
-export default WallpaperGenerator;
+export default WallpaperView;
