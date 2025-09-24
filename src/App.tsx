@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
 import ErrorBoundary from "@/components/ui/error-boundary";
+import OfflineIndicator from "@/components/performance/OfflineIndicator";
+import { automationManager } from "@/services/automationManager";
 import Index from "./pages/Index";
 import Library from "./pages/Library";
 import Favorites from "./pages/Favorites";
@@ -22,6 +24,11 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  // Initialize automation services after React is ready
+  useEffect(() => {
+    automationManager.initialize().catch(console.error);
+  }, []);
+
   return (
     <ErrorBoundary>
       <BrowserRouter>
@@ -41,6 +48,7 @@ function App() {
                 </main>
               </div>
               <Toaster />
+              <OfflineIndicator />
             </TooltipProvider>
           </AccessibilityProvider>
         </QueryClientProvider>
