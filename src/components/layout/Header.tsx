@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Download, Moon, Settings } from "lucide-react";
+import AuthButton from "@/components/auth/AuthButton";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -16,16 +20,15 @@ const Header = () => {
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => navigate('/settings')}
+          >
             <Settings className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Moon className="h-4 w-4" />
-          </Button>
-          <Button variant="default" size="sm" className="h-8">
-            <Download className="mr-1 h-3 w-3" />
-            Download
-          </Button>
+          <AuthButton />
         </div>
       </div>
     </header>

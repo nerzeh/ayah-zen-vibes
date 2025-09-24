@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import OfflineIndicator from "@/components/performance/OfflineIndicator";
 import { automationManager } from "@/services/automationManager";
@@ -12,6 +13,7 @@ import Library from "./pages/Library";
 import Favorites from "./pages/Favorites";
 import Customize from "./pages/Customize";
 import Settings from "./pages/Settings";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -33,24 +35,27 @@ function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <AccessibilityProvider>
-            <TooltipProvider delayDuration={300}>
-              <div className="min-h-screen bg-background">
-                <main id="main-content">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/library" element={<Library />} />
-                    <Route path="/favorites" element={<Favorites />} />
-                    <Route path="/customize" element={<Customize />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-              </div>
-              <Toaster />
-              <OfflineIndicator />
-            </TooltipProvider>
-          </AccessibilityProvider>
+          <AuthProvider>
+            <AccessibilityProvider>
+              <TooltipProvider delayDuration={300}>
+                <div className="min-h-screen bg-background">
+                  <main id="main-content">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/library" element={<Library />} />
+                      <Route path="/favorites" element={<Favorites />} />
+                      <Route path="/customize" element={<Customize />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                </div>
+                <Toaster />
+                <OfflineIndicator />
+              </TooltipProvider>
+            </AccessibilityProvider>
+          </AuthProvider>
         </QueryClientProvider>
       </BrowserRouter>
     </ErrorBoundary>

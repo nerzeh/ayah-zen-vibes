@@ -46,6 +46,99 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          auto_wallpaper: boolean | null
+          automation_enabled: boolean | null
+          automation_notifications: boolean | null
+          created_at: string
+          daily_notifications: boolean | null
+          daily_updates: boolean | null
+          dark_mode: boolean | null
+          font_size: string | null
+          frequency: string | null
+          high_contrast: boolean | null
+          id: string
+          language: string | null
+          prayer_reminders: boolean | null
+          reduced_motion: boolean | null
+          screen_reader_mode: boolean | null
+          update_time: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_wallpaper?: boolean | null
+          automation_enabled?: boolean | null
+          automation_notifications?: boolean | null
+          created_at?: string
+          daily_notifications?: boolean | null
+          daily_updates?: boolean | null
+          dark_mode?: boolean | null
+          font_size?: string | null
+          frequency?: string | null
+          high_contrast?: boolean | null
+          id?: string
+          language?: string | null
+          prayer_reminders?: boolean | null
+          reduced_motion?: boolean | null
+          screen_reader_mode?: boolean | null
+          update_time?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_wallpaper?: boolean | null
+          automation_enabled?: boolean | null
+          automation_notifications?: boolean | null
+          created_at?: string
+          daily_notifications?: boolean | null
+          daily_updates?: boolean | null
+          dark_mode?: boolean | null
+          font_size?: string | null
+          frequency?: string | null
+          high_contrast?: boolean | null
+          id?: string
+          language?: string | null
+          prayer_reminders?: boolean | null
+          reduced_motion?: boolean | null
+          screen_reader_mode?: boolean | null
+          update_time?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       verses: {
         Row: {
           arabic_text: string

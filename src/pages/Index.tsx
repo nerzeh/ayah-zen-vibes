@@ -1,31 +1,47 @@
 import Header from "@/components/layout/Header";
-import WallpaperGenerator from "@/components/wallpaper/WallpaperGenerator";
+import WallpaperView from "@/components/wallpaper/WallpaperGenerator";
 import BottomNavigation from "@/components/navigation/BottomNavigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Download, Palette, BookOpen, Settings, Heart } from "lucide-react";
+import { Sparkles, Download, Palette, BookOpen, Settings, Heart, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-background">
+      <Header />
+      
       {/* Header */}
       <div className="text-center pt-8 pb-6 px-4">
         <div className="relative inline-block mb-4">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Today's Verse
+            {user ? `Welcome back, ${user.user_metadata?.display_name || user.email?.split('@')[0]}!` : "Today's Verse"}
           </h1>
           <Sparkles className="absolute -top-1 -right-6 h-6 w-6 text-secondary animate-pulse" />
         </div>
         <p className="text-muted-foreground max-w-md mx-auto">
           Beautiful Islamic wallpapers with daily Quranic inspiration
         </p>
+        
+        {!user && (
+          <div className="mt-4">
+            <Link to="/auth">
+              <Button variant="outline" className="gap-2">
+                <LogIn className="h-4 w-4" />
+                Sign in to save your preferences
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       <main className="container mx-auto px-4 pb-24">
         {/* Main Wallpaper Generator */}
         <section className="max-w-md mx-auto mb-8">
-          <WallpaperGenerator />
+          <WallpaperView />
         </section>
 
         {/* Quick Actions */}

@@ -1,26 +1,51 @@
 import { useState } from "react";
-import { Settings as SettingsIcon, Bell, Globe, Moon, Sun, Info, Smartphone } from "lucide-react";
+import { Settings as SettingsIcon, Bell, Globe, Moon, Sun, Info, Smartphone, LogOut, User } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useUserSettings } from "@/hooks/useUserSettings";
+import { useAuth } from "@/contexts/AuthContext";
 import WidgetConfiguration from "@/components/widget/WidgetConfiguration";
 import AutomationSettings from "@/components/automation/AutomationSettings";
 import AccessibilitySettings from "@/components/accessibility/AccessibilitySettings";
+import { Navigate } from "react-router-dom";
 
 const Settings = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [dailyNotifications, setDailyNotifications] = useState(true);
-  const [language, setLanguage] = useState("en");
-  const [dailyUpdates, setDailyUpdates] = useState(true);
+  const { user, signOut } = useAuth();
+  const { settings, updateSettings, loading } = useUserSettings();
   const { toast } = useToast();
+
+  // Redirect if not authenticated
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-6 pb-24 bg-background min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading your settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSettingChange = (setting: string, value: any) => {
     toast({
       title: "Setting updated",
       description: `${setting} has been ${value ? 'enabled' : 'disabled'}`,
+    });
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast({
+      title: "Signed out",
+      description: "You have been successfully signed out.",
     });
   };
 
@@ -36,6 +61,34 @@ const Settings = () => {
       </div>
 
       <div className="space-y-6">
+        {/* User Profile Section */}
+        <Card className="p-6 bg-gradient-card border-primary/10">
+          <div className="flex items-center mb-4">
+            <User className="h-6 w-6 text-primary mr-2" />
+            <h2 className="text-xl font-semibold text-foreground">Account</h2>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-base font-medium text-foreground">{user.email}</p>
+                <p className="text-sm text-muted-foreground">
+                  {user.user_metadata?.display_name || 'No display name set'}
+                </p>
+              </div>
+            </div>
+            
+            <Button 
+              variant="outline" 
+              onClick={handleSignOut}
+              className="w-full border-destructive/20 text-destructive hover:bg-destructive/5"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
+        </Card>
+
         {/* Daily Automation Section */}
         <AutomationSettings />
 
@@ -64,9 +117,9 @@ const Settings = () => {
               </div>
               <Switch
                 id="daily-updates"
-                checked={dailyUpdates}
+                checked={settings.dailyUpdates}
                 onCheckedChange={(checked) => {
-                  setDailyUpdates(checked);
+                  updateSettings({ dailyUpdates: checked });
                   handleSettingChange("Daily updates", checked);
                 }}
               />
@@ -111,9 +164,9 @@ const Settings = () => {
               </div>
               <Switch
                 id="daily-notifications"
-                checked={dailyNotifications}
+                checked={settings.dailyNotifications}
                 onCheckedChange={(checked) => {
-                  setDailyNotifications(checked);
+                  updateSettings({ dailyNotifications: checked });
                   handleSettingChange("Daily notifications", checked);
                 }}
               />
@@ -142,7 +195,7 @@ const Settings = () => {
         {/* Appearance Section */}
         <Card className="p-6 bg-gradient-card border-primary/10">
           <div className="flex items-center mb-4">
-            {darkMode ? (
+            {settings.darkMode ? (
               <Moon className="h-6 w-6 text-primary mr-2" />
             ) : (
               <Sun className="h-6 w-6 text-primary mr-2" />
@@ -162,9 +215,9 @@ const Settings = () => {
               </div>
               <Switch
                 id="dark-mode"
-                checked={darkMode}
+                checked={settings.darkMode}
                 onCheckedChange={(checked) => {
-                  setDarkMode(checked);
+                  updateSettings({ darkMode: checked });
                   handleSettingChange("Dark mode", checked);
                 }}
               />
@@ -184,7 +237,7 @@ const Settings = () => {
               <Label htmlFor="language" className="text-base font-medium">
                 Translation Language
               </Label>
-              <Select value={language} onValueChange={setLanguage}>
+              <Select value={settings.language} onValueChange={(value) => updateSettings({ language: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select language" />
                 </SelectTrigger>

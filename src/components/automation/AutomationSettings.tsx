@@ -6,10 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useDailyAutomation, AutomationSettings as Settings } from "@/hooks/useDailyAutomation";
+import { useUserSettings } from "@/hooks/useUserSettings";
 import { useToast } from "@/hooks/use-toast";
 
 const AutomationSettings = () => {
-  const { settings, state, updateSettings, manualUpdate, requestPermissions } = useDailyAutomation();
+  const { state, manualUpdate, requestPermissions } = useDailyAutomation();
+  const { settings, updateSettings, isAuthenticated } = useUserSettings();
   const { toast } = useToast();
 
   const formatTime = (timeString: string) => {
@@ -32,8 +34,19 @@ const AutomationSettings = () => {
     return options;
   };
 
-  const handleSettingChange = (key: keyof Settings, value: any) => {
-    updateSettings({ [key]: value });
+  const handleSettingChange = (key: string, value: any) => {
+    // Map the automation settings to user settings
+    const settingsMap: Record<string, any> = {
+      'enabled': { automationEnabled: value },
+      'updateTime': { updateTime: value },
+      'frequency': { frequency: value },
+      'autoWallpaper': { autoWallpaper: value },
+      'notifications': { automationNotifications: value },
+    };
+
+    if (settingsMap[key]) {
+      updateSettings(settingsMap[key]);
+    }
     
     toast({
       title: "Setting updated",
@@ -57,7 +70,7 @@ const AutomationSettings = () => {
       <div className="flex items-center mb-4">
         <Clock className="h-6 w-6 text-primary mr-2" />
         <h2 className="text-xl font-semibold text-foreground">Daily Automation</h2>
-        {settings.enabled && (
+        {settings.automationEnabled && (
           <Badge variant="secondary" className="ml-auto">
             Active
           </Badge>
@@ -65,6 +78,12 @@ const AutomationSettings = () => {
       </div>
       
       <div className="space-y-6">
+        {!isAuthenticated && (
+          <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded border">
+            Sign in to save your automation settings and sync across devices.
+          </div>
+        )}
+        
         {/* Enable Automation */}
         <div className="flex items-center justify-between">
           <div className="space-y-1">
@@ -77,12 +96,12 @@ const AutomationSettings = () => {
           </div>
           <Switch
             id="automation-enabled"
-            checked={settings.enabled}
+            checked={settings.automationEnabled}
             onCheckedChange={(checked) => handleSettingChange('enabled', checked)}
           />
         </div>
 
-        {settings.enabled && (
+        {settings.automationEnabled && (
           <>
             {/* Update Time */}
             <div className="space-y-2">
@@ -163,7 +182,7 @@ const AutomationSettings = () => {
               </div>
               <Switch
                 id="automation-notifications"
-                checked={settings.notifications}
+                checked={settings.automationNotifications}
                 onCheckedChange={(checked) => handleSettingChange('notifications', checked)}
               />
             </div>
@@ -171,7 +190,7 @@ const AutomationSettings = () => {
         )}
 
         {/* Status Information */}
-        {settings.enabled && (
+        {settings.automationEnabled && (
           <div className="pt-4 border-t border-border/50">
             <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
@@ -235,7 +254,7 @@ const AutomationSettings = () => {
             Update Now
           </Button>
           
-          {(settings.notifications || settings.autoWallpaper) && (
+          {(settings.automationNotifications || settings.autoWallpaper) && (
             <Button 
               onClick={requestPermissions}
               variant="outline"

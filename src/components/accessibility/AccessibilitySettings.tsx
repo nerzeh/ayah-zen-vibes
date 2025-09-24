@@ -4,18 +4,29 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAccessibility } from "./AccessibilityProvider";
+import { useUserSettings } from "@/hooks/useUserSettings";
 import { useToast } from "@/hooks/use-toast";
 
 const AccessibilitySettings = () => {
-  const { settings, updateSettings, announceToScreenReader } = useAccessibility();
+  const { announceToScreenReader } = useAccessibility();
+  const { settings, updateSettings, isAuthenticated } = useUserSettings();
   const { toast } = useToast();
 
   const handleSettingChange = (key: string, value: any) => {
-    updateSettings({ [key]: value });
+    const settingsMap: Record<string, any> = {
+      'fontSize': { fontSize: value },
+      'highContrast': { highContrast: value },
+      'reducedMotion': { reducedMotion: value },
+      'screenReaderMode': { screenReaderMode: value },
+    };
+
+    if (settingsMap[key]) {
+      updateSettings(settingsMap[key]);
+    }
     announceToScreenReader(`${key} ${value ? 'enabled' : 'updated'}`);
     
     toast({
-      title: "Accessibility updated",
+      title: "Accessibility updated", 
       description: `${key} has been ${value ? 'enabled' : 'updated'}`,
     });
   };
