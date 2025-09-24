@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import WidgetConfiguration from "@/components/widget/WidgetConfiguration";
+import AutomationSettings from "@/components/automation/AutomationSettings";
 
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -34,6 +35,9 @@ const Settings = () => {
       </div>
 
       <div className="space-y-6">
+        {/* Daily Automation Section */}
+        <AutomationSettings />
+
         {/* Widget Configuration Section */}
         <WidgetConfiguration />
 
