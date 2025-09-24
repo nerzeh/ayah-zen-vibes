@@ -3,52 +3,33 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw, Download, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-interface Verse {
-  arabic: string;
-  translation: string;
-  reference: string;
-}
-
-const sampleVerses: Verse[] = [
-  {
-    arabic: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا",
-    translation: "And whoever fears Allah - He will make for him a way out",
-    reference: "At-Talaq 65:2"
-  },
-  {
-    arabic: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",
-    translation: "For indeed, with hardship [will be] ease",
-    reference: "Ash-Sharh 94:5"
-  },
-  {
-    arabic: "وَاللَّهُ خَيْرٌ حَافِظًا وَهُوَ أَرْحَمُ الرَّاحِمِينَ",
-    translation: "But Allah is the best guardian, and He is the most merciful of the merciful",
-    reference: "Yusuf 12:64"
-  },
-  {
-    arabic: "وَعَسَىٰ أَن تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَّكُمْ",
-    translation: "But perhaps you hate a thing and it is good for you",
-    reference: "Al-Baqarah 2:216"
-  }
-];
+import { useRandomVerse, useFavoriteVerse, type Verse } from "@/hooks/useVerses";
+import { useQueryClient } from "@tanstack/react-query";
 
 const WallpaperGenerator = () => {
-  const [currentVerse, setCurrentVerse] = useState<Verse>(sampleVerses[0]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const { data: currentVerse, refetch, isLoading } = useRandomVerse();
+  const favoriteVerse = useFavoriteVerse();
+  const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const generateNewVerse = () => {
+  const generateNewVerse = async () => {
     setIsGenerating(true);
-    setTimeout(() => {
-      const randomVerse = sampleVerses[Math.floor(Math.random() * sampleVerses.length)];
-      setCurrentVerse(randomVerse);
-      setIsGenerating(false);
+    try {
+      await refetch();
       toast({
         title: "New verse generated",
         description: "Your wallpaper has been updated with a beautiful new verse",
       });
-    }, 1000);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate new verse. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const downloadWallpaper = () => {
@@ -57,6 +38,36 @@ const WallpaperGenerator = () => {
       description: "Your beautiful Islamic wallpaper has been saved to your device",
     });
   };
+
+  const handleFavorite = async () => {
+    if (!currentVerse) return;
+    
+    try {
+      await favoriteVerse.mutateAsync(currentVerse.id);
+      toast({
+        title: "Added to favorites",
+        description: "This verse has been saved to your favorites",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Please sign in to save favorites",
+        variant: "destructive"
+      });
+    }
+  };
+
+  if (isLoading || !currentVerse) {
+    return (
+      <div className="space-y-6">
+        <Card className="relative overflow-hidden border-0 shadow-elegant">
+          <div className="aspect-[9/16] bg-gradient-hero flex items-center justify-center">
+            <RefreshCw className="h-8 w-8 animate-spin text-white" />
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -77,16 +88,16 @@ const WallpaperGenerator = () => {
           {/* Arabic Text */}
           <div className="space-y-6 z-10">
             <p className={`font-arabic text-2xl md:text-3xl lg:text-4xl text-white leading-relaxed ${isGenerating ? 'animate-pulse' : ''}`}>
-              {currentVerse.arabic}
+              {currentVerse.arabic_text}
             </p>
             
             {/* Translation */}
             <div className="space-y-2">
               <p className="text-white/90 text-base md:text-lg font-light leading-relaxed">
-                "{currentVerse.translation}"
+                "{currentVerse.english_translation}"
               </p>
               <p className="text-secondary text-sm font-medium">
-                {currentVerse.reference}
+                Surah {currentVerse.surah_number}:{currentVerse.ayah_number}
               </p>
             </div>
           </div>
@@ -120,9 +131,11 @@ const WallpaperGenerator = () => {
         </Button>
         
         <Button
+          onClick={handleFavorite}
           variant="outline"
           size="lg"
           className="border-primary/20 hover:bg-primary/5"
+          disabled={favoriteVerse.isPending}
         >
           <Heart className="h-4 w-4" />
         </Button>

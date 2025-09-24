@@ -14,7 +14,68 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      favorites: {
+        Row: {
+          created_at: string | null
+          created_date: string | null
+          id: number
+          user_id: string | null
+          verse_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          created_date?: string | null
+          id?: number
+          user_id?: string | null
+          verse_id: number
+        }
+        Update: {
+          created_at?: string | null
+          created_date?: string | null
+          id?: number
+          user_id?: string | null
+          verse_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_verse_id_fkey"
+            columns: ["verse_id"]
+            isOneToOne: false
+            referencedRelation: "verses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      verses: {
+        Row: {
+          arabic_text: string
+          ayah_number: number
+          created_at: string | null
+          english_translation: string
+          id: number
+          surah_number: number
+          theme_category: string | null
+        }
+        Insert: {
+          arabic_text: string
+          ayah_number: number
+          created_at?: string | null
+          english_translation: string
+          id?: number
+          surah_number: number
+          theme_category?: string | null
+        }
+        Update: {
+          arabic_text?: string
+          ayah_number?: number
+          created_at?: string | null
+          english_translation?: string
+          id?: number
+          surah_number?: number
+          theme_category?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
