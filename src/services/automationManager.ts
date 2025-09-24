@@ -1,6 +1,5 @@
 import { notificationService } from './notificationService';
 import { backgroundProcessor } from './backgroundProcessor';
-import { useDailyAutomation } from '@/hooks/useDailyAutomation';
 
 export class AutomationManager {
   private static instance: AutomationManager;
