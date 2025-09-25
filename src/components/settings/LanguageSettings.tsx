@@ -45,7 +45,7 @@ const LanguageSettings = () => {
       if (localLanguage !== settings.language) {
         updates.language = localLanguage;
         // Change language immediately for UI (only supported app languages)
-        const appLangs = ['en','ar','fr','es'] as const;
+        const appLangs = ['en','ar','fr','es','de'] as const;
         if ((appLangs as readonly string[]).includes(localLanguage)) {
           setLanguage(localLanguage as any);
         }
