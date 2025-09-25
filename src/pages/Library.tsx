@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, Heart, BookOpen, Filter, Share2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,7 @@ const categories = [
 const Library = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const navigate = useNavigate();
   const { data: verses, isLoading } = useVerses();
   const favoriteVerse = useFavoriteVerse();
   const { toast } = useToast();
@@ -176,6 +178,7 @@ const Library = () => {
                   variant="outline"
                   size="sm"
                   className="border-primary/20 text-primary hover:bg-primary/5"
+                  onClick={() => navigate(`/customize?verseId=${verse.id}`)}
                 >
                   Generate Wallpaper
                 </Button>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Palette, Smartphone, Download } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,16 +7,33 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import WallpaperCustomizer from "@/components/wallpaper/WallpaperCustomizer";
 import { WallpaperGenerator as WallpaperEngine, WallpaperOptions, getDeviceScreenDimensions, downloadWallpaper } from "@/lib/wallpaperEngine";
-import { useRandomVerse } from "@/hooks/useVerses";
+import { useRandomVerse, useVerses, Verse } from "@/hooks/useVerses";
 import { useToast } from "@/hooks/use-toast";
 import BottomNavigation from "@/components/navigation/BottomNavigation";
 
 const Customize = () => {
+  const [searchParams] = useSearchParams();
   const [wallpaperEngine] = useState(() => new WallpaperEngine());
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedWallpaper, setGeneratedWallpaper] = useState<string | null>(null);
-  const { data: currentVerse } = useRandomVerse();
+  const [currentVerse, setCurrentVerse] = useState<Verse | null>(null);
+  
+  const verseId = searchParams.get('verseId');
+  const { data: randomVerse } = useRandomVerse();
+  const { data: allVerses } = useVerses();
   const { toast } = useToast();
+
+  // Effect to set the current verse based on URL parameter or use random verse
+  useEffect(() => {
+    if (verseId && allVerses) {
+      const selectedVerse = allVerses.find(v => v.id === parseInt(verseId));
+      if (selectedVerse) {
+        setCurrentVerse(selectedVerse);
+      }
+    } else if (randomVerse && !verseId) {
+      setCurrentVerse(randomVerse);
+    }
+  }, [verseId, allVerses, randomVerse]);
 
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
