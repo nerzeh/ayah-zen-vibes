@@ -1,16 +1,18 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { Home, BookOpen, Palette, Settings, Heart } from "lucide-react";
-
-const navItems = [
-  { path: "/", icon: Home, label: "Home" },
-  { path: "/library", icon: BookOpen, label: "Library" },
-  { path: "/favorites", icon: Heart, label: "Favorites" },
-  { path: "/customize", icon: Palette, label: "Customize" },
-  { path: "/settings", icon: Settings, label: "Settings" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const BottomNavigation = () => {
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { path: "/", icon: Home, label: t('nav.home') },
+    { path: "/library", icon: BookOpen, label: t('nav.library') },
+    { path: "/favorites", icon: Heart, label: t('nav.favorites') },
+    { path: "/customize", icon: Palette, label: t('nav.customize') },
+    { path: "/settings", icon: Settings, label: t('nav.settings') },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">

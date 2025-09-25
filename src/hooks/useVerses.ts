@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useVerseTranslations } from '@/hooks/useVerseTranslations';
 
 export interface Verse {
   id: number;
@@ -8,9 +9,12 @@ export interface Verse {
   arabic_text: string;
   english_translation: string;
   theme_category: string;
+  translated_text?: string;
 }
 
 export const useVerses = () => {
+  const { getTranslation } = useVerseTranslations();
+  
   return useQuery({
     queryKey: ['verses'],
     queryFn: async () => {
@@ -20,12 +24,17 @@ export const useVerses = () => {
         .order('id');
       
       if (error) throw error;
-      return data as Verse[];
+      return (data as Verse[])?.map(verse => ({
+        ...verse,
+        translated_text: getTranslation(verse.id, verse.english_translation)
+      })) || [];
     },
   });
 };
 
 export const useRandomVerse = () => {
+  const { getTranslation } = useVerseTranslations();
+  
   return useQuery({
     queryKey: ['random-verse'],
     queryFn: async () => {
@@ -45,7 +54,10 @@ export const useRandomVerse = () => {
         .single();
       
       if (error) throw error;
-      return data as Verse;
+      return {
+        ...data,
+        translated_text: getTranslation(data.id, data.english_translation)
+      } as Verse;
     },
   });
 };

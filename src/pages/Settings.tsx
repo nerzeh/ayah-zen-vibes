@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Settings as SettingsIcon, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Navigate, Link } from "react-router-dom";
 import AccountSettings from "@/components/settings/AccountSettings";
 import DailyVerseSettings from "@/components/settings/DailyVerseSettings";
@@ -14,6 +15,7 @@ import BottomNavigation from "@/components/navigation/BottomNavigation";
 
 const Settings = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   // Redirect if not authenticated
   if (!user) {
@@ -33,8 +35,8 @@ const Settings = () => {
         <div className="flex items-center">
           <SettingsIcon className="h-8 w-8 text-primary mr-3" />
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Settings</h1>
-            <p className="text-muted-foreground">Customize your Ayah Wallpaper experience</p>
+            <h1 className="text-3xl font-bold text-foreground">{t('settings.title')}</h1>
+            <p className="text-muted-foreground">{t('settings.subtitle')}</p>
           </div>
         </div>
       </div>

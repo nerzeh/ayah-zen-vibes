@@ -7,10 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { useEnhancedUserSettings } from "@/hooks/useEnhancedUserSettings";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const LanguageSettings = () => {
   const { settings, updateSettings, isAuthenticated } = useEnhancedUserSettings();
   const { toast } = useToast();
+  const { t, changeLanguage } = useLanguage();
 
   // Local (unsaved) values
   const [localLanguage, setLocalLanguage] = useState(settings.language);
@@ -40,7 +42,11 @@ const LanguageSettings = () => {
     try {
       setIsSaving(true);
       const updates: Record<string, any> = {};
-      if (localLanguage !== settings.language) updates.language = localLanguage;
+      if (localLanguage !== settings.language) {
+        updates.language = localLanguage;
+        // Change language immediately for UI
+        await changeLanguage(localLanguage);
+      }
       if (localTranslationStyle !== settings.translationStyle) updates.translationStyle = localTranslationStyle;
       if (localArabicTextSize !== settings.arabicTextSize) updates.arabicTextSize = localArabicTextSize;
       if (localDateFormat !== settings.dateFormat) updates.dateFormat = localDateFormat;
@@ -48,10 +54,10 @@ const LanguageSettings = () => {
 
       if (Object.keys(updates).length > 0) {
         await updateSettings(updates);
-        toast({ title: 'Saved', description: 'Language settings updated.' });
+        toast({ title: t('common.success'), description: t('language.saved', 'Language settings updated.') });
       }
     } catch (e) {
-      toast({ title: 'Error', description: 'Failed to save settings.', variant: 'destructive' });
+      toast({ title: t('common.error'), description: t('language.saveFailed', 'Failed to save settings.'), variant: 'destructive' });
     } finally {
       setIsSaving(false);
     }
@@ -71,9 +77,9 @@ const LanguageSettings = () => {
   ];
 
   const translationStyles = [
-    { value: 'literal', label: 'Literal Translation' },
-    { value: 'interpretive', label: 'Interpretive Translation' },
-    { value: 'simplified', label: 'Simplified Language' },
+    { value: 'literal', label: t('translation.literal') },
+    { value: 'interpretive', label: t('translation.interpretive') },
+    { value: 'simplified', label: t('translation.simplified') },
   ];
 
   return (
@@ -93,7 +99,7 @@ const LanguageSettings = () => {
         {/* Preferred Language */}
         <div className="space-y-3">
           <Label className="text-base font-medium">
-            Interface Language
+            {t('language.interfaceLanguage')}
           </Label>
           
           <Select
@@ -118,7 +124,7 @@ const LanguageSettings = () => {
           </Select>
           
           <p className="text-sm text-muted-foreground">
-            Choose your preferred language for the app interface
+            {t('language.interfaceLanguageDesc')}
           </p>
         </div>
 
@@ -126,7 +132,7 @@ const LanguageSettings = () => {
         <div className="space-y-3">
           <Label className="text-base font-medium flex items-center">
             <Book className="h-4 w-4 mr-2" />
-            Translation Style
+            {t('language.translationStyle')}
           </Label>
           
           <Select
@@ -148,7 +154,7 @@ const LanguageSettings = () => {
           </Select>
           
           <p className="text-sm text-muted-foreground">
-            Choose how you prefer Quranic verses to be translated
+            {t('language.translationStyleDesc')}
           </p>
         </div>
 
@@ -245,7 +251,7 @@ const LanguageSettings = () => {
           {isDirty && (
             <div className="sticky bottom-4 z-20">
               <Card className="p-3 bg-background/95 border-primary/20 backdrop-blur flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">You have unsaved changes</span>
+                <span className="text-sm text-muted-foreground">{t('language.unsavedChanges')}</span>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -257,10 +263,10 @@ const LanguageSettings = () => {
                       setLocalTimeFormat(settings.timeFormat || '12h');
                     }}
                   >
-                    Discard
+                    {t('language.discard')}
                   </Button>
                   <Button onClick={handleSave} disabled={isSaving}>
-                    {isSaving ? 'Saving...' : 'Save changes'}
+                    {isSaving ? t('language.saving') : t('language.saveChanges')}
                   </Button>
                 </div>
               </Card>
