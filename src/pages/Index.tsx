@@ -10,6 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const Index = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const displayName = user ? (user.user_metadata?.display_name || user.email?.split('@')[0]) : '';
 
   return (
     <div className="min-h-screen bg-background">
@@ -19,7 +20,7 @@ const Index = () => {
       <div className="text-center pt-8 pb-6 px-4">
         <div className="relative inline-block mb-4">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            {user ? `Welcome back, ${user.user_metadata?.display_name || user.email?.split('@')[0]}!` : t('home.todayVerse')}
+            {user ? t('home.welcomeBack', 'Welcome back, {name}!').replace('{name}', displayName) : t('home.todayVerse')}
           </h1>
           <Sparkles className="absolute -top-1 -right-6 h-6 w-6 text-secondary animate-pulse" />
         </div>
@@ -32,7 +33,7 @@ const Index = () => {
             <Link to="/welcome">
               <Button variant="outline" className="gap-2">
                 <LogIn className="h-4 w-4" />
-                Sign in to save your preferences
+                {t('home.signInCta', 'Sign in to save your preferences')}
               </Button>
             </Link>
           </div>

@@ -26,6 +26,8 @@ const translations: Record<string, Record<string, string>> = {
     'home.generateWallpaper': 'Generate Wallpaper',
     'home.addToFavorites': 'Add to Favorites',
     'home.removeFromFavorites': 'Remove from Favorites',
+    'home.welcomeBack': 'Welcome back, {name}!',
+    'home.signInCta': 'Sign in to save your preferences',
     
     // Library
     'library.title': 'Verse Library',
@@ -35,6 +37,17 @@ const translations: Record<string, Record<string, string>> = {
     'library.all': 'All',
     'library.share': 'Share',
     'library.generateWallpaper': 'Generate Wallpaper',
+    'library.noResults': 'No verses found matching your criteria',
+    
+    // Categories
+    'categories.faith': 'Faith',
+    'categories.guidance': 'Guidance',
+    'categories.comfort': 'Comfort',
+    'categories.gratitude': 'Gratitude',
+    'categories.protection': 'Protection',
+    'categories.trust': 'Trust',
+    'categories.power': 'Power',
+    'categories.blessing': 'Blessing',
     
     // Settings
     'settings.title': 'Settings',
@@ -87,6 +100,8 @@ const translations: Record<string, Record<string, string>> = {
     'common.loading': 'Loading...',
     'common.error': 'Error',
     'common.success': 'Success',
+    'common.surah': 'Surah',
+    'common.wallpaper': 'Wallpaper',
     
     // Customize
     'customize.title': 'Customize Wallpaper',
@@ -144,6 +159,8 @@ const translations: Record<string, Record<string, string>> = {
     'home.generateWallpaper': 'Générer un fond d\'écran',
     'home.addToFavorites': 'Ajouter aux favoris',
     'home.removeFromFavorites': 'Retirer des favoris',
+    'home.welcomeBack': 'Bon retour, {name}!',
+    'home.signInCta': 'Connectez-vous pour enregistrer vos préférences',
     
     // Library
     'library.title': 'Bibliothèque de versets',
@@ -153,6 +170,17 @@ const translations: Record<string, Record<string, string>> = {
     'library.all': 'Tous',
     'library.share': 'Partager',
     'library.generateWallpaper': 'Générer un fond d\'écran',
+    'library.noResults': 'Aucun verset ne correspond à vos critères',
+    
+    // Catégories
+    'categories.faith': 'Foi',
+    'categories.guidance': 'Orientation',
+    'categories.comfort': 'Réconfort',
+    'categories.gratitude': 'Gratitude',
+    'categories.protection': 'Protection',
+    'categories.trust': 'Confiance',
+    'categories.power': 'Puissance',
+    'categories.blessing': 'Bénédiction',
     
     // Settings
     'settings.title': 'Paramètres',
@@ -205,6 +233,48 @@ const translations: Record<string, Record<string, string>> = {
     'common.loading': 'Chargement...',
     'common.error': 'Erreur',
     'common.success': 'Succès',
+    'common.surah': 'Sourate',
+    'common.wallpaper': 'Fond',
+    
+    // Personnaliser
+    'customize.title': 'Personnaliser le fond',
+    'customize.subtitle': 'Créez votre fond islamique parfait',
+    'customize.livePreview': 'Aperçu en direct',
+    'customize.reset': 'Réinitialiser',
+    'customize.generateHint': 'Générez un aperçu pour voir votre design',
+    'customize.generatePreview': 'Générer un aperçu',
+    'customize.generating': 'Génération...',
+    'customize.download': 'Télécharger le fond',
+    'customize.regenerate': 'Régénérer',
+    'customize.sectionTitle': 'Personnalisez votre fond',
+    'customize.resolution': 'Résolution',
+    'customize.backgroundImages': 'Images de fond',
+    'customize.gradient': 'Dégradé',
+    'customize.hide': 'Masquer',
+    'customize.customize': 'Personnaliser',
+    'customize.showOriginal': 'Voir l\'original',
+    
+    // Fond d'écran
+    'wallpaper.newVerse': 'Nouveau verset',
+    'wallpaper.downloaded': 'Fond téléchargé',
+    'wallpaper.savedToDevice': 'Votre beau fond islamique a été enregistré sur votre appareil',
+    'wallpaper.generated': 'Fond généré',
+    'wallpaper.previewReady': 'Votre aperçu personnalisé est prêt !',
+    'wallpaper.addedToFavorites': 'Ajouté aux favoris',
+    'wallpaper.savedToFavorites': 'Ce verset a été enregistré dans vos favoris',
+    'wallpaper.signInToSave': 'Veuillez vous connecter pour enregistrer les favoris',
+    
+    // Favoris
+    'favorites.subtitle': 'Vos versets coraniques préférés',
+    'favorites.noFavoritesYet': 'Aucun favori pour le moment',
+    'favorites.startBuilding': 'Commencez à constituer votre collection en ajoutant des versets à vos favoris',
+    'favorites.browseLibrary': 'Parcourir la bibliothèque',
+    'favorites.favoriteVerses': 'Versets favoris',
+    'favorites.added': 'Ajouté',
+    'favorites.createWallpaper': 'Créer un fond',
+    'favorites.copiedToClipboard': 'Le texte du verset a été copié dans votre presse-papiers',
+    'favorites.shareNotSupported': 'Partage non pris en charge',
+    'favorites.copyManually': 'Veuillez copier le texte du verset manuellement',
   },
   
   ar: {
@@ -222,6 +292,8 @@ const translations: Record<string, Record<string, string>> = {
     'home.generateWallpaper': 'إنشاء خلفية',
     'home.addToFavorites': 'إضافة إلى المفضلة',
     'home.removeFromFavorites': 'إزالة من المفضلة',
+    'home.welcomeBack': 'مرحبًا بعودتك، {name}!',
+    'home.signInCta': 'سجّل الدخول لحفظ تفضيلاتك',
     
     // Library
     'library.title': 'مكتبة الآيات',
@@ -231,6 +303,17 @@ const translations: Record<string, Record<string, string>> = {
     'library.all': 'الكل',
     'library.share': 'مشاركة',
     'library.generateWallpaper': 'إنشاء خلفية',
+    'library.noResults': 'لا توجد آيات مطابقة لمعاييرك',
+    
+    // التصنيفات
+    'categories.faith': 'الإيمان',
+    'categories.guidance': 'الهداية',
+    'categories.comfort': 'السكينة',
+    'categories.gratitude': 'الشكر',
+    'categories.protection': 'الحماية',
+    'categories.trust': 'التوكل',
+    'categories.power': 'القدرة',
+    'categories.blessing': 'البركة',
     
     // Settings
     'settings.title': 'الإعدادات',
@@ -283,6 +366,48 @@ const translations: Record<string, Record<string, string>> = {
     'common.loading': 'جاري التحميل...',
     'common.error': 'خطأ',
     'common.success': 'نجح',
+    'common.surah': 'سورة',
+    'common.wallpaper': 'خلفية',
+    
+    // تخصيص
+    'customize.title': 'تخصيص الخلفية',
+    'customize.subtitle': 'أنشئ خلفيتك الإسلامية المثالية',
+    'customize.livePreview': 'معاينة مباشرة',
+    'customize.reset': 'إعادة ضبط',
+    'customize.generateHint': 'أنشئ معاينة لرؤية تصميمك',
+    'customize.generatePreview': 'إنشاء معاينة',
+    'customize.generating': 'جارٍ الإنشاء...',
+    'customize.download': 'تحميل الخلفية',
+    'customize.regenerate': 'إعادة الإنشاء',
+    'customize.sectionTitle': 'خصص خلفيتك',
+    'customize.resolution': 'الدقة',
+    'customize.backgroundImages': 'صور الخلفية',
+    'customize.gradient': 'تدرج',
+    'customize.hide': 'إخفاء',
+    'customize.customize': 'تخصيص',
+    'customize.showOriginal': 'عرض الأصل',
+    
+    // خلفية
+    'wallpaper.newVerse': 'آية جديدة',
+    'wallpaper.downloaded': 'تم تنزيل الخلفية',
+    'wallpaper.savedToDevice': 'تم حفظ الخلفية الإسلامية الجميلة على جهازك',
+    'wallpaper.generated': 'تم إنشاء الخلفية',
+    'wallpaper.previewReady': 'جاهزة معاينتك المخصصة!',
+    'wallpaper.addedToFavorites': 'تمت الإضافة إلى المفضلة',
+    'wallpaper.savedToFavorites': 'تم حفظ هذه الآية في المفضلة',
+    'wallpaper.signInToSave': 'يرجى تسجيل الدخول لحفظ المفضلة',
+    
+    // المفضلة
+    'favorites.subtitle': 'آياتك القرآنية المحببة',
+    'favorites.noFavoritesYet': 'لا توجد مفضلة بعد',
+    'favorites.startBuilding': 'ابدأ ببناء مجموعتك بإضافة الآيات إلى المفضلة',
+    'favorites.browseLibrary': 'تصفح المكتبة',
+    'favorites.favoriteVerses': 'الآيات المفضلة',
+    'favorites.added': 'أضيفت',
+    'favorites.createWallpaper': 'إنشاء خلفية',
+    'favorites.copiedToClipboard': 'تم نسخ نص الآية إلى الحافظة',
+    'favorites.shareNotSupported': 'المشاركة غير مدعومة',
+    'favorites.copyManually': 'يرجى نسخ نص الآية يدويًا',
   },
   
   es: {
@@ -300,6 +425,8 @@ const translations: Record<string, Record<string, string>> = {
     'home.generateWallpaper': 'Generar fondo de pantalla',
     'home.addToFavorites': 'Agregar a favoritos',
     'home.removeFromFavorites': 'Quitar de favoritos',
+    'home.welcomeBack': '¡Bienvenido de nuevo, {name}!',
+    'home.signInCta': 'Inicia sesión para guardar tus preferencias',
     
     // Library
     'library.title': 'Biblioteca de versos',
@@ -309,6 +436,17 @@ const translations: Record<string, Record<string, string>> = {
     'library.all': 'Todos',
     'library.share': 'Compartir',
     'library.generateWallpaper': 'Generar fondo de pantalla',
+    'library.noResults': 'No se encontraron versos que coincidan con tus criterios',
+    
+    // Categorías
+    'categories.faith': 'Fe',
+    'categories.guidance': 'Guía',
+    'categories.comfort': 'Consuelo',
+    'categories.gratitude': 'Gratitud',
+    'categories.protection': 'Protección',
+    'categories.trust': 'Confianza',
+    'categories.power': 'Poder',
+    'categories.blessing': 'Bendición',
     
     // Settings
     'settings.title': 'Configuración',
@@ -361,6 +499,8 @@ const translations: Record<string, Record<string, string>> = {
     'common.loading': 'Cargando...',
     'common.error': 'Error',
     'common.success': 'Éxito',
+    'common.surah': 'Sura',
+    'common.wallpaper': 'Fondo',
     
     // Personalizar
     'customize.title': 'Personalizar fondo',
@@ -389,7 +529,7 @@ const translations: Record<string, Record<string, string>> = {
     'wallpaper.addedToFavorites': 'Agregado a favoritos',
     'wallpaper.savedToFavorites': 'Este verso se ha guardado en tus favoritos',
     'wallpaper.signInToSave': 'Inicia sesión para guardar favoritos',
-  }
+  },
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

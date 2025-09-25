@@ -13,15 +13,15 @@ import { useAccessibility } from "@/components/accessibility/AccessibilityProvid
 import BottomNavigation from "@/components/navigation/BottomNavigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 const categories = [
-  { name: "All", value: "" },
-  { name: "Faith", value: "faith" },
-  { name: "Guidance", value: "guidance" },
-  { name: "Comfort", value: "comfort" },
-  { name: "Gratitude", value: "gratitude" },
-  { name: "Protection", value: "protection" },
-  { name: "Trust", value: "trust" },
-  { name: "Power", value: "power" },
-  { name: "Blessing", value: "blessing" }
+  { key: "all", value: "" },
+  { key: "faith", value: "faith" },
+  { key: "guidance", value: "guidance" },
+  { key: "comfort", value: "comfort" },
+  { key: "gratitude", value: "gratitude" },
+  { key: "protection", value: "protection" },
+  { key: "trust", value: "trust" },
+  { key: "power", value: "power" },
+  { key: "blessing", value: "blessing" }
 ];
 
 const Library = () => {
@@ -104,7 +104,7 @@ const Library = () => {
               }`}
               onClick={() => setSelectedCategory(category.value)}
             >
-              {category.value === "" ? t('library.all') : category.name}
+              {category.value === "" ? t('library.all') : t(`categories.${category.key}`, category.key)}
             </Badge>
           ))}
         </div>
@@ -115,7 +115,7 @@ const Library = () => {
         {filteredVerses.length === 0 ? (
           <Card className="p-8 text-center bg-gradient-card border-primary/10">
             <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">No verses found matching your criteria</p>
+            <p className="text-muted-foreground">{t('library.noResults', 'No verses found matching your criteria')}</p>
           </Card>
         ) : (
           filteredVerses.map((verse) => (
@@ -174,7 +174,7 @@ const Library = () => {
               {/* Reference */}
               <div className="flex justify-between items-center pt-4 border-t border-border">
                 <span className="text-sm font-medium text-primary">
-                  Surah {verse.surah_number}:{verse.ayah_number}
+                  {t('common.surah', 'Surah')} {verse.surah_number}:{verse.ayah_number}
                 </span>
                 <Button
                   variant="outline"

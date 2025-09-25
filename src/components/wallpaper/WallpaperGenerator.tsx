@@ -140,7 +140,7 @@ const WallpaperView = () => {
                 size="sm"
                 className="glass-effect hover:bg-primary/20"
               >
-                Show Original
+                {t('customize.showOriginal')}
               </Button>
             </div>
           </div>
@@ -173,7 +173,7 @@ const WallpaperView = () => {
                 <div className="flex items-center justify-center space-x-4">
                   <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
                   <p className="text-primary text-sm font-semibold px-4 py-2 glass-effect rounded-full">
-                    Surah {currentVerse.surah_number}:{currentVerse.ayah_number}
+                    {t('common.surah', 'Surah')} {currentVerse.surah_number}:{currentVerse.ayah_number}
                   </p>
                   <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
                 </div>
@@ -246,7 +246,7 @@ const WallpaperView = () => {
             size="lg"
           >
             <Settings className="mr-2 h-4 w-4" />
-            {showCustomizer ? t('customize.hide') : t('customize.customize')} Wallpaper
+            {showCustomizer ? t('customize.hide') : t('customize.customize')} {t('common.wallpaper', 'Wallpaper')}
           </Button>
           
           {!generatedWallpaper && (

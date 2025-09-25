@@ -187,7 +187,7 @@ const Favorites = () => {
                 <div className="flex justify-between items-center pt-4 border-t border-border">
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-primary">
-                      Surah {verse.surah_number}:{verse.ayah_number}
+                      {t('common.surah', 'Surah')} {verse.surah_number}:{verse.ayah_number}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {t('favorites.added', 'Added')} {new Date(verse.created_date).toLocaleDateString()}
