@@ -12,10 +12,10 @@ const NotificationSettings = () => {
   const { settings, updateSettings, isAuthenticated } = useUserSettings();
   const { toast } = useToast();
   const { t } = useLanguage();
-  const handleSettingChange = (setting: string, value: any) => {
+  const handleSettingChange = (settingKey: string, value: any) => {
     toast({
       title: t('notifications.updated'),
-      description: `${setting} has been ${value ? 'enabled' : 'updated'}`,
+      description: t(value ? 'notifications.settingEnabled' : 'notifications.settingUpdated'),
     });
   };
 
@@ -24,33 +24,33 @@ const NotificationSettings = () => {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         toast({
-          title: "Notifications enabled",
-          description: "You'll now receive notifications for daily verses and updates.",
+          title: t('notifications.permissionGranted'),
+          description: t('notifications.permissionGrantedDesc'),
         });
       } else {
         toast({
-          title: "Notifications blocked",
-          description: "Please enable notifications in your browser settings to receive updates.",
+          title: t('notifications.permissionBlocked'),
+          description: t('notifications.permissionBlockedDesc'),
           variant: "destructive"
         });
       }
     } else {
       toast({
-        title: "Not supported",
-        description: "Your browser doesn't support notifications.",
+        title: t('notifications.notSupported'),
+        description: t('notifications.notSupportedDesc'),
         variant: "destructive"
       });
     }
   };
 
   const notificationTimes = [
-    { value: '06:00', label: '6:00 AM - Fajr' },
-    { value: '07:00', label: '7:00 AM - Morning' },
-    { value: '12:00', label: '12:00 PM - Dhuhr' },
-    { value: '15:00', label: '3:00 PM - Asr' },
-    { value: '18:00', label: '6:00 PM - Maghrib' },
-    { value: '20:00', label: '8:00 PM - Isha' },
-    { value: '21:00', label: '9:00 PM - Evening' },
+    { value: '06:00', label: t('notifications.time6amFajr') },
+    { value: '07:00', label: t('notifications.time7amMorning') },
+    { value: '12:00', label: t('notifications.time12pmDhuhr') },
+    { value: '15:00', label: t('notifications.time3pmAsr') },
+    { value: '18:00', label: t('notifications.time6pmMaghrib') },
+    { value: '20:00', label: t('notifications.time8pmIsha') },
+    { value: '21:00', label: t('notifications.time9pmEvening') },
   ];
 
   const notificationPermission = 'Notification' in window ? Notification.permission : 'denied';
@@ -111,7 +111,7 @@ const NotificationSettings = () => {
               checked={settings.dailyNotifications}
               onCheckedChange={(checked) => {
                 updateSettings({ dailyNotifications: checked });
-                handleSettingChange("Daily verse reminders", checked);
+                handleSettingChange("notifications.dailyReminders", checked);
               }}
             />
           </div>
@@ -152,7 +152,7 @@ const NotificationSettings = () => {
             checked={settings.prayerReminders}
             onCheckedChange={(checked) => {
               updateSettings({ prayerReminders: checked });
-              handleSettingChange("Prayer time reminders", checked);
+              handleSettingChange("notifications.prayerReminders", checked);
             }}
           />
         </div>
@@ -172,7 +172,7 @@ const NotificationSettings = () => {
             id="feature-updates"
             defaultChecked={true}
             onCheckedChange={(checked) => {
-              handleSettingChange("Feature updates", checked);
+              handleSettingChange("notifications.features", checked);
             }}
           />
         </div>
@@ -198,7 +198,7 @@ const NotificationSettings = () => {
                 id="notification-sound"
                 defaultChecked={true}
                 onCheckedChange={(checked) => {
-                  handleSettingChange("Notification sound", checked);
+                  handleSettingChange("notifications.soundEnabled", checked);
                 }}
               />
             </div>
@@ -217,7 +217,7 @@ const NotificationSettings = () => {
                 id="vibration"
                 defaultChecked={true}
                 onCheckedChange={(checked) => {
-                  handleSettingChange("Vibration", checked);
+                  handleSettingChange("notifications.vibration", checked);
                 }}
               />
             </div>
@@ -254,7 +254,7 @@ const NotificationSettings = () => {
             <Switch
               id="quiet-hours"
               onCheckedChange={(checked) => {
-                handleSettingChange("Quiet hours", checked);
+                handleSettingChange("notifications.quietHours", checked);
               }}
             />
           </div>
