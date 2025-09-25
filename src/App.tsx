@@ -33,7 +33,7 @@ const queryClient = new QueryClient({
 
 function App() {
   // Initialize automation services after React is ready
-  useEffect(() => {
+  React.useEffect(() => {
     automationManager.initialize().catch(console.error);
   }, []);
 

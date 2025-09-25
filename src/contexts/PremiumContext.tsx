@@ -1,6 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 
 interface PremiumContextType {
   isPremium: boolean;
@@ -28,44 +26,29 @@ interface PremiumProviderProps {
 }
 
 export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) => {
-  const { user } = useAuth();
   const [isPremium, setIsPremium] = useState(false);
   const [wallpaperCount, setWallpaperCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   
   const wallpaperLimit = 5; // Free users limited to 5 wallpapers
 
-  // Load premium status from database
+  // Load premium status on mount
   useEffect(() => {
-    if (!user) {
-      setIsPremium(false);
-      setWallpaperCount(0);
-      setIsLoading(false);
-      return;
-    }
-
     loadPremiumStatus();
-  }, [user]);
+  }, []);
 
   const loadPremiumStatus = async () => {
-    if (!user) return;
-
     try {
-      const { data, error } = await (supabase as any)
-        .from('user_premium')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error loading premium status:', error);
-        return;
-      }
-
-      if (data) {
-        setIsPremium(data.is_premium || false);
-        setWallpaperCount(data.wallpaper_count || 0);
-      }
+      // Import inside function to avoid circular dependency
+      const { useAuth } = await import('./AuthContext');
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // For now, use localStorage to simulate premium status
+      const storedPremium = localStorage.getItem('isPremium');
+      const storedCount = localStorage.getItem('wallpaperCount');
+      
+      setIsPremium(storedPremium === 'true');
+      setWallpaperCount(parseInt(storedCount || '0'));
     } catch (error) {
       console.error('Error loading premium status:', error);
     } finally {
@@ -74,63 +57,32 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
   };
 
   const purchasePremium = async () => {
-    // For web/demo, just set premium status
-    await updatePremiumStatus(true);
+    try {
+      // For web/demo, just set premium status
+      localStorage.setItem('isPremium', 'true');
+      setIsPremium(true);
+    } catch (error) {
+      console.error('Purchase failed:', error);
+      throw error;
+    }
   };
 
   const restorePurchases = async () => {
-    // For web/demo, reload premium status
-    await loadPremiumStatus();
-  };
-
-  const updatePremiumStatus = async (premium: boolean) => {
-    if (!user) return;
-
     try {
-      const { error } = await (supabase as any)
-        .from('user_premium')
-        .upsert([{
-          user_id: user.id,
-          is_premium: premium,
-          wallpaper_count: wallpaperCount,
-          updated_at: new Date().toISOString(),
-        }]);
-
-      if (error) {
-        console.error('Error updating premium status:', error);
-        return;
-      }
-
-      setIsPremium(premium);
+      // For web/demo, reload premium status
+      await loadPremiumStatus();
     } catch (error) {
-      console.error('Error updating premium status:', error);
+      console.error('Restore failed:', error);
+      throw error;
     }
   };
 
   const incrementWallpaperCount = async () => {
-    if (!user || isPremium) return; // Premium users have unlimited
+    if (isPremium) return; // Premium users have unlimited
 
     const newCount = wallpaperCount + 1;
-    
-    try {
-      const { error } = await (supabase as any)
-        .from('user_premium')
-        .upsert([{
-          user_id: user.id,
-          is_premium: isPremium,
-          wallpaper_count: newCount,
-          updated_at: new Date().toISOString(),
-        }]);
-
-      if (error) {
-        console.error('Error updating wallpaper count:', error);
-        return;
-      }
-
-      setWallpaperCount(newCount);
-    } catch (error) {
-      console.error('Error updating wallpaper count:', error);
-    }
+    localStorage.setItem('wallpaperCount', newCount.toString());
+    setWallpaperCount(newCount);
   };
 
   const canDownloadWallpaper = isPremium || wallpaperCount < wallpaperLimit;
