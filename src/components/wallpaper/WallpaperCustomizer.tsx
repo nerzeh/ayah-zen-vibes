@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { WallpaperOptions } from "@/lib/wallpaperEngine";
 import { PexelsService, PexelsPhoto } from "@/services/pexelsService";
 import { RefreshCw } from "lucide-react";
@@ -97,48 +98,57 @@ const WallpaperCustomizer = ({
             </Button>
           </div>
           
-          <div className="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
-            {/* Gradient Option */}
-            <div
-              className={`relative aspect-video rounded-lg cursor-pointer border-2 transition-all ${
-                !options.backgroundImage 
-                  ? 'border-primary shadow-md' 
-                  : 'border-muted-foreground/20 hover:border-muted-foreground/40'
-              }`}
-              onClick={() => updateOption('backgroundImage', undefined)}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
-                <span className="text-xs font-medium">Gradient</span>
-              </div>
-            </div>
+          <Carousel className="w-full">
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {/* Gradient Option */}
+              <CarouselItem className="pl-2 md:pl-4 basis-1/3 md:basis-1/4">
+                <div
+                  className={`relative aspect-square rounded-lg cursor-pointer border-2 transition-all ${
+                    !options.backgroundImage 
+                      ? 'border-primary shadow-md' 
+                      : 'border-muted-foreground/20 hover:border-muted-foreground/40'
+                  }`}
+                  onClick={() => updateOption('backgroundImage', undefined)}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
+                    <span className="text-xs font-medium">Gradient</span>
+                  </div>
+                </div>
+              </CarouselItem>
 
-            {/* Pexels Images */}
-            {backgroundPhotos.map((photo) => (
-              <div
-                key={photo.id}
-                className={`relative aspect-video rounded-lg cursor-pointer border-2 transition-all overflow-hidden ${
-                  options.backgroundImage === photo.src.medium
-                    ? 'border-primary shadow-md' 
-                    : 'border-muted-foreground/20 hover:border-muted-foreground/40'
-                }`}
-                onClick={() => updateOption('backgroundImage', photo.src.medium)}
-              >
-                <img
-                  src={photo.src.tiny}
-                  alt={photo.alt}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/40" />
-              </div>
-            ))}
-            
-            {isLoadingBackgrounds && (
-              <div className="aspect-video rounded-lg border-2 border-muted-foreground/20 flex items-center justify-center">
-                <RefreshCw className="h-6 w-6 animate-spin" />
-              </div>
-            )}
-          </div>
+              {/* Pexels Images */}
+              {backgroundPhotos.map((photo) => (
+                <CarouselItem key={photo.id} className="pl-2 md:pl-4 basis-1/3 md:basis-1/4">
+                  <div
+                    className={`relative aspect-square rounded-lg cursor-pointer border-2 transition-all overflow-hidden ${
+                      options.backgroundImage === photo.src.medium
+                        ? 'border-primary shadow-md' 
+                        : 'border-muted-foreground/20 hover:border-muted-foreground/40'
+                    }`}
+                    onClick={() => updateOption('backgroundImage', photo.src.medium)}
+                  >
+                    <img
+                      src={photo.src.tiny}
+                      alt={photo.alt}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/40" />
+                  </div>
+                </CarouselItem>
+              ))}
+              
+              {isLoadingBackgrounds && (
+                <CarouselItem className="pl-2 md:pl-4 basis-1/3 md:basis-1/4">
+                  <div className="aspect-square rounded-lg border-2 border-muted-foreground/20 flex items-center justify-center">
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  </div>
+                </CarouselItem>
+              )}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
 
         <Separator />
