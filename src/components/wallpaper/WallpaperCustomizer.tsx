@@ -9,6 +9,7 @@ import { WallpaperOptions } from "@/lib/wallpaperEngine";
 import { PexelsService, PexelsPhoto } from "@/services/pexelsService";
 import { RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface WallpaperCustomizerProps {
   options: WallpaperOptions;
@@ -26,6 +27,7 @@ export default function WallpaperCustomizer({
   const [backgroundPhotos, setBackgroundPhotos] = useState<PexelsPhoto[]>([]);
   const [isLoadingBackgrounds, setIsLoadingBackgrounds] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   useEffect(() => {
     loadBackgrounds();
@@ -42,8 +44,8 @@ export default function WallpaperCustomizer({
       setBackgroundPhotos(photos);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to load background images",
+        title: t('common.error'),
+        description: t('customize.loadBackgroundsError', 'Failed to load background images'),
         variant: "destructive",
       });
     } finally {
@@ -53,13 +55,13 @@ export default function WallpaperCustomizer({
 
   return (
     <Card className="islamic-card p-6 space-y-6 bg-gradient-card border-primary/20">
-      <h3 className="text-lg font-semibold text-foreground">Customize Your Wallpaper</h3>
+      <h3 className="text-lg font-semibold text-foreground">{t('customize.sectionTitle')}</h3>
       
       <div className="space-y-6">
         {/* Resolution */}
         <div className="space-y-2">
           <Label htmlFor="resolution" className="text-sm font-medium">
-            Resolution
+            {t('customize.resolution')}
           </Label>
           <Select
             value={`${options.width}x${options.height}`}
@@ -70,7 +72,7 @@ export default function WallpaperCustomizer({
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select resolution" />
+              <SelectValue placeholder={t('customize.resolution')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1080x1920">Mobile Portrait (1080x1920)</SelectItem>
@@ -87,7 +89,7 @@ export default function WallpaperCustomizer({
         {/* Background Images */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-sm font-medium">Background Images</Label>
+            <Label className="text-sm font-medium">{t('customize.backgroundImages')}</Label>
             <Button
               onClick={loadBackgrounds}
               disabled={isLoadingBackgrounds}
@@ -111,7 +113,7 @@ export default function WallpaperCustomizer({
                   onClick={() => updateOption('backgroundImage', undefined)}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
-                    <span className="text-xs font-medium">Gradient</span>
+                    <span className="text-xs font-medium">{t('customize.gradient')}</span>
                   </div>
                 </div>
               </CarouselItem>
@@ -160,7 +162,7 @@ export default function WallpaperCustomizer({
           className="w-full"
           size="lg"
         >
-          {isGenerating ? "Generating..." : "Generate Preview"}
+          {isGenerating ? t('customize.generating') : t('customize.generatePreview')}
         </Button>
       </div>
     </Card>

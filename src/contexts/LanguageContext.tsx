@@ -87,7 +87,35 @@ const translations: Record<string, Record<string, string>> = {
     'common.loading': 'Loading...',
     'common.error': 'Error',
     'common.success': 'Success',
-  },
+    
+    // Customize
+    'customize.title': 'Customize Wallpaper',
+    'customize.subtitle': 'Create your perfect Islamic wallpaper design',
+    'customize.livePreview': 'Live Preview',
+    'customize.reset': 'Reset',
+    'customize.generateHint': 'Generate a preview to see your design',
+    'customize.generatePreview': 'Generate Preview',
+    'customize.generating': 'Generating...',
+    'customize.download': 'Download Wallpaper',
+    'customize.regenerate': 'Regenerate',
+    'customize.sectionTitle': 'Customize Your Wallpaper',
+    'customize.resolution': 'Resolution',
+    'customize.backgroundImages': 'Background Images',
+    'customize.gradient': 'Gradient',
+    'customize.hide': 'Hide',
+    'customize.customize': 'Customize',
+    'customize.showOriginal': 'Show Original',
+    
+    // Wallpaper
+    'wallpaper.newVerse': 'New Verse',
+    'wallpaper.downloaded': 'Wallpaper downloaded',
+    'wallpaper.savedToDevice': 'Your beautiful Islamic wallpaper has been saved to your device',
+    'wallpaper.generated': 'Wallpaper generated',
+    'wallpaper.previewReady': 'Your custom wallpaper preview is ready!',
+    'wallpaper.addedToFavorites': 'Added to favorites',
+    'wallpaper.savedToFavorites': 'This verse has been saved to your favorites',
+    'wallpaper.signInToSave': 'Please sign in to save favorites',
+  }
   
   fr: {
     // Navigation
@@ -321,6 +349,34 @@ const translations: Record<string, Record<string, string>> = {
     'common.loading': 'Cargando...',
     'common.error': 'Error',
     'common.success': 'Éxito',
+    
+    // Personalizar
+    'customize.title': 'Personalizar fondo',
+    'customize.subtitle': 'Crea tu fondo islámico perfecto',
+    'customize.livePreview': 'Vista previa en vivo',
+    'customize.reset': 'Restablecer',
+    'customize.generateHint': 'Genera una vista previa para ver tu diseño',
+    'customize.generatePreview': 'Generar vista previa',
+    'customize.generating': 'Generando...',
+    'customize.download': 'Descargar fondo',
+    'customize.regenerate': 'Regenerar',
+    'customize.sectionTitle': 'Personaliza tu fondo',
+    'customize.resolution': 'Resolución',
+    'customize.backgroundImages': 'Imágenes de fondo',
+    'customize.gradient': 'Degradado',
+    'customize.hide': 'Ocultar',
+    'customize.customize': 'Personalizar',
+    'customize.showOriginal': 'Ver original',
+    
+    // Fondo de pantalla
+    'wallpaper.newVerse': 'Nuevo verso',
+    'wallpaper.downloaded': 'Fondo descargado',
+    'wallpaper.savedToDevice': 'Tu hermoso fondo islámico se ha guardado en tu dispositivo',
+    'wallpaper.generated': 'Fondo generado',
+    'wallpaper.previewReady': '¡Tu vista previa personalizada está lista!',
+    'wallpaper.addedToFavorites': 'Agregado a favoritos',
+    'wallpaper.savedToFavorites': 'Este verso se ha guardado en tus favoritos',
+    'wallpaper.signInToSave': 'Inicia sesión para guardar favoritos',
   }
 };
 

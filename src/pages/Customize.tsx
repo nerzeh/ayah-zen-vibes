@@ -10,7 +10,7 @@ import { WallpaperGenerator as WallpaperEngine, WallpaperOptions, getDeviceScree
 import { useRandomVerse, useVerses, Verse } from "@/hooks/useVerses";
 import { useToast } from "@/hooks/use-toast";
 import BottomNavigation from "@/components/navigation/BottomNavigation";
-
+import { useLanguage } from "@/contexts/LanguageContext";
 const Customize = () => {
   const [searchParams] = useSearchParams();
   const [wallpaperEngine] = useState(() => new WallpaperEngine());
@@ -22,6 +22,7 @@ const Customize = () => {
   const { data: randomVerse } = useRandomVerse();
   const { data: allVerses } = useVerses();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   // Effect to set the current verse based on URL parameter or use random verse
   useEffect(() => {
@@ -54,13 +55,13 @@ const Customize = () => {
       setGeneratedWallpaper(url);
       
       toast({
-        title: "Preview generated",
-        description: "Your custom wallpaper preview is ready!",
+        title: t('wallpaper.generated', 'Preview generated'),
+        description: t('wallpaper.previewReady', 'Your custom wallpaper preview is ready!'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to generate preview. Please try again.",
+        title: t('common.error'),
+        description: t('customize.previewError', 'Failed to generate preview. Please try again.'),
         variant: "destructive"
       });
     } finally {
@@ -77,13 +78,13 @@ const Customize = () => {
       downloadWallpaper(blob, filename);
       
       toast({
-        title: "Wallpaper downloaded",
-        description: "Your beautiful Islamic wallpaper has been saved",
+        title: t('wallpaper.downloaded'),
+        description: t('wallpaper.savedToDevice'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to download wallpaper. Please try again.",
+        title: t('common.error'),
+        description: t('customize.downloadError', 'Failed to download wallpaper. Please try again.'),
         variant: "destructive"
       });
     }
@@ -95,9 +96,9 @@ const Customize = () => {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-2">
           <Palette className="h-8 w-8 text-primary mr-2" />
-          <h1 className="text-3xl font-bold text-foreground">Customize Wallpaper</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t('customize.title')}</h1>
         </div>
-        <p className="text-muted-foreground">Create your perfect Islamic wallpaper design</p>
+        <p className="text-muted-foreground">{t('customize.subtitle')}</p>
       </div>
 
       {/* Preview Section */}
@@ -105,14 +106,14 @@ const Customize = () => {
         <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">
             <Smartphone className="h-6 w-6 text-primary mr-2" />
-            <h2 className="text-xl font-semibold text-foreground">Live Preview</h2>
+            <h2 className="text-xl font-semibold text-foreground">{t('customize.livePreview')}</h2>
           </div>
           
           {generatedWallpaper ? (
             <div className="relative inline-block">
               <img
                 src={generatedWallpaper}
-                alt="Generated Islamic Wallpaper Preview"
+                alt={`${t('customize.title')} Preview`}
                 className="max-w-full h-80 object-contain rounded-lg shadow-elegant border border-primary/10"
               />
               <Button
@@ -121,19 +122,19 @@ const Customize = () => {
                 size="sm"
                 className="absolute top-2 right-2 bg-white/90 hover:bg-white"
               >
-                Reset
+                {t('customize.reset')}
               </Button>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 px-6 border-2 border-dashed border-primary/20 rounded-lg">
               <Smartphone className="h-16 w-16 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground text-lg mb-4">Generate a preview to see your design</p>
+              <p className="text-muted-foreground text-lg mb-4">{t('customize.generateHint')}</p>
               <Button
                 onClick={generateWallpaperPreview}
                 disabled={isGenerating || !currentVerse}
                 className="hover:bg-primary/90 text-primary-foreground"
               >
-                {isGenerating ? "Generating..." : "Generate Preview"}
+                {isGenerating ? t('customize.generating') : t('customize.generatePreview')}
               </Button>
             </div>
           )}
@@ -148,7 +149,7 @@ const Customize = () => {
               size="lg"
             >
               <Download className="mr-2 h-5 w-5" />
-              Download Wallpaper
+              {t('customize.download')}
             </Button>
             <Button
               onClick={generateWallpaperPreview}
@@ -157,7 +158,7 @@ const Customize = () => {
               className="border-primary/20 hover:bg-primary/5"
               disabled={isGenerating}
             >
-              Regenerate
+              {t('customize.regenerate')}
             </Button>
           </div>
         )}

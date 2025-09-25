@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRandomVerse, useFavoriteVerse, type Verse } from "@/hooks/useVerses";
 import { WallpaperGenerator as WallpaperEngine, WallpaperOptions, getDeviceScreenDimensions, downloadWallpaper } from "@/lib/wallpaperEngine";
 import WallpaperCustomizer from "./WallpaperCustomizer";
-
+import { useLanguage } from "@/contexts/LanguageContext";
 const WallpaperView = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showCustomizer, setShowCustomizer] = useState(false);
@@ -16,6 +16,7 @@ const WallpaperView = () => {
   const { data: currentVerse, refetch, isLoading } = useRandomVerse();
   const favoriteVerse = useFavoriteVerse();
   const { toast } = useToast();
+  const { t } = useLanguage();
   
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
@@ -31,13 +32,13 @@ const WallpaperView = () => {
     try {
       await refetch();
       toast({
-        title: "New verse generated",
-        description: "Your wallpaper has been updated with a beautiful new verse",
+        title: t('wallpaper.generated'),
+        description: t('wallpaper.previewReady'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to generate new verse. Please try again.",
+        title: t('common.error'),
+        description: t('wallpaper.generateError', 'Failed to generate new verse. Please try again.'),
         variant: "destructive"
       });
     } finally {
@@ -55,13 +56,13 @@ const WallpaperView = () => {
       setGeneratedWallpaper(url);
       
       toast({
-        title: "Wallpaper generated",
-        description: "Your custom wallpaper preview is ready!",
+        title: t('wallpaper.generated'),
+        description: t('wallpaper.previewReady'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to generate wallpaper. Please try again.",
+        title: t('common.error'),
+        description: t('wallpaper.generateError', 'Failed to generate wallpaper. Please try again.'),
         variant: "destructive"
       });
     } finally {
@@ -78,13 +79,13 @@ const WallpaperView = () => {
       downloadWallpaper(blob, filename);
       
       toast({
-        title: "Wallpaper downloaded",
-        description: "Your beautiful Islamic wallpaper has been saved to your device",
+        title: t('wallpaper.downloaded'),
+        description: t('wallpaper.savedToDevice'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to download wallpaper. Please try again.",
+        title: t('common.error'),
+        description: t('wallpaper.downloadError', 'Failed to download wallpaper. Please try again.'),
         variant: "destructive"
       });
     }
@@ -96,13 +97,13 @@ const WallpaperView = () => {
     try {
       await favoriteVerse.mutateAsync(currentVerse.id);
       toast({
-        title: "Added to favorites",
-        description: "This verse has been saved to your favorites",
+        title: t('wallpaper.addedToFavorites'),
+        description: t('wallpaper.savedToFavorites'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Please sign in to save favorites",
+        title: t('common.error'),
+        description: t('wallpaper.signInToSave'),
         variant: "destructive"
       });
     }
@@ -129,8 +130,8 @@ const WallpaperView = () => {
             <img
               src={generatedWallpaper}
               alt="Generated Islamic Wallpaper"
-              className="w-full h-full object-contain rounded-lg"
-            />
+                className="w-full h-full object-contain rounded-lg"
+              />
             <div className="absolute inset-0 bg-black/20 rounded-lg" />
             <div className="absolute top-4 right-4">
               <Button
@@ -167,7 +168,7 @@ const WallpaperView = () => {
               {/* Translation */}
               <div className="space-y-4">
                 <p className="text-white/95 text-base md:text-lg font-light leading-relaxed italic">
-                  "{currentVerse.english_translation}"
+                  "{currentVerse.translated_text || currentVerse.english_translation}"
                 </p>
                 <div className="flex items-center justify-center space-x-4">
                   <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
@@ -214,7 +215,7 @@ const WallpaperView = () => {
             size="lg"
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
-            {isGenerating ? 'Generating...' : 'New Verse'}
+            {isGenerating ? t('customize.generating') : t('wallpaper.newVerse')}
           </Button>
           
           <Button
@@ -223,7 +224,7 @@ const WallpaperView = () => {
             size="lg"
           >
             <Download className="mr-2 h-4 w-4" />
-            Download Wallpaper
+            {t('customize.download')}
           </Button>
           
           <Button
@@ -245,7 +246,7 @@ const WallpaperView = () => {
             size="lg"
           >
             <Settings className="mr-2 h-4 w-4" />
-            {showCustomizer ? 'Hide' : 'Customize'} Wallpaper
+            {showCustomizer ? t('customize.hide') : t('customize.customize')} Wallpaper
           </Button>
           
           {!generatedWallpaper && (
@@ -256,7 +257,7 @@ const WallpaperView = () => {
               className="flex-1 glass-effect border-primary/30 hover:bg-primary/20 hover:shadow-glow"
               size="lg"
             >
-              Generate Preview
+            {t('customize.generatePreview')}
             </Button>
           )}
         </div>

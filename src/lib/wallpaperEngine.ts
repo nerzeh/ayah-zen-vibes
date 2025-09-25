@@ -139,7 +139,7 @@ export class WallpaperGenerator {
       arabicLines = this.wrapText(verse.arabic_text, availableWidth, arabicFontSize);
       
       this.ctx.font = `${translationFontSize}px "Inter", sans-serif`;
-      translationLines = this.wrapText(`"${verse.english_translation}"`, availableWidth, translationFontSize);
+      translationLines = this.wrapText(`"${verse.translated_text || verse.english_translation}"`, availableWidth, translationFontSize);
 
       // Calculate heights for each section
       const arabicHeight = arabicLines.length * arabicFontSize * 1.3;
