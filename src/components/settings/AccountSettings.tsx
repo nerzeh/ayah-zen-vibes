@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,9 +15,25 @@ const AccountSettings = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(user?.user_metadata?.display_name || '');
 
+  useEffect(() => {
+    if (!user?.id) return;
+    const loadProfile = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('display_name')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (!error && data?.display_name) {
+        setDisplayName(data.display_name);
+      }
+    };
+    loadProfile();
+  }, [user?.id]);
+
   if (!user) return null;
 
-  const userInitials = (user.user_metadata?.display_name || user.email?.split('@')[0] || 'U')
+  const initialsSource = displayName || user.email?.split('@')[0] || 'U';
+  const userInitials = initialsSource
     .split(' ')
     .map(n => n[0])
     .join('')
@@ -52,6 +68,9 @@ const AccountSettings = () => {
         });
         return;
       }
+
+      // Also update auth metadata so UI reflects immediately
+      await supabase.auth.updateUser({ data: { display_name: displayName.trim() } });
 
       setIsEditing(false);
       toast({
@@ -132,7 +151,7 @@ const AccountSettings = () => {
           ) : (
             <div className="flex items-center space-x-2">
               <p className="text-foreground flex-1">
-                {user.user_metadata?.display_name || 'No display name set'}
+                {displayName || 'No display name set'}
               </p>
               <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}>
                 <Edit2 className="h-4 w-4" />
