@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useFavorites } from '@/hooks/useFavorites';
 import { Verse } from '@/hooks/useVerses';
 import BottomNavigation from "@/components/navigation/BottomNavigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FavoriteVerse extends Verse {
   favorite_id: number;
@@ -17,6 +18,7 @@ interface FavoriteVerse extends Verse {
 
 const Favorites = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const {
     favorites,
     isLoading,
@@ -25,7 +27,8 @@ const Favorites = () => {
   } = useFavorites();
 
   const shareVerse = async (verse: Verse) => {
-    const shareText = `"${verse.english_translation}"\n\n— Quran ${verse.surah_number}:${verse.ayah_number}\n\nShared via Ayah Wallpapers`;
+    const translation = verse.translated_text || verse.english_translation;
+    const shareText = `"${translation}"\n\n— Quran ${verse.surah_number}:${verse.ayah_number}\n\nShared via Ayah Wallpapers`;
     
     if (navigator.share) {
       try {
@@ -42,13 +45,13 @@ const Favorites = () => {
       try {
         await navigator.clipboard.writeText(shareText);
         toast({
-          title: "Copied to clipboard",
-          description: "Verse text has been copied to your clipboard",
+          title: t('common.success', 'Copied to clipboard'),
+          description: t('favorites.copiedToClipboard', 'Verse text has been copied to your clipboard'),
         });
       } catch (error) {
         toast({
-          title: "Share not supported",
-          description: "Please copy the verse text manually",
+          title: t('favorites.shareNotSupported', 'Share not supported'),
+          description: t('favorites.copyManually', 'Please copy the verse text manually'),
           variant: "destructive"
         });
       }
@@ -71,25 +74,25 @@ const Favorites = () => {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-2">
           <Heart className="h-8 w-8 text-accent mr-2 fill-current" />
-          <h1 className="text-3xl font-bold text-foreground">My Favorites</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t('nav.favorites')}</h1>
         </div>
-        <p className="text-muted-foreground">Your beloved Quranic verses</p>
+        <p className="text-muted-foreground">{t('favorites.subtitle', 'Your beloved Quranic verses')}</p>
       </div>
 
       {/* Empty State */}
       {!favorites || favorites.length === 0 ? (
         <Card className="p-12 text-center bg-gradient-card border-primary/10">
           <Heart className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-          <h3 className="text-xl font-semibold text-foreground mb-2">No favorites yet</h3>
+          <h3 className="text-xl font-semibold text-foreground mb-2">{t('favorites.noFavoritesYet', 'No favorites yet')}</h3>
           <p className="text-muted-foreground mb-6">
-            Start building your collection by adding verses to your favorites
+            {t('favorites.startBuilding', 'Start building your collection by adding verses to your favorites')}
           </p>
           <Button 
             onClick={() => window.history.back()}
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <BookOpen className="h-4 w-4 mr-2" />
-            Browse Library
+            {t('favorites.browseLibrary', 'Browse Library')}
           </Button>
         </Card>
       ) : (
@@ -100,7 +103,7 @@ const Favorites = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-2xl font-bold text-foreground">{favorites.length}</p>
-                  <p className="text-sm text-muted-foreground">Favorite Verses</p>
+                  <p className="text-sm text-muted-foreground">{t('favorites.favoriteVerses', 'Favorite Verses')}</p>
                 </div>
                 <div className="bg-primary p-3 rounded-full">
                   <Heart className="h-6 w-6 text-primary-foreground fill-current" />
@@ -176,7 +179,7 @@ const Favorites = () => {
                 {/* English Translation */}
                 <div className="mb-4">
                   <p className="text-muted-foreground text-lg italic leading-relaxed">
-                    "{verse.english_translation}"
+                    "{verse.translated_text || verse.english_translation}"
                   </p>
                 </div>
 
@@ -187,7 +190,7 @@ const Favorites = () => {
                       Surah {verse.surah_number}:{verse.ayah_number}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      Added {new Date(verse.created_date).toLocaleDateString()}
+                      {t('favorites.added', 'Added')} {new Date(verse.created_date).toLocaleDateString()}
                     </span>
                   </div>
                   <Button
@@ -209,7 +212,7 @@ const Favorites = () => {
                     }}
                   >
                     <Download className="h-3 w-3 mr-1" />
-                    Create Wallpaper
+                    {t('favorites.createWallpaper', 'Create Wallpaper')}
                   </Button>
                 </div>
               </Card>

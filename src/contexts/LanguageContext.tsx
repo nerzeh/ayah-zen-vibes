@@ -115,7 +115,19 @@ const translations: Record<string, Record<string, string>> = {
     'wallpaper.addedToFavorites': 'Added to favorites',
     'wallpaper.savedToFavorites': 'This verse has been saved to your favorites',
     'wallpaper.signInToSave': 'Please sign in to save favorites',
-  }
+    
+    // Favorites
+    'favorites.subtitle': 'Your beloved Quranic verses',
+    'favorites.noFavoritesYet': 'No favorites yet',
+    'favorites.startBuilding': 'Start building your collection by adding verses to your favorites',
+    'favorites.browseLibrary': 'Browse Library',
+    'favorites.favoriteVerses': 'Favorite Verses',
+    'favorites.added': 'Added',
+    'favorites.createWallpaper': 'Create Wallpaper',
+    'favorites.copiedToClipboard': 'Verse text has been copied to your clipboard',
+    'favorites.shareNotSupported': 'Share not supported',
+    'favorites.copyManually': 'Please copy the verse text manually',
+  },
   
   fr: {
     // Navigation
