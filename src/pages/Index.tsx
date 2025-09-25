@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Download, Palette, BookOpen, Settings, Heart, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-
+import { useLanguage } from "@/contexts/LanguageContext";
 const Index = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background">
@@ -18,12 +19,12 @@ const Index = () => {
       <div className="text-center pt-8 pb-6 px-4">
         <div className="relative inline-block mb-4">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            {user ? `Welcome back, ${user.user_metadata?.display_name || user.email?.split('@')[0]}!` : "Today's Verse"}
+            {user ? `Welcome back, ${user.user_metadata?.display_name || user.email?.split('@')[0]}!` : t('home.todayVerse')}
           </h1>
           <Sparkles className="absolute -top-1 -right-6 h-6 w-6 text-secondary animate-pulse" />
         </div>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Beautiful Islamic wallpapers with daily Quranic inspiration
+          {t('home.subtitle')}
         </p>
         
         {!user && (
@@ -53,7 +54,7 @@ const Index = () => {
                 className="w-full h-16 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center gap-1"
               >
                 <BookOpen className="h-5 w-5 text-primary" />
-                <span className="text-sm font-medium">Library</span>
+                <span className="text-sm font-medium">{t('nav.library')}</span>
               </Button>
             </Link>
             
@@ -63,7 +64,7 @@ const Index = () => {
                 className="w-full h-16 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center gap-1"
               >
                 <Palette className="h-5 w-5 text-primary" />
-                <span className="text-sm font-medium">Customize</span>
+                <span className="text-sm font-medium">{t('nav.customize')}</span>
               </Button>
             </Link>
           </div>

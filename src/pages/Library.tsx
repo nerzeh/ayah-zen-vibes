@@ -11,7 +11,7 @@ import ShareDialog from "@/components/sharing/ShareDialog";
 import LoadingScreen from "@/components/ui/loading-screen";
 import { useAccessibility } from "@/components/accessibility/AccessibilityProvider";
 import BottomNavigation from "@/components/navigation/BottomNavigation";
-
+import { useLanguage } from "@/contexts/LanguageContext";
 const categories = [
   { name: "All", value: "" },
   { name: "Faith", value: "faith" },
@@ -32,10 +32,12 @@ const Library = () => {
   const favoriteVerse = useFavoriteVerse();
   const { toast } = useToast();
   const { announceToScreenReader } = useAccessibility();
+  const { t } = useLanguage();
 
   const filteredVerses = verses?.filter(verse => {
+    const translated = (verse.translated_text || verse.english_translation || '').toLowerCase();
     const matchesSearch = verse.arabic_text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         verse.english_translation.toLowerCase().includes(searchQuery.toLowerCase());
+                         translated.includes(searchQuery.toLowerCase());
     const matchesCategory = !selectedCategory || verse.theme_category === selectedCategory;
     return matchesSearch && matchesCategory;
   }) || [];
@@ -67,16 +69,16 @@ const Library = () => {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-2">
           <BookOpen className="h-8 w-8 text-primary mr-2" />
-          <h1 className="text-3xl font-bold text-foreground">Verse Library</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t('library.title')}</h1>
         </div>
-        <p className="text-muted-foreground">Discover and explore beautiful Quranic verses</p>
+        <p className="text-muted-foreground">{t('library.subtitle')}</p>
       </div>
 
       {/* Search Bar */}
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
-          placeholder="Search verses in Arabic or English..."
+          placeholder={t('library.search')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 h-12 rounded-xl border-primary/20 focus:border-primary bg-card"
@@ -88,7 +90,7 @@ const Library = () => {
       <div className="mb-8">
         <div className="flex items-center mb-4">
           <Filter className="h-5 w-5 text-primary mr-2" />
-          <span className="font-medium text-foreground">Filter by Theme</span>
+          <span className="font-medium text-foreground">{t('library.filter')}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
@@ -102,7 +104,7 @@ const Library = () => {
               }`}
               onClick={() => setSelectedCategory(category.value)}
             >
-              {category.name}
+              {category.value === "" ? t('library.all') : category.name}
             </Badge>
           ))}
         </div>
@@ -163,11 +165,11 @@ const Library = () => {
               </div>
 
               {/* English Translation */}
-              <div className="mb-4">
-                <p className="text-muted-foreground text-lg italic leading-relaxed">
-                  "{verse.english_translation}"
-                </p>
-              </div>
+        <div className="mb-4">
+          <p className="text-muted-foreground text-lg italic leading-relaxed">
+            "{verse.translated_text || verse.english_translation}"
+          </p>
+        </div>
 
               {/* Reference */}
               <div className="flex justify-between items-center pt-4 border-t border-border">
@@ -180,7 +182,7 @@ const Library = () => {
                   className="border-primary/20 text-primary hover:bg-primary/5"
                   onClick={() => navigate(`/customize?verseId=${verse.id}`)}
                 >
-                  Generate Wallpaper
+          {t('library.generateWallpaper')}
                 </Button>
               </div>
             </Card>

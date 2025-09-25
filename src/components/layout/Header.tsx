@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Download, Moon, Settings } from "lucide-react";
 import AuthButton from "@/components/auth/AuthButton";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -14,8 +16,8 @@ const Header = () => {
             <span className="text-sm font-bold text-primary-foreground">آ</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-foreground">Ayah Wallpapers</h1>
-            <p className="text-xs text-muted-foreground">Islamic Verse Generator</p>
+            <h1 className="text-lg font-semibold text-foreground">{t('home.title')}</h1>
+            <p className="text-xs text-muted-foreground">{t('home.subtitle')}</p>
           </div>
         </div>
         

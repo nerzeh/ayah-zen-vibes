@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useVerseTranslations } from '@/hooks/useVerseTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface Verse {
   id: number;
@@ -14,9 +15,10 @@ export interface Verse {
 
 export const useVerses = () => {
   const { getTranslation } = useVerseTranslations();
+  const { currentLanguage } = useLanguage();
   
   return useQuery({
-    queryKey: ['verses'],
+    queryKey: ['verses', currentLanguage],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('verses')
@@ -34,9 +36,10 @@ export const useVerses = () => {
 
 export const useRandomVerse = () => {
   const { getTranslation } = useVerseTranslations();
+  const { currentLanguage } = useLanguage();
   
   return useQuery({
-    queryKey: ['random-verse'],
+    queryKey: ['random-verse', currentLanguage],
     queryFn: async () => {
       // First get the count of verses
       const { count } = await supabase
