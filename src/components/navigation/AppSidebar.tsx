@@ -118,17 +118,19 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <NavLink 
-                        to={item.url} 
-                        end 
+                      <NavLink
+                        to={item.url}
+                        end
                         className={`flex items-center gap-2 rounded-md p-2 transition-colors ${
-                          isItemActive 
-                            ? "bg-primary text-primary-foreground" 
+                          isItemActive
+                            ? "bg-primary text-primary-foreground"
                             : "hover:bg-muted/50"
                         }`}
                       >
-                        <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
+                        <>
+                          <item.icon className="h-4 w-4" />
+                          {!collapsed && <span>{item.title}</span>}
+                        </>
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -148,17 +150,19 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <NavLink 
-                        to={item.url} 
-                        end 
+                      <NavLink
+                        to={item.url}
+                        end
                         className={`flex items-center gap-2 rounded-md p-2 transition-colors ${
-                          isItemActive 
-                            ? "bg-primary text-primary-foreground" 
+                          isItemActive
+                            ? "bg-primary text-primary-foreground"
                             : "hover:bg-muted/50"
                         }`}
                       >
-                        <item.icon className="h-4 w-4" />
-                        {!collapsed && <span>{item.title}</span>}
+                        <>
+                          <item.icon className="h-4 w-4" />
+                          {!collapsed && <span>{item.title}</span>}
+                        </>
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -173,8 +177,10 @@ export function AppSidebar() {
       <div className="p-2 border-t border-border">
         <SidebarTrigger asChild>
           <Button variant="ghost" size="sm" className="w-full justify-start">
-            <Menu className="h-4 w-4" />
-            {!collapsed && <span className="ml-2">Toggle</span>}
+            <>
+              <Menu className="h-4 w-4" />
+              {!collapsed && <span className="ml-2">Toggle</span>}
+            </>
           </Button>
         </SidebarTrigger>
       </div>
