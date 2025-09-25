@@ -5,14 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useVerses, useFavoriteVerse } from "@/hooks/useVerses";
-import { useFreeTierLimits } from "@/hooks/usePremiumFeature";
 import { useToast } from "@/hooks/use-toast";
 import ShareDialog from "@/components/sharing/ShareDialog";
-import AdBanner from "@/components/subscription/AdBanner";
 import LoadingScreen from "@/components/ui/loading-screen";
 import { useAccessibility } from "@/components/accessibility/AccessibilityProvider";
 import BottomNavigation from "@/components/navigation/BottomNavigation";
-import { Link } from "react-router-dom";
 
 const categories = [
   { name: "All", value: "" },
@@ -33,14 +30,13 @@ const Library = () => {
   const favoriteVerse = useFavoriteVerse();
   const { toast } = useToast();
   const { announceToScreenReader } = useAccessibility();
-  const { verseLimit, shouldShowAds, isPremium } = useFreeTierLimits();
 
   const filteredVerses = verses?.filter(verse => {
     const matchesSearch = verse.arabic_text.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          verse.english_translation.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !selectedCategory || verse.theme_category === selectedCategory;
     return matchesSearch && matchesCategory;
-  })?.slice(0, isPremium ? undefined : verseLimit) || [];
+  }) || [];
 
   const handleFavorite = async (verseId: number) => {
     try {
@@ -65,9 +61,6 @@ const Library = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 pb-24 bg-background min-h-screen">
-      {/* Ad Banner for Free Users */}
-      {shouldShowAds && <AdBanner className="mb-6" />}
-      
       {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-2">
@@ -94,11 +87,6 @@ const Library = () => {
         <div className="flex items-center mb-4">
           <Filter className="h-5 w-5 text-primary mr-2" />
           <span className="font-medium text-foreground">Filter by Theme</span>
-          {!isPremium && (
-            <Badge variant="outline" className="ml-2 text-xs">
-              Free: {verseLimit} verses max
-            </Badge>
-          )}
         </div>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
@@ -117,23 +105,6 @@ const Library = () => {
           ))}
         </div>
       </div>
-
-      {/* Free Tier Upgrade Prompt */}
-      {!isPremium && filteredVerses.length >= verseLimit && (
-        <Card className="p-6 mb-6 bg-gradient-card border-primary/20">
-          <div className="text-center">
-            <h3 className="font-semibold text-foreground mb-2">
-              You've reached the free tier limit
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              Upgrade to Premium to access 500+ verses and unlock all features
-            </p>
-            <Link to="/subscription">
-              <Button>Upgrade to Premium</Button>
-            </Link>
-          </div>
-        </Card>
-      )}
 
       {/* Verses Grid */}
       <div className="space-y-4">
@@ -219,7 +190,6 @@ const Library = () => {
         <div className="mt-8 text-center">
           <p className="text-muted-foreground">
             Showing {filteredVerses.length} of {verses?.length || 0} verses
-            {!isPremium && ` (Free tier: ${verseLimit} max)`}
           </p>
         </div>
       )}
