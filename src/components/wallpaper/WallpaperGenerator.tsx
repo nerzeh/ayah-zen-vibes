@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw, Download, Heart, Settings } from "lucide-react";
@@ -10,11 +10,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { usePremium } from "@/contexts/PremiumContext";
 import PaywallDialog from "@/components/premium/PaywallDialog";
 const WallpaperView = () => {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [showCustomizer, setShowCustomizer] = useState(false);
-  const [generatedWallpaper, setGeneratedWallpaper] = useState<string | null>(null);
-  const [showPaywall, setShowPaywall] = useState(false);
-  const [wallpaperEngine] = useState(() => new WallpaperEngine());
+  const [isGenerating, setIsGenerating] = React.useState(false);
+  const [showCustomizer, setShowCustomizer] = React.useState(false);
+  const [generatedWallpaper, setGeneratedWallpaper] = React.useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = React.useState(false);
+  const [wallpaperEngine] = React.useState(() => new WallpaperEngine());
   
   const { data: currentVerse, refetch, isLoading } = useRandomVerse();
   const favoriteVerse = useFavoriteVerse();
@@ -22,7 +22,7 @@ const WallpaperView = () => {
   const { t } = useLanguage();
   const { canDownloadWallpaper, wallpaperCount, wallpaperLimit, incrementWallpaperCount, isPremium } = usePremium();
   
-  const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
+  const [wallpaperOptions, setWallpaperOptions] = React.useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
     return {
       width: dimensions.width,

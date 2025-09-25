@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -24,12 +24,12 @@ export default function WallpaperCustomizer({
   onGenerate, 
   isGenerating 
 }: WallpaperCustomizerProps) {
-  const [backgroundPhotos, setBackgroundPhotos] = useState<PexelsPhoto[]>([]);
-  const [isLoadingBackgrounds, setIsLoadingBackgrounds] = useState(false);
+  const [backgroundPhotos, setBackgroundPhotos] = React.useState<PexelsPhoto[]>([]);
+  const [isLoadingBackgrounds, setIsLoadingBackgrounds] = React.useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadBackgrounds();
   }, []);
 

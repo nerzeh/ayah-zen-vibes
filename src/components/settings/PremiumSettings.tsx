@@ -11,7 +11,7 @@ import PremiumBadge from '@/components/premium/PremiumBadge';
 const PremiumSettings: React.FC = () => {
   const { isPremium, wallpaperCount, wallpaperLimit, purchasePremium } = usePremium();
   const { t } = useLanguage();
-  const [showPaywall, setShowPaywall] = useState(false);
+  const [showPaywall, setShowPaywall] = React.useState(false);
 
   return (
     <>
