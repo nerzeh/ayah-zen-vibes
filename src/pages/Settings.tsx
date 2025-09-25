@@ -9,6 +9,7 @@ import AppearanceSettings from "@/components/settings/AppearanceSettings";
 import LanguageSettings from "@/components/settings/LanguageSettings";
 import NotificationSettings from "@/components/settings/NotificationSettings";
 import DataPrivacySettings from "@/components/settings/DataPrivacySettings";
+import WidgetConfiguration from "@/components/widget/WidgetConfiguration";
 import BottomNavigation from "@/components/navigation/BottomNavigation";
 
 const Settings = () => {
@@ -53,6 +54,9 @@ const Settings = () => {
 
         {/* Notifications */}
         <NotificationSettings />
+
+        {/* Home Screen Widget */}
+        <WidgetConfiguration />
 
         {/* Data & Privacy */}
         <DataPrivacySettings />
