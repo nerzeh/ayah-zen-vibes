@@ -93,19 +93,58 @@ export class WallpaperGenerator {
   private async renderText(verse: Verse, options: WallpaperOptions): Promise<void> {
     const { width, height } = options;
     
-    // Calculate responsive font sizes based on screen dimensions
-    const baseFontSize = Math.min(width, height) / 25;
-    const arabicFontSize = baseFontSize * 1.6;
-    const translationFontSize = baseFontSize * 0.85;
-    const referenceFontSize = baseFontSize * 0.65;
+    // Calculate initial font sizes
+    let baseFontSize = Math.min(width, height) / 25;
+    let arabicFontSize = baseFontSize * 1.6;
+    let translationFontSize = baseFontSize * 0.85;
+    let referenceFontSize = baseFontSize * 0.65;
 
     // Layout calculations
-    const topMargin = height * 0.15;
-    const bottomMargin = height * 0.15;
+    const topMargin = height * 0.12;
+    const bottomMargin = height * 0.12;
     const textSpacing = baseFontSize * 0.6;
+    const availableHeight = height - topMargin - bottomMargin;
 
-    // Set text properties with enhanced styling
+    // Set initial text properties
     this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+
+    // Calculate text dimensions and adjust font sizes if needed
+    let attempts = 0;
+    let totalTextHeight: number;
+    let arabicLines: string[];
+    let translationLines: string[];
+
+    do {
+      // Get text lines with current font sizes
+      this.ctx.font = `${arabicFontSize}px "Amiri", "Scheherazade New", serif`;
+      arabicLines = this.wrapText(verse.arabic_text, width * 0.85, arabicFontSize);
+      
+      this.ctx.font = `${translationFontSize}px "Inter", sans-serif`;
+      translationLines = this.wrapText(`"${verse.english_translation}"`, width * 0.9, translationFontSize);
+
+      // Calculate total height needed
+      const arabicHeight = arabicLines.length * arabicFontSize * 1.4;
+      const translationHeight = translationLines.length * translationFontSize * 1.4;
+      const spacingHeight = textSpacing * 4; // spacing between sections and separator
+      const referenceHeight = referenceFontSize * 1.2;
+      
+      totalTextHeight = arabicHeight + translationHeight + spacingHeight + referenceHeight;
+
+      // If text doesn't fit, reduce font sizes
+      if (totalTextHeight > availableHeight && attempts < 5) {
+        const scaleFactor = 0.85;
+        baseFontSize *= scaleFactor;
+        arabicFontSize *= scaleFactor;
+        translationFontSize *= scaleFactor;
+        referenceFontSize *= scaleFactor;
+        attempts++;
+      } else {
+        break;
+      }
+    } while (attempts < 5);
+
+    // Now render the text with proper spacing
     this.ctx.fillStyle = '#ffffff';
     
     // Enhanced text shadow for Islamic calligraphy effect
@@ -114,13 +153,12 @@ export class WallpaperGenerator {
     this.ctx.shadowOffsetX = 3;
     this.ctx.shadowOffsetY = 3;
 
-    let currentY = topMargin + arabicFontSize;
+    // Calculate starting position to center all content vertically
+    const contentHeight = totalTextHeight;
+    let currentY = topMargin + (availableHeight - contentHeight) / 2 + arabicFontSize * 0.7;
 
     // Render Arabic text with Islamic calligraphy font
     this.ctx.font = `${arabicFontSize}px "Amiri", "Scheherazade New", serif`;
-    this.ctx.textBaseline = 'middle';
-    
-    const arabicLines = this.wrapText(verse.arabic_text, width * 0.85, arabicFontSize);
     
     for (const line of arabicLines) {
       // Add golden glow for Arabic text
@@ -137,8 +175,6 @@ export class WallpaperGenerator {
     this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
     this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
     this.ctx.shadowBlur = 4;
-    
-    const translationLines = this.wrapText(`"${verse.english_translation}"`, width * 0.9, translationFontSize);
     
     for (const line of translationLines) {
       this.ctx.fillText(line, width / 2, currentY);
@@ -159,7 +195,7 @@ export class WallpaperGenerator {
     this.ctx.fillText(
       `Surah ${verse.surah_number}:${verse.ayah_number}`,
       width / 2,
-      height - bottomMargin
+      currentY
     );
 
     // Reset shadow
