@@ -1,16 +1,14 @@
-import React, { createContext, useContext, useEffect, ReactNode } from 'react';
-import { useEnhancedUserSettings } from '@/hooks/useEnhancedUserSettings';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+export type Language = 'en' | 'ar' | 'fr' | 'es';
 
 interface LanguageContextType {
-  currentLanguage: string;
-  t: (key: string, defaultValue?: string) => string;
-  changeLanguage: (language: string) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
+  t: (key: string, fallback?: string) => string;
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-// Translation dictionaries
-const translations: Record<string, Record<string, string>> = {
+const translations = {
   en: {
     // Navigation
     'nav.home': 'Home',
@@ -22,7 +20,7 @@ const translations: Record<string, Record<string, string>> = {
     // Home page
     'home.title': 'Daily Islamic Inspiration',
     'home.subtitle': 'Beautiful Quranic verses as wallpapers',
-    'home.todayVerse': "Today's Verse",
+    'home.todayVerse': 'Today\'s Verse',
     'home.generateWallpaper': 'Generate Wallpaper',
     'home.addToFavorites': 'Add to Favorites',
     'home.removeFromFavorites': 'Remove from Favorites',
@@ -37,10 +35,13 @@ const translations: Record<string, Record<string, string>> = {
     'library.all': 'All',
     'library.share': 'Share',
     'library.generateWallpaper': 'Generate Wallpaper',
-    'library.noResults': 'No verses found matching your criteria',
+    'library.noResults': 'No verses match your search criteria',
     
     // Categories
     'categories.faith': 'Faith',
+    'categories.wisdom': 'Wisdom',
+    'categories.patience': 'Patience',
+    'categories.forgiveness': 'Forgiveness',
     'categories.guidance': 'Guidance',
     'categories.comfort': 'Comfort',
     'categories.gratitude': 'Gratitude',
@@ -70,7 +71,7 @@ const translations: Record<string, Record<string, string>> = {
     'language.timeFormat': 'Time Format',
     'language.unsavedChanges': 'You have unsaved changes',
     'language.discard': 'Discard',
-    'language.saveChanges': 'Save changes',
+    'language.saveChanges': 'Save Changes',
     'language.saving': 'Saving...',
     
     // Translation styles
@@ -82,8 +83,8 @@ const translations: Record<string, Record<string, string>> = {
     'format.gregorian': 'Gregorian Calendar',
     'format.hijri': 'Hijri Calendar',
     'format.both': 'Both Calendars',
-    'format.12h': '12 Hour (AM/PM)',
-    'format.24h': '24 Hour',
+    'format.12h': '12-hour (AM/PM)',
+    'format.24h': '24-hour',
     
     // Account
     'account.displayName': 'Display Name',
@@ -99,11 +100,25 @@ const translations: Record<string, Record<string, string>> = {
     'account.profileUpdateSuccess': 'Your display name has been updated successfully.',
     'account.profileUpdateError': 'Failed to update profile. Please try again.',
     'account.signedOut': 'Signed out',
-    'account.signedOutSuccess': 'You have been successfully signed out.',
-    'account.photoUploadSoon': 'Profile picture upload will be available soon!',
+    'account.signedOutSuccess': 'You have been signed out successfully.',
+    'account.photoUploadSoon': 'Profile photo upload will be available soon!',
     'account.emailChangeNote': 'Email changes require verification and will be available soon',
     'account.contactSupport': 'Contact Support',
     'account.deletionRequest': 'Please email us at support@ayahwallpapers.com for account deletion requests.',
+    
+    // Appearance Settings
+    'appearance.theme': 'Theme',
+    'appearance.themeSystem': 'System',
+    'appearance.themeLight': 'Light',
+    'appearance.themeDark': 'Dark',
+    'appearance.fontSize': 'Text Size',
+    'appearance.fontSizeSmall': 'Small',
+    'appearance.fontSizeMedium': 'Medium (Default)',
+    'appearance.fontSizeLarge': 'Large',
+    'appearance.fontSizeExtraLarge': 'Extra Large',
+    'appearance.selectFontSize': 'Select font size',
+    'appearance.previewText': 'Preview: Sample text in {size} size - Lorem ipsum dolor sit amet',
+    'appearance.updated': 'Appearance updated',
     
     // Daily Verse Settings
     'daily.title': 'Daily Verse Settings',
@@ -113,29 +128,17 @@ const translations: Record<string, Record<string, string>> = {
     'daily.updateTime': 'Daily Update Time',
     'daily.updateTimeDesc': 'Choose when to receive your daily verse',
     'daily.selectTime': 'Select time',
-    'daily.autoWallpaper': 'Auto-Download Wallpaper',
-    'daily.autoWallpaperDesc': 'Automatically download new wallpapers for easy setting',
+    'daily.autoWallpaper': 'Auto Wallpaper Download',
+    'daily.autoWallpaperDesc': 'Automatically download new wallpapers for easy setup',
     'daily.notifications': 'Daily Verse Notifications',
     'daily.notificationsDesc': 'Get notified when your daily verse is ready',
     'daily.frequency': 'Update Frequency',
-    'daily.frequencyDesc': 'How often to automatically update your verses',
+    'daily.frequencyDesc': 'How often to automatically refresh your verses',
     'daily.daily': 'Daily',
     'daily.weekly': 'Weekly',
     'daily.manual': 'Manual Only',
     'daily.selectFrequency': 'Select frequency',
     'daily.settingUpdated': 'Setting updated',
-    
-    // Appearance Settings
-    'appearance.title': 'Appearance',
-    'appearance.signInNote': 'Sign in to save your appearance preferences across devices.',
-    'appearance.fontSize': 'Font Size',
-    'appearance.fontSizeSmall': 'Small',
-    'appearance.fontSizeMedium': 'Medium (Default)',
-    'appearance.fontSizeLarge': 'Large',
-    'appearance.fontSizeExtraLarge': 'Extra Large',
-    'appearance.selectFontSize': 'Select font size',
-    'appearance.previewText': 'Preview: Sample text in {size} size - Lorem ipsum dolor sit amet',
-    'appearance.updated': 'Appearance updated',
     
     // Notification Settings
     'notifications.title': 'Notifications',
@@ -186,8 +189,58 @@ const translations: Record<string, Record<string, string>> = {
     'notifications.quietHours': 'Quiet Hours',
     'notifications.quietHoursDesc': 'Disable notifications during specified hours',
     
+    // Widget Settings
+    'widget.title': 'Home Screen Widget',
+    'widget.configured': 'Widget Configured',
+    'widget.configuredDesc': 'Your widget settings have been saved successfully',
+    'widget.installation': 'Widget Installation',
+    'widget.installationDesc': 'Follow the instructions below to add the widget to your home screen',
+    'widget.preview': 'Widget Preview',
+    'widget.todayVerse': 'Today\'s Verse',
+    'widget.enable': 'Enable Widget',
+    'widget.enableDesc': 'Add a beautiful widget to your home screen',
+    'widget.size': 'Widget Size',
+    'widget.selectSize': 'Select widget size',
+    'widget.sizeSmall': 'Small (2x2)',
+    'widget.sizeMedium': 'Medium (4x2)', 
+    'widget.sizeLarge': 'Large (4x4)',
+    'widget.frequency': 'Update Frequency',
+    'widget.selectFrequency': 'Select update frequency',
+    'widget.frequencyDaily': 'Daily',
+    'widget.frequencyTwice': 'Twice Daily',
+    'widget.frequencyHourly': 'Hourly',
+    'widget.frequencyNote': 'How often the widget content should refresh',
+    'widget.theme': 'Widget Theme',
+    'widget.selectTheme': 'Select theme',
+    'widget.themeClassic': 'Classic',
+    'widget.themeMinimal': 'Minimal',
+    'widget.themeElegant': 'Elegant',
+    'widget.content': 'Content Settings',
+    'widget.showArabic': 'Show Arabic Text',
+    'widget.showArabicDesc': 'Display original Arabic verse text',
+    'widget.showTranslation': 'Show Translation',
+    'widget.showTranslationDesc': 'Display translated verse text',
+    'widget.saveConfig': 'Save Configuration',
+    'widget.installWidget': 'Install Widget',
+    'widget.instructionsTitle': 'Installation Instructions',
+    'widget.instructionsIOS': 'Press and hold on home screen, tap "+", search for "Ayah Wallpapers", select widget size',
+    'widget.instructionsAndroid': 'Long press on home screen, select "Widgets", find "Ayah Wallpapers", drag to position',
+    'widget.tip': 'Tip: Make sure the app is installed and configured before adding the widget',
+    
     // Data Privacy Settings
     'privacy.title': 'Data & Privacy',
+    'privacy.signInRequired': 'Sign in required',
+    'privacy.signInToSync': 'Please sign in to sync your data across devices',
+    'privacy.signInToExport': 'Please sign in to export your data',
+    'privacy.syncSuccess': 'Data synced successfully',
+    'privacy.syncSuccessDesc': 'Your settings and data are now synchronized across all devices',
+    'privacy.syncFailed': 'Sync failed',
+    'privacy.syncFailedDesc': 'Failed to sync data. Please try again later',
+    'privacy.cacheCleared': 'Cache cleared',
+    'privacy.cacheClearedDesc': 'Temporary files and cache have been cleared successfully',
+    'privacy.cacheClearError': 'Failed to clear cache. Please try again',
+    'privacy.dataExported': 'Data exported',
+    'privacy.dataExportedDesc': 'Your data has been downloaded as a JSON file',
     'privacy.dataSync': 'Data Synchronization',
     'privacy.dataSyncDesc': 'Sync your settings and favorites across devices',
     'privacy.dataSyncDisabled': 'Sign in to enable data sync',
@@ -206,79 +259,23 @@ const translations: Record<string, Record<string, string>> = {
     'privacy.exportData': 'Export My Data',
     'privacy.clearCache': 'Clear Cache & Temporary Files',
     'privacy.clearingCache': 'Clearing Cache...',
-    'privacy.signInToExport': 'Sign in to access data export and sync features',
     'privacy.privacyControls': 'Privacy Controls',
     'privacy.analytics': 'Anonymous Analytics',
     'privacy.analyticsDesc': 'Help improve the app by sharing anonymous usage data',
     'privacy.crashReports': 'Crash Reports',
-    'privacy.crashReportsDesc': 'Send crash reports to help us fix issues',
-    'privacy.legal': 'Legal & Privacy',
+    'privacy.crashReportsDesc': 'Send crash reports to help improve app stability',
+    'privacy.legal': 'Legal & Policies',
+    'privacy.comingSoon': 'Coming Soon',
+    'privacy.policyComingSoon': 'Privacy policy will be available soon',
+    'privacy.termsComingSoon': 'Terms of service will be available soon',
+    'privacy.dataComingSoon': 'Data policy will be available soon',
     'privacy.privacyPolicy': 'Privacy Policy',
     'privacy.termsOfService': 'Terms of Service',
     'privacy.dataPolicy': 'Data Usage Policy',
     'privacy.dangerZone': 'Danger Zone',
     'privacy.deleteAccount': 'Delete Account',
-    'privacy.deleteAccountDesc': 'Permanently delete your account and all associated data. This action cannot be undone.',
+    'privacy.deleteAccountDesc': 'Permanently delete your account and all associated data',
     'privacy.requestDeletion': 'Request Account Deletion',
-    'privacy.syncSuccess': 'Data synced successfully',
-    'privacy.syncSuccessDesc': 'Your preferences and favorites are now up to date across all devices.',
-    'privacy.syncFailed': 'Sync failed',
-    'privacy.syncFailedDesc': 'There was an error syncing your data. Please try again.',
-    'privacy.cacheCleared': 'Cache cleared',
-    'privacy.cacheClearedDesc': 'App cache and temporary data have been cleared successfully.',
-    'privacy.cacheClearError': 'Failed to clear cache. Please try again.',
-    'privacy.dataExported': 'Data exported',
-    'privacy.dataExportedDesc': 'Your data has been downloaded to your device.',
-    'privacy.analyticsEnabled': 'Analytics enabled',
-    'privacy.analyticsDisabled': 'Analytics disabled',
-    'privacy.analyticsEnabledDesc': 'Thank you for helping us improve the app!',
-    'privacy.analyticsDisabledDesc': 'Analytics have been disabled.',
-    'privacy.crashEnabled': 'Crash reporting enabled',
-    'privacy.crashDisabled': 'Crash reporting disabled',
-    'privacy.crashEnabledDesc': 'We\'ll receive crash reports to improve app stability.',
-    'privacy.crashDisabledDesc': 'Crash reporting has been disabled.',
-    'privacy.comingSoon': 'Coming Soon',
-    'privacy.policyComingSoon': 'Privacy policy will be available soon.',
-    'privacy.termsComingSoon': 'Terms of service will be available soon.',
-    'privacy.dataComingSoon': 'Data policy will be available soon.',
-    
-    // Widget Settings
-    'widget.title': 'Home Screen Widget',
-    'widget.preview': 'Widget Preview',
-    'widget.todayVerse': 'Today\'s Verse',
-    'widget.enable': 'Enable Widget',
-    'widget.enableDesc': 'Show daily verses on your home screen',
-    'widget.size': 'Widget Size',
-    'widget.sizeSmall': 'Small (2×2) - Arabic only',
-    'widget.sizeMedium': 'Medium (4×2) - Arabic + Translation',
-    'widget.sizeLarge': 'Large (4×4) - Full verse display',
-    'widget.selectSize': 'Select widget size',
-    'widget.frequency': 'Update Frequency',
-    'widget.frequencyDaily': 'Daily (Recommended)',
-    'widget.frequencyTwice': 'Twice Daily',
-    'widget.frequencyHourly': 'Every Hour',
-    'widget.selectFrequency': 'Select update frequency',
-    'widget.frequencyNote': 'More frequent updates may impact battery life',
-    'widget.theme': 'Widget Theme',
-    'widget.themeClassic': 'Classic Green & Gold',
-    'widget.themeMinimal': 'Minimal Dark',
-    'widget.themeElegant': 'Elegant Teal',
-    'widget.selectTheme': 'Select widget theme',
-    'widget.content': 'Content Display',
-    'widget.showArabic': 'Show Arabic Text',
-    'widget.showArabicDesc': 'Display original Arabic verse',
-    'widget.showTranslation': 'Show Translation',
-    'widget.showTranslationDesc': 'Display English translation',
-    'widget.saveConfig': 'Save Configuration',
-    'widget.installWidget': 'Install Widget',
-    'widget.configured': 'Widget configured',
-    'widget.configuredDesc': 'Your home screen widget settings have been saved',
-    'widget.installation': 'Widget installation',
-    'widget.installationDesc': 'Please add the Ayah Widget from your device\'s widget gallery',
-    'widget.instructionsTitle': 'Installation Instructions',
-    'widget.instructionsIOS': 'iOS: Long press on home screen → Add Widget → Search "Ayah Wallpapers"',
-    'widget.instructionsAndroid': 'Android: Long press on home screen → Widgets → Find "Daily Verse Widget"',
-    'widget.tip': '💡 Tip: Place the widget where you\'ll see it first thing in the morning for daily inspiration',
     
     // Common
     'common.save': 'Save',
@@ -360,8 +357,11 @@ const translations: Record<string, Record<string, string>> = {
     'library.generateWallpaper': 'Générer un fond d\'écran',
     'library.noResults': 'Aucun verset ne correspond à vos critères',
     
-    // Catégories
+    // Categories
     'categories.faith': 'Foi',
+    'categories.wisdom': 'Sagesse',
+    'categories.patience': 'Patience',
+    'categories.forgiveness': 'Pardon',
     'categories.guidance': 'Orientation',
     'categories.comfort': 'Réconfort',
     'categories.gratitude': 'Gratitude',
@@ -401,7 +401,7 @@ const translations: Record<string, Record<string, string>> = {
     
     // Date/Time formats
     'format.gregorian': 'Calendrier grégorien',
-    'format.hijri': 'Calendrier hégirien',
+    'format.hijri': 'Calendrier hijri',
     'format.both': 'Les deux calendriers',
     'format.12h': '12 heures (AM/PM)',
     'format.24h': '24 heures',
@@ -421,12 +421,26 @@ const translations: Record<string, Record<string, string>> = {
     'account.profileUpdateError': 'Échec de la mise à jour du profil. Veuillez réessayer.',
     'account.signedOut': 'Déconnecté',
     'account.signedOutSuccess': 'Vous avez été déconnecté avec succès.',
-    'account.photoUploadSoon': 'Le téléchargement de photo de profil sera bientôt disponible !',
-    'account.emailChangeNote': 'Les changements d\'e-mail nécessitent une vérification et seront bientôt disponibles',
+    'account.photoUploadSoon': 'Le téléchargement de photos de profil sera bientôt disponible !',
+    'account.emailChangeNote': 'Les changements d\'email nécessitent une vérification et seront bientôt disponibles',
     'account.contactSupport': 'Contacter le support',
     'account.deletionRequest': 'Veuillez nous envoyer un e-mail à support@ayahwallpapers.com pour les demandes de suppression de compte.',
     
-    // Daily Verse Settings  
+    // Appearance Settings
+    'appearance.theme': 'Thème',
+    'appearance.themeSystem': 'Système',
+    'appearance.themeLight': 'Clair',
+    'appearance.themeDark': 'Sombre',
+    'appearance.fontSize': 'Taille du texte',
+    'appearance.fontSizeSmall': 'Petit',
+    'appearance.fontSizeMedium': 'Moyen (par défaut)',
+    'appearance.fontSizeLarge': 'Grand',
+    'appearance.fontSizeExtraLarge': 'Très grand',
+    'appearance.selectFontSize': 'Sélectionner la taille de police',
+    'appearance.previewText': 'Aperçu : Texte d\'exemple en taille {size} - Lorem ipsum dolor sit amet',
+    'appearance.updated': 'Apparence mise à jour',
+    
+    // Daily Verse Settings
     'daily.title': 'Paramètres du verset quotidien',
     'daily.signInNote': 'Connectez-vous pour enregistrer vos préférences de verset quotidien et synchroniser sur tous les appareils.',
     'daily.updates': 'Mises à jour du verset quotidien',
@@ -494,6 +508,94 @@ const translations: Record<string, Record<string, string>> = {
     'notifications.soundSilent': 'Silencieux',
     'notifications.quietHours': 'Heures silencieuses',
     'notifications.quietHoursDesc': 'Désactiver les notifications pendant les heures spécifiées',
+
+    // Widget Settings
+    'widget.title': 'Widget d\'écran d\'accueil',
+    'widget.configured': 'Widget configuré',
+    'widget.configuredDesc': 'Vos paramètres de widget ont été enregistrés avec succès',
+    'widget.installation': 'Installation du widget',
+    'widget.installationDesc': 'Suivez les instructions ci-dessous pour ajouter le widget à votre écran d\'accueil',
+    'widget.preview': 'Aperçu du widget',
+    'widget.todayVerse': 'Verset du jour',
+    'widget.enable': 'Activer le widget',
+    'widget.enableDesc': 'Ajouter un beau widget à votre écran d\'accueil',
+    'widget.size': 'Taille du widget',
+    'widget.selectSize': 'Sélectionner la taille du widget',
+    'widget.sizeSmall': 'Petit (2x2)',
+    'widget.sizeMedium': 'Moyen (4x2)',
+    'widget.sizeLarge': 'Grand (4x4)',
+    'widget.frequency': 'Fréquence de mise à jour',
+    'widget.selectFrequency': 'Sélectionner la fréquence de mise à jour',
+    'widget.frequencyDaily': 'Quotidien',
+    'widget.frequencyTwice': 'Deux fois par jour',
+    'widget.frequencyHourly': 'Toutes les heures',
+    'widget.frequencyNote': 'À quelle fréquence le contenu du widget doit se rafraîchir',
+    'widget.theme': 'Thème du widget',
+    'widget.selectTheme': 'Sélectionner le thème',
+    'widget.themeClassic': 'Classique',
+    'widget.themeMinimal': 'Minimal',
+    'widget.themeElegant': 'Élégant',
+    'widget.content': 'Paramètres de contenu',
+    'widget.showArabic': 'Afficher le texte arabe',
+    'widget.showArabicDesc': 'Afficher le texte original du verset en arabe',
+    'widget.showTranslation': 'Afficher la traduction',
+    'widget.showTranslationDesc': 'Afficher le texte traduit du verset',
+    'widget.saveConfig': 'Enregistrer la configuration',
+    'widget.installWidget': 'Installer le widget',
+    'widget.instructionsTitle': 'Instructions d\'installation',
+    'widget.instructionsIOS': 'Maintenez enfoncé sur l\'écran d\'accueil, appuyez sur "+", recherchez "Ayah Wallpapers", sélectionnez la taille du widget',
+    'widget.instructionsAndroid': 'Appui long sur l\'écran d\'accueil, sélectionnez "Widgets", trouvez "Ayah Wallpapers", glissez vers la position',
+    'widget.tip': 'Astuce : Assurez-vous que l\'application est installée et configurée avant d\'ajouter le widget',
+    
+    // Data Privacy Settings
+    'privacy.title': 'Données et confidentialité',
+    'privacy.signInRequired': 'Connexion requise',
+    'privacy.signInToSync': 'Veuillez vous connecter pour synchroniser vos données sur tous les appareils',
+    'privacy.signInToExport': 'Veuillez vous connecter pour exporter vos données',
+    'privacy.syncSuccess': 'Données synchronisées avec succès',
+    'privacy.syncSuccessDesc': 'Vos paramètres et données sont maintenant synchronisés sur tous les appareils',
+    'privacy.syncFailed': 'Échec de la synchronisation',
+    'privacy.syncFailedDesc': 'Échec de la synchronisation des données. Veuillez réessayer plus tard',
+    'privacy.cacheCleared': 'Cache vidé',
+    'privacy.cacheClearedDesc': 'Les fichiers temporaires et le cache ont été effacés avec succès',
+    'privacy.cacheClearError': 'Échec de la suppression du cache. Veuillez réessayer',
+    'privacy.dataExported': 'Données exportées',
+    'privacy.dataExportedDesc': 'Vos données ont été téléchargées sous forme de fichier JSON',
+    'privacy.dataSync': 'Synchronisation des données',
+    'privacy.dataSyncDesc': 'Synchronisez vos paramètres et favoris sur tous les appareils',
+    'privacy.dataSyncDisabled': 'Connectez-vous pour activer la synchronisation des données',
+    'privacy.enabled': 'Activé',
+    'privacy.disabled': 'Désactivé',
+    'privacy.lastSync': 'Dernière synchronisation :',
+    'privacy.syncNow': 'Synchroniser maintenant',
+    'privacy.syncing': 'Synchronisation...',
+    'privacy.storage': 'Utilisation du stockage',
+    'privacy.used': 'Utilisé :',
+    'privacy.wallpapers': 'Fonds d\'écran :',
+    'privacy.settings': 'Paramètres :',
+    'privacy.favorites': 'Favoris :',
+    'privacy.cache': 'Cache :',
+    'privacy.dataManagement': 'Gestion des données',
+    'privacy.exportData': 'Exporter mes données',
+    'privacy.clearCache': 'Vider le cache et les fichiers temporaires',
+    'privacy.clearingCache': 'Suppression du cache...',
+    'privacy.privacyControls': 'Contrôles de confidentialité',
+    'privacy.analytics': 'Analyses anonymes',
+    'privacy.analyticsDesc': 'Aidez à améliorer l\'application en partageant des données d\'utilisation anonymes',
+    'privacy.crashReports': 'Rapports de plantage',
+    'privacy.crashReportsDesc': 'Envoyer des rapports de plantage pour aider à améliorer la stabilité de l\'application',
+    'privacy.legal': 'Légal et politiques',
+    'privacy.comingSoon': 'Bientôt disponible',
+    'privacy.policyComingSoon': 'La politique de confidentialité sera bientôt disponible',
+    'privacy.termsComingSoon': 'Les conditions d\'utilisation seront bientôt disponibles',
+    'privacy.dataComingSoon': 'La politique de données sera bientôt disponible',
+    'privacy.privacyPolicy': 'Politique de confidentialité',
+    'privacy.termsOfService': 'Conditions d\'utilisation',
+    'privacy.dataPolicy': 'Politique d\'utilisation des données',
+    'privacy.dangerZone': 'Zone de danger',
+    'privacy.deleteAccount': 'Supprimer le compte',
+    'privacy.deleteAccountDesc': 'Supprimer définitivement votre compte et toutes les données associées',
+    'privacy.requestDeletion': 'Demander la suppression du compte',
     
     // Common
     'common.save': 'Enregistrer',
@@ -507,14 +609,14 @@ const translations: Record<string, Record<string, string>> = {
     'common.wallpaper': 'Fond',
     
     // Personnaliser
-    'customize.title': 'Personnaliser le fond',
-    'customize.subtitle': 'Créez votre fond islamique parfait',
+    'customize.title': 'Personnaliser le fond d\'écran',
+    'customize.subtitle': 'Créez votre design parfait de fond d\'écran islamique',
     'customize.livePreview': 'Aperçu en direct',
     'customize.reset': 'Réinitialiser',
     'customize.generateHint': 'Générez un aperçu pour voir votre design',
-    'customize.generatePreview': 'Générer un aperçu',
+    'customize.generatePreview': 'Générer l\'aperçu',
     'customize.generating': 'Génération...',
-    'customize.download': 'Télécharger le fond',
+    'customize.download': 'Télécharger le fond d\'écran',
     'customize.regenerate': 'Régénérer',
     'customize.sectionTitle': 'Personnalisez votre fond',
     'customize.resolution': 'Résolution',
@@ -569,28 +671,31 @@ const translations: Record<string, Record<string, string>> = {
     'library.title': 'مكتبة الآيات',
     'library.subtitle': 'استكشف مجموعتنا من الآيات القرآنية',
     'library.search': 'البحث في الآيات...',
-    'library.filter': 'فلترة حسب الموضوع',
+    'library.filter': 'تصفية حسب الموضوع',
     'library.all': 'الكل',
     'library.share': 'مشاركة',
     'library.generateWallpaper': 'إنشاء خلفية',
-    'library.noResults': 'لا توجد آيات مطابقة لمعاييرك',
+    'library.noResults': 'لا توجد آيات تطابق معايير البحث',
     
-    // التصنيفات
+    // Categories
     'categories.faith': 'الإيمان',
+    'categories.wisdom': 'الحكمة',
+    'categories.patience': 'الصبر',
+    'categories.forgiveness': 'المغفرة',
     'categories.guidance': 'الهداية',
-    'categories.comfort': 'السكينة',
+    'categories.comfort': 'الراحة',
     'categories.gratitude': 'الشكر',
     'categories.protection': 'الحماية',
-    'categories.trust': 'التوكل',
-    'categories.power': 'القدرة',
+    'categories.trust': 'الثقة',
+    'categories.power': 'القوة',
     'categories.blessing': 'البركة',
     
     // Settings
     'settings.title': 'الإعدادات',
-    'settings.subtitle': 'خصص تجربة خلفيات الآيات الخاصة بك',
+    'settings.subtitle': 'خصص تجربتك مع خلفيات الآيات',
     'settings.account': 'الحساب',
     'settings.appearance': 'المظهر',
-    'settings.language': 'اللغة والموقع',
+    'settings.language': 'اللغة والتوطين',
     'settings.notifications': 'الإشعارات',
     'settings.privacy': 'البيانات والخصوصية',
     
@@ -641,6 +746,40 @@ const translations: Record<string, Record<string, string>> = {
     'account.contactSupport': 'اتصل بالدعم',
     'account.deletionRequest': 'يرجى مراسلتنا على support@ayahwallpapers.com لطلبات حذف الحساب.',
     
+    // Appearance Settings
+    'appearance.theme': 'المظهر',
+    'appearance.themeSystem': 'النظام',
+    'appearance.themeLight': 'فاتح',
+    'appearance.themeDark': 'داكن',
+    'appearance.fontSize': 'حجم النص',
+    'appearance.fontSizeSmall': 'صغير',
+    'appearance.fontSizeMedium': 'متوسط (افتراضي)',
+    'appearance.fontSizeLarge': 'كبير',
+    'appearance.fontSizeExtraLarge': 'كبير جداً',
+    'appearance.selectFontSize': 'اختر حجم الخط',
+    'appearance.previewText': 'معاينة: نص تجريبي بحجم {size} - النص التجريبي هنا',
+    'appearance.updated': 'تم تحديث المظهر',
+    
+    // Daily Verse Settings
+    'daily.title': 'إعدادات الآية اليومية',
+    'daily.signInNote': 'سجل الدخول لحفظ تفضيلات الآية اليومية والمزامنة عبر الأجهزة.',
+    'daily.updates': 'تحديثات الآية اليومية',
+    'daily.updatesDesc': 'احصل تلقائياً على آية جديدة كل يوم',
+    'daily.updateTime': 'وقت التحديث اليومي',
+    'daily.updateTimeDesc': 'اختر متى تريد تلقي آيتك اليومية',
+    'daily.selectTime': 'اختر الوقت',
+    'daily.autoWallpaper': 'تنزيل الخلفية تلقائياً',
+    'daily.autoWallpaperDesc': 'تنزيل خلفيات جديدة تلقائياً للإعداد السهل',
+    'daily.notifications': 'إشعارات الآية اليومية',
+    'daily.notificationsDesc': 'احصل على إشعار عندما تكون آيتك اليومية جاهزة',
+    'daily.frequency': 'تكرار التحديث',
+    'daily.frequencyDesc': 'كم مرة يتم تحديث آياتك تلقائياً',
+    'daily.daily': 'يومياً',
+    'daily.weekly': 'أسبوعياً',
+    'daily.manual': 'يدوي فقط',
+    'daily.selectFrequency': 'اختر التكرار',
+    'daily.settingUpdated': 'تم تحديث الإعداد',
+    
     // Notifications
     'notifications.title': 'الإشعارات',
     'notifications.signInNote': 'سجل الدخول لحفظ إعدادات الإشعارات على جميع الأجهزة.',
@@ -689,6 +828,94 @@ const translations: Record<string, Record<string, string>> = {
     'notifications.soundSilent': 'صامت',
     'notifications.quietHours': 'ساعات الصمت',
     'notifications.quietHoursDesc': 'إيقاف الإشعارات خلال الساعات المحددة',
+
+    // Widget Settings
+    'widget.title': 'ويدجت الشاشة الرئيسية',
+    'widget.configured': 'تم تكوين الويدجت',
+    'widget.configuredDesc': 'تم حفظ إعدادات الويدجت بنجاح',
+    'widget.installation': 'تثبيت الويدجت',
+    'widget.installationDesc': 'اتبع التعليمات أدناه لإضافة الويدجت إلى شاشتك الرئيسية',
+    'widget.preview': 'معاينة الويدجت',
+    'widget.todayVerse': 'آية اليوم',
+    'widget.enable': 'تفعيل الويدجت',
+    'widget.enableDesc': 'إضافة ويدجت جميل إلى شاشتك الرئيسية',
+    'widget.size': 'حجم الويدجت',
+    'widget.selectSize': 'اختر حجم الويدجت',
+    'widget.sizeSmall': 'صغير (2x2)',
+    'widget.sizeMedium': 'متوسط (4x2)',
+    'widget.sizeLarge': 'كبير (4x4)',
+    'widget.frequency': 'تكرار التحديث',
+    'widget.selectFrequency': 'اختر تكرار التحديث',
+    'widget.frequencyDaily': 'يومياً',
+    'widget.frequencyTwice': 'مرتان يومياً',
+    'widget.frequencyHourly': 'كل ساعة',
+    'widget.frequencyNote': 'كم مرة يجب تحديث محتوى الويدجت',
+    'widget.theme': 'موضوع الويدجت',
+    'widget.selectTheme': 'اختر الموضوع',
+    'widget.themeClassic': 'كلاسيكي',
+    'widget.themeMinimal': 'بسيط',
+    'widget.themeElegant': 'أنيق',
+    'widget.content': 'إعدادات المحتوى',
+    'widget.showArabic': 'إظهار النص العربي',
+    'widget.showArabicDesc': 'عرض نص الآية الأصلي بالعربية',
+    'widget.showTranslation': 'إظهار الترجمة',
+    'widget.showTranslationDesc': 'عرض نص الآية المترجم',
+    'widget.saveConfig': 'حفظ التكوين',
+    'widget.installWidget': 'تثبيت الويدجت',
+    'widget.instructionsTitle': 'تعليمات التثبيت',
+    'widget.instructionsIOS': 'اضغط مع الاستمرار على الشاشة الرئيسية، اضغط على "+"، ابحث عن "Ayah Wallpapers"، اختر حجم الويدجت',
+    'widget.instructionsAndroid': 'اضغط لفترة طويلة على الشاشة الرئيسية، اختر "Widgets"، ابحث عن "Ayah Wallpapers"، اسحب إلى الموضع',
+    'widget.tip': 'نصيحة: تأكد من تثبيت التطبيق وتكوينه قبل إضافة الويدجت',
+    
+    // Data Privacy Settings
+    'privacy.title': 'البيانات والخصوصية',
+    'privacy.signInRequired': 'يجب تسجيل الدخول',
+    'privacy.signInToSync': 'يرجى تسجيل الدخول لمزامنة بياناتك عبر الأجهزة',
+    'privacy.signInToExport': 'يرجى تسجيل الدخول لتصدير بياناتك',
+    'privacy.syncSuccess': 'تم مزامنة البيانات بنجاح',
+    'privacy.syncSuccessDesc': 'إعداداتك وبياناتك الآن متزامنة عبر جميع الأجهزة',
+    'privacy.syncFailed': 'فشل في المزامنة',
+    'privacy.syncFailedDesc': 'فشل في مزامنة البيانات. يرجى المحاولة مرة أخرى لاحقاً',
+    'privacy.cacheCleared': 'تم مسح التخزين المؤقت',
+    'privacy.cacheClearedDesc': 'تم مسح الملفات المؤقتة والتخزين المؤقت بنجاح',
+    'privacy.cacheClearError': 'فشل في مسح التخزين المؤقت. يرجى المحاولة مرة أخرى',
+    'privacy.dataExported': 'تم تصدير البيانات',
+    'privacy.dataExportedDesc': 'تم تنزيل بياناتك كملف JSON',
+    'privacy.dataSync': 'مزامنة البيانات',
+    'privacy.dataSyncDesc': 'مزامنة إعداداتك ومفضلاتك عبر الأجهزة',
+    'privacy.dataSyncDisabled': 'سجل الدخول لتفعيل مزامنة البيانات',
+    'privacy.enabled': 'مفعّل',
+    'privacy.disabled': 'معطّل',
+    'privacy.lastSync': 'آخر مزامنة:',
+    'privacy.syncNow': 'مزامنة الآن',
+    'privacy.syncing': 'جاري المزامنة...',
+    'privacy.storage': 'استخدام التخزين',
+    'privacy.used': 'مُستخدم:',
+    'privacy.wallpapers': 'الخلفيات:',
+    'privacy.settings': 'الإعدادات:',
+    'privacy.favorites': 'المفضلة:',
+    'privacy.cache': 'التخزين المؤقت:',
+    'privacy.dataManagement': 'إدارة البيانات',
+    'privacy.exportData': 'تصدير بياناتي',
+    'privacy.clearCache': 'مسح التخزين المؤقت والملفات المؤقتة',
+    'privacy.clearingCache': 'جاري مسح التخزين المؤقت...',
+    'privacy.privacyControls': 'ضوابط الخصوصية',
+    'privacy.analytics': 'التحليلات المجهولة',
+    'privacy.analyticsDesc': 'ساعد في تحسين التطبيق بمشاركة بيانات الاستخدام المجهولة',
+    'privacy.crashReports': 'تقارير الأخطاء',
+    'privacy.crashReportsDesc': 'إرسال تقارير الأخطاء للمساعدة في تحسين استقرار التطبيق',
+    'privacy.legal': 'القانونية والسياسات',
+    'privacy.comingSoon': 'قريباً',
+    'privacy.policyComingSoon': 'سياسة الخصوصية ستكون متاحة قريباً',
+    'privacy.termsComingSoon': 'شروط الخدمة ستكون متاحة قريباً',
+    'privacy.dataComingSoon': 'سياسة البيانات ستكون متاحة قريباً',
+    'privacy.privacyPolicy': 'سياسة الخصوصية',
+    'privacy.termsOfService': 'شروط الخدمة',
+    'privacy.dataPolicy': 'سياسة استخدام البيانات',
+    'privacy.dangerZone': 'منطقة الخطر',
+    'privacy.deleteAccount': 'حذف الحساب',
+    'privacy.deleteAccountDesc': 'حذف حسابك وجميع البيانات المرتبطة به نهائياً',
+    'privacy.requestDeletion': 'طلب حذف الحساب',
     
     // Common
     'common.save': 'حفظ',
@@ -703,43 +930,43 @@ const translations: Record<string, Record<string, string>> = {
     
     // تخصيص
     'customize.title': 'تخصيص الخلفية',
-    'customize.subtitle': 'أنشئ خلفيتك الإسلامية المثالية',
+    'customize.subtitle': 'أنشئ تصميم الخلفية الإسلامية المثالية',
     'customize.livePreview': 'معاينة مباشرة',
-    'customize.reset': 'إعادة ضبط',
+    'customize.reset': 'إعادة تعيين',
     'customize.generateHint': 'أنشئ معاينة لرؤية تصميمك',
     'customize.generatePreview': 'إنشاء معاينة',
-    'customize.generating': 'جارٍ الإنشاء...',
-    'customize.download': 'تحميل الخلفية',
-    'customize.regenerate': 'إعادة الإنشاء',
+    'customize.generating': 'جاري الإنشاء...',
+    'customize.download': 'تنزيل الخلفية',
+    'customize.regenerate': 'إعادة إنشاء',
     'customize.sectionTitle': 'خصص خلفيتك',
     'customize.resolution': 'الدقة',
     'customize.backgroundImages': 'صور الخلفية',
-    'customize.gradient': 'تدرج',
+    'customize.gradient': 'التدرج',
     'customize.hide': 'إخفاء',
     'customize.customize': 'تخصيص',
-    'customize.showOriginal': 'عرض الأصل',
+    'customize.showOriginal': 'إظهار الأصل',
     
     // خلفية
     'wallpaper.newVerse': 'آية جديدة',
     'wallpaper.downloaded': 'تم تنزيل الخلفية',
-    'wallpaper.savedToDevice': 'تم حفظ الخلفية الإسلامية الجميلة على جهازك',
+    'wallpaper.savedToDevice': 'تم حفظ خلفيتك الإسلامية الجميلة على جهازك',
     'wallpaper.generated': 'تم إنشاء الخلفية',
-    'wallpaper.previewReady': 'جاهزة معاينتك المخصصة!',
-    'wallpaper.addedToFavorites': 'تمت الإضافة إلى المفضلة',
-    'wallpaper.savedToFavorites': 'تم حفظ هذه الآية في المفضلة',
+    'wallpaper.previewReady': 'معاينة خلفيتك المخصصة جاهزة!',
+    'wallpaper.addedToFavorites': 'تمت الإضافة للمفضلة',
+    'wallpaper.savedToFavorites': 'تم حفظ هذه الآية في مفضلاتك',
     'wallpaper.signInToSave': 'يرجى تسجيل الدخول لحفظ المفضلة',
     
     // المفضلة
-    'favorites.subtitle': 'آياتك القرآنية المحببة',
+    'favorites.subtitle': 'آياتك القرآنية المحبوبة',
     'favorites.noFavoritesYet': 'لا توجد مفضلة بعد',
-    'favorites.startBuilding': 'ابدأ ببناء مجموعتك بإضافة الآيات إلى المفضلة',
+    'favorites.startBuilding': 'ابدأ في بناء مجموعتك بإضافة الآيات إلى مفضلاتك',
     'favorites.browseLibrary': 'تصفح المكتبة',
     'favorites.favoriteVerses': 'الآيات المفضلة',
-    'favorites.added': 'أضيفت',
+    'favorites.added': 'تمت الإضافة',
     'favorites.createWallpaper': 'إنشاء خلفية',
     'favorites.copiedToClipboard': 'تم نسخ نص الآية إلى الحافظة',
     'favorites.shareNotSupported': 'المشاركة غير مدعومة',
-    'favorites.copyManually': 'يرجى نسخ نص الآية يدويًا',
+    'favorites.copyManually': 'يرجى نسخ نص الآية يدوياً',
   },
   
   es: {
@@ -755,8 +982,8 @@ const translations: Record<string, Record<string, string>> = {
     'home.subtitle': 'Hermosos versos coránicos como fondos de pantalla',
     'home.todayVerse': 'Verso de hoy',
     'home.generateWallpaper': 'Generar fondo de pantalla',
-    'home.addToFavorites': 'Agregar a favoritos',
-    'home.removeFromFavorites': 'Quitar de favoritos',
+    'home.addToFavorites': 'Añadir a favoritos',
+    'home.removeFromFavorites': 'Eliminar de favoritos',
     'home.welcomeBack': '¡Bienvenido de nuevo, {name}!',
     'home.signInCta': 'Inicia sesión para guardar tus preferencias',
     
@@ -768,10 +995,13 @@ const translations: Record<string, Record<string, string>> = {
     'library.all': 'Todos',
     'library.share': 'Compartir',
     'library.generateWallpaper': 'Generar fondo de pantalla',
-    'library.noResults': 'No se encontraron versos que coincidan con tus criterios',
+    'library.noResults': 'No hay versos que coincidan con tus criterios de búsqueda',
     
-    // Categorías
+    // Categories
     'categories.faith': 'Fe',
+    'categories.wisdom': 'Sabiduría',
+    'categories.patience': 'Paciencia',
+    'categories.forgiveness': 'Perdón',
     'categories.guidance': 'Guía',
     'categories.comfort': 'Consuelo',
     'categories.gratitude': 'Gratitud',
@@ -836,6 +1066,40 @@ const translations: Record<string, Record<string, string>> = {
     'account.contactSupport': 'Contactar soporte',
     'account.deletionRequest': 'Envíanos un correo a support@ayahwallpapers.com para solicitudes de eliminación de cuenta.',
     
+    // Appearance Settings
+    'appearance.theme': 'Tema',
+    'appearance.themeSystem': 'Sistema',
+    'appearance.themeLight': 'Claro',
+    'appearance.themeDark': 'Oscuro',
+    'appearance.fontSize': 'Tamaño de texto',
+    'appearance.fontSizeSmall': 'Pequeño',
+    'appearance.fontSizeMedium': 'Mediano (predeterminado)',
+    'appearance.fontSizeLarge': 'Grande',
+    'appearance.fontSizeExtraLarge': 'Extra grande',
+    'appearance.selectFontSize': 'Seleccionar tamaño de fuente',
+    'appearance.previewText': 'Vista previa: Texto de muestra en tamaño {size} - Lorem ipsum dolor sit amet',
+    'appearance.updated': 'Apariencia actualizada',
+    
+    // Daily Verse Settings
+    'daily.title': 'Configuración de verso diario',
+    'daily.signInNote': 'Inicia sesión para guardar tus preferencias de verso diario y sincronizar en todos los dispositivos.',
+    'daily.updates': 'Actualizaciones de verso diario',
+    'daily.updatesDesc': 'Obtener automáticamente un nuevo verso cada día',
+    'daily.updateTime': 'Hora de actualización diaria',
+    'daily.updateTimeDesc': 'Elige cuándo recibir tu verso diario',
+    'daily.selectTime': 'Seleccionar hora',
+    'daily.autoWallpaper': 'Descarga automática de fondo de pantalla',
+    'daily.autoWallpaperDesc': 'Descargar automáticamente nuevos fondos de pantalla para una configuración fácil',
+    'daily.notifications': 'Notificaciones de verso diario',
+    'daily.notificationsDesc': 'Recibir notificaciones cuando tu verso diario esté listo',
+    'daily.frequency': 'Frecuencia de actualización',
+    'daily.frequencyDesc': 'Con qué frecuencia actualizar automáticamente tus versos',
+    'daily.daily': 'Diario',
+    'daily.weekly': 'Semanal',
+    'daily.manual': 'Solo manual',
+    'daily.selectFrequency': 'Seleccionar frecuencia',
+    'daily.settingUpdated': 'Configuración actualizada',
+    
     // Notifications
     'notifications.title': 'Notificaciones',
     'notifications.signInNote': 'Inicia sesión para guardar tus preferencias de notificación en todos los dispositivos.',
@@ -884,6 +1148,94 @@ const translations: Record<string, Record<string, string>> = {
     'notifications.soundSilent': 'Silencioso',
     'notifications.quietHours': 'Horas silenciosas',
     'notifications.quietHoursDesc': 'Deshabilitar notificaciones durante las horas especificadas',
+
+    // Widget Settings
+    'widget.title': 'Widget de pantalla de inicio',
+    'widget.configured': 'Widget configurado',
+    'widget.configuredDesc': 'La configuración de tu widget se ha guardado exitosamente',
+    'widget.installation': 'Instalación de widget',
+    'widget.installationDesc': 'Sigue las instrucciones a continuación para agregar el widget a tu pantalla de inicio',
+    'widget.preview': 'Vista previa del widget',
+    'widget.todayVerse': 'Verso de hoy',
+    'widget.enable': 'Habilitar widget',
+    'widget.enableDesc': 'Agregar un hermoso widget a tu pantalla de inicio',
+    'widget.size': 'Tamaño del widget',
+    'widget.selectSize': 'Seleccionar tamaño del widget',
+    'widget.sizeSmall': 'Pequeño (2x2)',
+    'widget.sizeMedium': 'Mediano (4x2)',
+    'widget.sizeLarge': 'Grande (4x4)',
+    'widget.frequency': 'Frecuencia de actualización',
+    'widget.selectFrequency': 'Seleccionar frecuencia de actualización',
+    'widget.frequencyDaily': 'Diario',
+    'widget.frequencyTwice': 'Dos veces al día',
+    'widget.frequencyHourly': 'Cada hora',
+    'widget.frequencyNote': 'Con qué frecuencia debe actualizarse el contenido del widget',
+    'widget.theme': 'Tema del widget',
+    'widget.selectTheme': 'Seleccionar tema',
+    'widget.themeClassic': 'Clásico',
+    'widget.themeMinimal': 'Minimalista',
+    'widget.themeElegant': 'Elegante',
+    'widget.content': 'Configuración de contenido',
+    'widget.showArabic': 'Mostrar texto árabe',
+    'widget.showArabicDesc': 'Mostrar el texto original del verso en árabe',
+    'widget.showTranslation': 'Mostrar traducción',
+    'widget.showTranslationDesc': 'Mostrar el texto traducido del verso',
+    'widget.saveConfig': 'Guardar configuración',
+    'widget.installWidget': 'Instalar widget',
+    'widget.instructionsTitle': 'Instrucciones de instalación',
+    'widget.instructionsIOS': 'Mantén presionado en la pantalla de inicio, toca "+", busca "Ayah Wallpapers", selecciona el tamaño del widget',
+    'widget.instructionsAndroid': 'Presiona prolongadamente en la pantalla de inicio, selecciona "Widgets", encuentra "Ayah Wallpapers", arrastra a la posición',
+    'widget.tip': 'Consejo: Asegúrate de que la aplicación esté instalada y configurada antes de agregar el widget',
+    
+    // Data Privacy Settings
+    'privacy.title': 'Datos y privacidad',
+    'privacy.signInRequired': 'Inicio de sesión requerido',
+    'privacy.signInToSync': 'Por favor inicia sesión para sincronizar tus datos en todos los dispositivos',
+    'privacy.signInToExport': 'Por favor inicia sesión para exportar tus datos',
+    'privacy.syncSuccess': 'Datos sincronizados exitosamente',
+    'privacy.syncSuccessDesc': 'Tus configuraciones y datos ahora están sincronizados en todos los dispositivos',
+    'privacy.syncFailed': 'Falló la sincronización',
+    'privacy.syncFailedDesc': 'Error al sincronizar datos. Por favor inténtalo de nuevo más tarde',
+    'privacy.cacheCleared': 'Caché eliminado',
+    'privacy.cacheClearedDesc': 'Los archivos temporales y el caché se han eliminado exitosamente',
+    'privacy.cacheClearError': 'Error al eliminar el caché. Por favor inténtalo de nuevo',
+    'privacy.dataExported': 'Datos exportados',
+    'privacy.dataExportedDesc': 'Tus datos se han descargado como archivo JSON',
+    'privacy.dataSync': 'Sincronización de datos',
+    'privacy.dataSyncDesc': 'Sincroniza tus configuraciones y favoritos en todos los dispositivos',
+    'privacy.dataSyncDisabled': 'Inicia sesión para habilitar la sincronización de datos',
+    'privacy.enabled': 'Habilitado',
+    'privacy.disabled': 'Deshabilitado',
+    'privacy.lastSync': 'Última sincronización:',
+    'privacy.syncNow': 'Sincronizar ahora',
+    'privacy.syncing': 'Sincronizando...',
+    'privacy.storage': 'Uso de almacenamiento',
+    'privacy.used': 'Usado:',
+    'privacy.wallpapers': 'Fondos de pantalla:',
+    'privacy.settings': 'Configuraciones:',
+    'privacy.favorites': 'Favoritos:',
+    'privacy.cache': 'Caché:',
+    'privacy.dataManagement': 'Gestión de datos',
+    'privacy.exportData': 'Exportar mis datos',
+    'privacy.clearCache': 'Eliminar caché y archivos temporales',
+    'privacy.clearingCache': 'Eliminando caché...',
+    'privacy.privacyControls': 'Controles de privacidad',
+    'privacy.analytics': 'Análisis anónimo',
+    'privacy.analyticsDesc': 'Ayuda a mejorar la aplicación compartiendo datos de uso anónimos',
+    'privacy.crashReports': 'Informes de fallos',
+    'privacy.crashReportsDesc': 'Enviar informes de fallos para ayudar a mejorar la estabilidad de la aplicación',
+    'privacy.legal': 'Legal y políticas',
+    'privacy.comingSoon': 'Próximamente',
+    'privacy.policyComingSoon': 'La política de privacidad estará disponible pronto',
+    'privacy.termsComingSoon': 'Los términos de servicio estarán disponibles pronto',
+    'privacy.dataComingSoon': 'La política de datos estará disponible pronto',
+    'privacy.privacyPolicy': 'Política de privacidad',
+    'privacy.termsOfService': 'Términos de servicio',
+    'privacy.dataPolicy': 'Política de uso de datos',
+    'privacy.dangerZone': 'Zona de peligro',
+    'privacy.deleteAccount': 'Eliminar cuenta',
+    'privacy.deleteAccountDesc': 'Eliminar permanentemente tu cuenta y todos los datos asociados',
+    'privacy.requestDeletion': 'Solicitar eliminación de cuenta',
     
     // Common
     'common.save': 'Guardar',
@@ -897,73 +1249,65 @@ const translations: Record<string, Record<string, string>> = {
     'common.wallpaper': 'Fondo',
     
     // Personalizar
-    'customize.title': 'Personalizar fondo',
-    'customize.subtitle': 'Crea tu fondo islámico perfecto',
+    'customize.title': 'Personalizar fondo de pantalla',
+    'customize.subtitle': 'Crea tu diseño perfecto de fondo de pantalla islámico',
     'customize.livePreview': 'Vista previa en vivo',
     'customize.reset': 'Restablecer',
     'customize.generateHint': 'Genera una vista previa para ver tu diseño',
     'customize.generatePreview': 'Generar vista previa',
     'customize.generating': 'Generando...',
-    'customize.download': 'Descargar fondo',
+    'customize.download': 'Descargar fondo de pantalla',
     'customize.regenerate': 'Regenerar',
-    'customize.sectionTitle': 'Personaliza tu fondo',
+    'customize.sectionTitle': 'Personaliza tu fondo de pantalla',
     'customize.resolution': 'Resolución',
     'customize.backgroundImages': 'Imágenes de fondo',
-    'customize.gradient': 'Degradado',
+    'customize.gradient': 'Gradiente',
     'customize.hide': 'Ocultar',
     'customize.customize': 'Personalizar',
-    'customize.showOriginal': 'Ver original',
+    'customize.showOriginal': 'Mostrar original',
     
     // Fondo de pantalla
     'wallpaper.newVerse': 'Nuevo verso',
-    'wallpaper.downloaded': 'Fondo descargado',
-    'wallpaper.savedToDevice': 'Tu hermoso fondo islámico se ha guardado en tu dispositivo',
-    'wallpaper.generated': 'Fondo generado',
-    'wallpaper.previewReady': '¡Tu vista previa personalizada está lista!',
-    'wallpaper.addedToFavorites': 'Agregado a favoritos',
+    'wallpaper.downloaded': 'Fondo de pantalla descargado',
+    'wallpaper.savedToDevice': 'Tu hermoso fondo de pantalla islámico se ha guardado en tu dispositivo',
+    'wallpaper.generated': 'Fondo de pantalla generado',
+    'wallpaper.previewReady': '¡Tu vista previa personalizada del fondo de pantalla está lista!',
+    'wallpaper.addedToFavorites': 'Añadido a favoritos',
     'wallpaper.savedToFavorites': 'Este verso se ha guardado en tus favoritos',
-    'wallpaper.signInToSave': 'Inicia sesión para guardar favoritos',
-  },
+    'wallpaper.signInToSave': 'Por favor inicia sesión para guardar favoritos',
+    
+    // Favoritos
+    'favorites.subtitle': 'Tus versos coránicos queridos',
+    'favorites.noFavoritesYet': 'Aún no hay favoritos',
+    'favorites.startBuilding': 'Comienza a construir tu colección agregando versos a tus favoritos',
+    'favorites.browseLibrary': 'Explorar biblioteca',
+    'favorites.favoriteVerses': 'Versos favoritos',
+    'favorites.added': 'Añadido',
+    'favorites.createWallpaper': 'Crear fondo de pantalla',
+    'favorites.copiedToClipboard': 'El texto del verso se ha copiado al portapapeles',
+    'favorites.shareNotSupported': 'Compartir no compatible',
+    'favorites.copyManually': 'Por favor copia el texto del verso manualmente',
+  }
 };
 
-export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { settings, updateSettings } = useEnhancedUserSettings();
-  
-  const t = (key: string, defaultValue?: string): string => {
-    const currentTranslations = translations[settings.language] || translations.en;
-    return currentTranslations[key] || defaultValue || key;
-  };
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-  const changeLanguage = async (language: string) => {
-    await updateSettings({ language });
-    
-    // Update document direction for RTL languages
-    if (language === 'ar') {
-      document.documentElement.dir = 'rtl';
-      document.documentElement.lang = 'ar';
-    } else {
-      document.documentElement.dir = 'ltr';
-      document.documentElement.lang = language;
-    }
-  };
+export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [language, setLanguage] = useState<Language>(() => {
+    const stored = localStorage.getItem('language');
+    return (stored as Language) || 'en';
+  });
 
-  // Set initial direction and language
   useEffect(() => {
-    if (settings.language === 'ar') {
-      document.documentElement.dir = 'rtl';
-      document.documentElement.lang = 'ar';
-    } else {
-      document.documentElement.dir = 'ltr';
-      document.documentElement.lang = settings.language;
-    }
-  }, [settings.language]);
+    localStorage.setItem('language', language);
+  }, [language]);
+
+  const t = (key: string, fallback?: string) => {
+    return translations[language][key] || fallback || key;
+  };
 
   return (
-    <LanguageContext.Provider value={{
-      currentLanguage: settings.language,
-      t,
-      changeLanguage
-    }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -971,7 +1315,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;

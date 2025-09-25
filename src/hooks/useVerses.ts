@@ -15,7 +15,7 @@ export interface Verse {
 
 export const useVerses = () => {
   const { getTranslation } = useVerseTranslations();
-  const { currentLanguage } = useLanguage();
+  const { language } = useLanguage();
   
   return useQuery({
     queryKey: ['verses', currentLanguage],

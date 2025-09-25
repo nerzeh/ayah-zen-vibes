@@ -25,7 +25,7 @@ export const useFavorites = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [offlineQueue, setOfflineQueue] = useState<OfflineFavorite[]>([]);
   const { getTranslation } = useVerseTranslations();
-  const { currentLanguage } = useLanguage();
+  const { language } = useLanguage();
   // Monitor online/offline status
   useEffect(() => {
     const handleOnline = () => {

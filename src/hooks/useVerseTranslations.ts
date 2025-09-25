@@ -125,7 +125,7 @@ const verseTranslations: Record<string, Record<number, string>> = {
 };
 
 export const useVerseTranslations = () => {
-  const { currentLanguage } = useLanguage();
+  const { language } = useLanguage();
   
   const getTranslation = (verseId: number, fallbackText?: string): string => {
     const translations = verseTranslations[currentLanguage] || verseTranslations.en;
