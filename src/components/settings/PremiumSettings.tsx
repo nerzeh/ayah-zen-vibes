@@ -9,7 +9,7 @@ import PaywallDialog from '@/components/premium/PaywallDialog';
 import PremiumBadge from '@/components/premium/PremiumBadge';
 
 const PremiumSettings: React.FC = () => {
-  const { isPremium, wallpaperCount, wallpaperLimit, purchasePremium } = usePremium();
+  const { isPremium, wallpaperCount, wallpaperLimit, purchasePackage } = usePremium();
   const { t } = useLanguage();
   const [showPaywall, setShowPaywall] = React.useState(false);
 

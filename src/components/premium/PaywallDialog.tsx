@@ -1,17 +1,11 @@
-import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Check, Crown, X, Smartphone, Download, Palette } from 'lucide-react';
+import { Check, Crown, Smartphone, Zap, ExternalLink } from 'lucide-react';
 import { usePremium } from '@/contexts/PremiumContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
+import { Capacitor } from '@capacitor/core';
 
 interface PaywallDialogProps {
   open: boolean;
@@ -19,169 +13,284 @@ interface PaywallDialogProps {
 }
 
 const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => {
-  const { purchasePremium, restorePurchases } = usePremium();
+  const { 
+    purchasePackage, 
+    restorePurchases, 
+    currentOffering, 
+    managementURL,
+    isLoading: premiumLoading 
+  } = usePremium();
   const { t } = useLanguage();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string>('monthly');
+  const isNative = Capacitor.isNativePlatform();
 
-  const handlePurchase = async () => {
-    try {
-      await purchasePremium();
+  const handlePurchase = async (packageId?: string) => {
+    if (!isNative) {
       toast({
-        title: "Premium Activated!",
-        description: "You now have unlimited access to all features.",
+        title: 'Purchase Error',
+        description: 'Purchases are only available on mobile devices',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const packageToPurchase = packageId || selectedPackage;
+      await purchasePackage(packageToPurchase);
+      toast({
+        title: 'Premium Activated!',
+        description: 'You now have unlimited access to all features.',
       });
       onOpenChange(false);
     } catch (error) {
       toast({
-        title: "Purchase Failed",
-        description: "Please try again or contact support.",
-        variant: "destructive"
+        title: 'Purchase Failed',
+        description: error instanceof Error ? error.message : 'Please try again or contact support.',
+        variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleRestore = async () => {
+    setIsLoading(true);
     try {
       await restorePurchases();
       toast({
-        title: "Purchases Restored",
-        description: "Your premium features have been restored.",
+        title: 'Purchases Restored',
+        description: 'Your premium features have been restored.',
       });
+      onOpenChange(false);
     } catch (error) {
       toast({
-        title: "Restore Failed",
-        description: "No previous purchases found.",
-        variant: "destructive"
+        title: 'Restore Failed',
+        description: error instanceof Error ? error.message : 'No previous purchases found.',
+        variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleManageSubscription = () => {
+    if (managementURL) {
+      window.open(managementURL, '_blank');
+    }
+  };
+
+  const getPackageDisplayInfo = (packageType: 'monthly' | 'annual' | 'lifetime') => {
+    if (!currentOffering) return null;
+    
+    const pkg = currentOffering[packageType];
+    if (!pkg) return null;
+
+    return {
+      price: pkg.storeProduct?.priceString || '$2.99',
+      identifier: pkg.identifier,
+      title: packageType === 'monthly' ? 'Monthly' : 
+             packageType === 'annual' ? 'Annual' : 'Lifetime',
+      savings: packageType === 'annual' ? 'Save 50%' : 
+               packageType === 'lifetime' ? 'Best Value' : null
+    };
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md mx-auto bg-gradient-to-br from-background to-background/95 border-primary/20">
+      <DialogContent className="sm:max-w-md mx-auto">
         <DialogHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <div className="bg-primary p-3 rounded-full">
               <Crown className="h-6 w-6 text-primary-foreground" />
             </div>
           </div>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold">
             Upgrade to Premium
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription>
             Unlock unlimited wallpapers and exclusive features
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 mt-6">
-          {/* Free vs Premium Comparison */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Free Plan */}
-            <Card className="p-4 border-muted">
-              <div className="text-center">
-                <h3 className="font-semibold text-foreground mb-2">Free</h3>
-                <p className="text-2xl font-bold text-muted-foreground mb-3">$0</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>5 wallpapers</span>
+          {/* Subscription Options */}
+          {isNative && currentOffering && (
+            <div className="space-y-4 my-6">
+              <h3 className="font-semibold text-lg text-center">Choose Your Plan</h3>
+              <div className="grid gap-3">
+                {currentOffering.annual && (
+                  <div 
+                    className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                      selectedPackage === 'annual' 
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => setSelectedPackage('annual')}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="font-medium">Annual Premium</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {getPackageDisplayInfo('annual')?.price}/year
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                          Save 50%
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <X className="h-4 w-4 text-red-500" />
-                    <span>Ads included</span>
+                )}
+                
+                {currentOffering.monthly && (
+                  <div 
+                    className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                      selectedPackage === 'monthly' 
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => setSelectedPackage('monthly')}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="font-medium">Monthly Premium</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {getPackageDisplayInfo('monthly')?.price}/month
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <X className="h-4 w-4 text-red-500" />
-                    <span>No widget</span>
-                  </div>
-                </div>
-              </div>
-            </Card>
+                )}
 
-            {/* Premium Plan */}
-            <Card className="p-4 border-primary bg-gradient-to-br from-primary/5 to-secondary/5 relative">
-              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-semibold">
-                PREMIUM
-              </div>
-              <div className="text-center">
-                <h3 className="font-semibold text-foreground mb-2">Premium</h3>
-                <p className="text-2xl font-bold text-primary mb-3">$2.99</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>Unlimited wallpapers</span>
+                {currentOffering.lifetime && (
+                  <div 
+                    className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                      selectedPackage === 'lifetime' 
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                    onClick={() => setSelectedPackage('lifetime')}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="font-medium">Remove Ads Lifetime</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {getPackageDisplayInfo('lifetime')?.price} once
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                          Best Value
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>No ads</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>Home screen widget</span>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Premium Features */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
-              <div className="bg-primary p-2 rounded-full">
-                <Download className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <div>
-                <h4 className="font-medium text-foreground">Unlimited Downloads</h4>
-                <p className="text-sm text-muted-foreground">Download as many wallpapers as you want</p>
+                )}
               </div>
             </div>
+          )}
 
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
-              <div className="bg-primary p-2 rounded-full">
-                <Smartphone className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <div>
-                <h4 className="font-medium text-foreground">Home Screen Widget</h4>
-                <p className="text-sm text-muted-foreground">Daily verses right on your home screen</p>
-              </div>
+          <div className="grid grid-cols-2 gap-6 my-6">
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg flex items-center gap-2">
+                Free Plan
+              </h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  5 wallpaper downloads
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  Basic customization
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  Daily verses
+                </li>
+              </ul>
             </div>
-
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
-              <div className="bg-primary p-2 rounded-full">
-                <Palette className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <div>
-                <h4 className="font-medium text-foreground">Ad-Free Experience</h4>
-                <p className="text-sm text-muted-foreground">Enjoy the app without any interruptions</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <Button 
-              onClick={handlePurchase}
-              className="w-full h-12 text-lg font-semibold"
-              size="lg"
-            >
-              <Crown className="mr-2 h-5 w-5" />
-              Upgrade to Premium - $2.99
-            </Button>
             
-            <Button 
-              onClick={handleRestore}
-              variant="outline"
-              className="w-full"
-            >
-              Restore Purchases
-            </Button>
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg flex items-center gap-2">
+                <Crown className="h-5 w-5 text-yellow-500" />
+                Premium Plan
+              </h3>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="font-medium">Unlimited wallpaper downloads</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="font-medium">Home screen widget</span>
+                  <Smartphone className="h-4 w-4 text-blue-500" />
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="font-medium">Ad-free experience</span>
+                  <Zap className="h-4 w-4 text-purple-500" />
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  Advanced customization
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-green-500" />
+                  Priority support
+                </li>
+              </ul>
+            </div>
           </div>
-
-          {/* Footer */}
-          <p className="text-xs text-muted-foreground text-center">
-            One-time purchase • No subscription • Lifetime access
-          </p>
         </div>
+
+        <DialogFooter className="flex-col sm:flex-row gap-2">
+          {isNative ? (
+            <>
+              <Button 
+                variant="outline" 
+                onClick={handleRestore}
+                disabled={isLoading || premiumLoading}
+              >
+                Restore Purchases
+              </Button>
+              {managementURL && (
+                <Button 
+                  variant="outline" 
+                  onClick={handleManageSubscription}
+                  className="flex items-center gap-2"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Manage Subscription
+                </Button>
+              )}
+              <Button 
+                onClick={() => handlePurchase()}
+                disabled={isLoading || premiumLoading || !currentOffering}
+                className="w-full sm:w-auto"
+              >
+                {isLoading ? 'Processing...' : 
+                 !currentOffering ? 'Loading...' :
+                 `Subscribe ${selectedPackage === 'annual' ? 'Annual' : 
+                              selectedPackage === 'lifetime' ? 'Lifetime' : 'Monthly'}`}
+              </Button>
+            </>
+          ) : (
+            <div className="text-center p-4 text-muted-foreground">
+              <p>Premium features are available on mobile devices.</p>
+              <p className="text-sm mt-2">Download our app from the App Store or Google Play.</p>
+            </div>
+          )}
+        </DialogFooter>
+
+        {/* Footer */}
+        <p className="text-xs text-muted-foreground text-center">
+          {isNative ? 'Subscription auto-renews • Cancel anytime' : 'One-time purchase • No subscription • Lifetime access'}
+        </p>
       </DialogContent>
     </Dialog>
   );
