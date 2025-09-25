@@ -50,18 +50,18 @@ class RevenueCatService {
     }
 
     try {
-      const customerInfo: CustomerInfo = await Purchases.getCustomerInfo();
+      const { customerInfo } = await Purchases.getCustomerInfo();
       
       return {
-        isPremium: false, // Simplified for demo
-        hasNoAds: false,
-        activeSubscriptions: [],
-        nonSubscriptionTransactions: [],
+        isPremium: customerInfo.entitlements.active['pro'] !== undefined,
+        hasNoAds: customerInfo.entitlements.active['no_ads'] !== undefined,
+        activeSubscriptions: Object.keys(customerInfo.entitlements.active),
+        nonSubscriptionTransactions: Object.keys(customerInfo.nonSubscriptionTransactions),
         entitlements: {
-          pro: false,
-          no_ads: false,
+          pro: customerInfo.entitlements.active['pro'] !== undefined,
+          no_ads: customerInfo.entitlements.active['no_ads'] !== undefined,
         },
-        managementURL: undefined,
+        managementURL: customerInfo.managementURL,
       };
     } catch (error) {
       console.error('Failed to get customer info:', error);

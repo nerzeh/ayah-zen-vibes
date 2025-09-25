@@ -89,7 +89,7 @@ const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => 
     if (!pkg) return null;
 
     return {
-      price: pkg.storeProduct?.priceString || '$2.99',
+      price: pkg.product?.priceString || '$2.99',
       identifier: pkg.identifier,
       title: packageType === 'monthly' ? 'Monthly' : 
              packageType === 'annual' ? 'Annual' : 'Lifetime',
