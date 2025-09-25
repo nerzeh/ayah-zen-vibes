@@ -29,7 +29,6 @@ Deno.serve(async (req) => {
 
     const { searchParams } = new URL(req.url)
     const widgetSize = searchParams.get('size') || '4x2'
-    const theme = searchParams.get('theme') || 'classic'
     const maxLength = searchParams.get('maxLength')
 
     // Get a random verse for the widget
@@ -102,40 +101,26 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Add theme-specific styling information
-    const themeConfig = {
-      classic: {
-        backgroundColor: '#1B4332',
-        textColor: '#FFFFFF',
-        accentColor: '#D4AF37',
-        pattern: 'islamic-geometric'
-      },
-      minimal: {
-        backgroundColor: '#2D3748',
-        textColor: '#F7FAFC',
-        accentColor: '#20C997',
-        pattern: 'subtle-dots'
-      },
-      elegant: {
-        backgroundColor: '#0F766E',
-        textColor: '#FFFFFF',
-        accentColor: '#FCD34D',
-        pattern: 'elegant-lines'
-      }
+    // Fixed dark glass theme
+    const darkGlassTheme = {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      textColor: '#FFFFFF',
+      accentColor: '#FFFFFF',
+      pattern: 'none'
     }
 
     const response = {
       verse: widgetData,
-      theme: themeConfig[theme as keyof typeof themeConfig] || themeConfig.classic,
+      theme: darkGlassTheme,
       metadata: {
         generatedAt: new Date().toISOString(),
         widgetSize,
-        theme,
+        theme: 'dark-glass',
         cacheUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Cache for 24 hours
       }
     }
 
-    console.log(`Widget verse generated for size: ${widgetSize}, theme: ${theme}`)
+    console.log(`Widget verse generated for size: ${widgetSize}, theme: dark-glass`)
 
     return new Response(
       JSON.stringify(response),

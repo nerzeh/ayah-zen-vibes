@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Smartphone, RefreshCw, Settings, Clock, Palette } from "lucide-react";
+import { Smartphone, RefreshCw, Settings, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -12,7 +12,6 @@ interface WidgetConfig {
   enabled: boolean;
   updateFrequency: 'daily' | 'twice-daily' | 'hourly';
   size: '2x2' | '4x2' | '4x4';
-  theme: 'classic' | 'minimal' | 'elegant';
   showArabic: boolean;
   showTranslation: boolean;
 }
@@ -22,7 +21,6 @@ const WidgetConfiguration = () => {
     enabled: false,
     updateFrequency: 'daily',
     size: '4x2',
-    theme: 'classic',
     showArabic: true,
     showTranslation: true
   });
@@ -72,18 +70,13 @@ const WidgetConfiguration = () => {
                 'w-64 h-64'
               }`}
               style={{
-                background: 'linear-gradient(135deg, hsl(142, 76%, 36%) 0%, hsl(158, 64%, 52%) 100%)',
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: 'blur(10px)',
                 position: 'relative'
               }}
             >
-              {/* Semi-transparent black overlay */}
-              <div 
-                className="absolute inset-0 rounded-2xl"
-                style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-              ></div>
-              
-              {/* Islamic Pattern Background */}
-              <div className="absolute inset-0 opacity-10 rounded-2xl bg-islamic-pattern"></div>
+              {/* Islamic Pattern Background (very subtle) */}
+              <div className="absolute inset-0 opacity-5 rounded-2xl bg-islamic-pattern"></div>
               
               {/* Content */}
               <div className="relative h-full flex flex-col justify-between text-white p-2">
@@ -171,23 +164,6 @@ const WidgetConfiguration = () => {
                 </p>
               </div>
 
-              {/* Widget Theme */}
-              <div className="space-y-2">
-                <Label className="text-base font-medium flex items-center">
-                  <Palette className="h-4 w-4 mr-2" />
-                  {t('widget.theme')}
-                </Label>
-                <Select value={config.theme} onValueChange={(value) => updateConfig('theme', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('widget.selectTheme')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="classic">{t('widget.themeClassic')}</SelectItem>
-                    <SelectItem value="minimal">{t('widget.themeMinimal')}</SelectItem>
-                    <SelectItem value="elegant">{t('widget.themeElegant')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
               {/* Content Options */}
               <div className="space-y-4">

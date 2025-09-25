@@ -5,7 +5,6 @@ export interface WidgetConfig {
   enabled: boolean;
   updateFrequency: 'daily' | 'twice-daily' | 'hourly';
   size: '2x2' | '4x2' | '4x4';
-  theme: 'classic' | 'minimal' | 'elegant';
   showArabic: boolean;
   showTranslation: boolean;
 }
@@ -44,7 +43,6 @@ export const useWidgetConfig = () => {
       enabled: false,
       updateFrequency: 'daily',
       size: '4x2',
-      theme: 'classic',
       showArabic: true,
       showTranslation: true
     };
@@ -63,14 +61,13 @@ export const useWidgetConfig = () => {
 
 export const useWidgetVerseData = (config?: WidgetConfig) => {
   return useQuery({
-    queryKey: ['widget-verse', config?.size, config?.theme],
+    queryKey: ['widget-verse', config?.size],
     queryFn: async () => {
       const widgetConfig = config || JSON.parse(localStorage.getItem('widgetConfig') || '{}');
       
       const { data, error } = await supabase.functions.invoke('daily-verse-widget', {
         body: {
           size: widgetConfig.size || '4x2',
-          theme: widgetConfig.theme || 'classic',
           maxLength: widgetConfig.size === '2x2' ? 30 : widgetConfig.size === '4x2' ? 80 : undefined
         }
       });
@@ -104,7 +101,6 @@ const updateNativeWidget = async (config: WidgetConfig) => {
     const { data } = await supabase.functions.invoke('daily-verse-widget', {
       body: {
         size: config.size,
-        theme: config.theme,
         maxLength: config.size === '2x2' ? 30 : config.size === '4x2' ? 80 : undefined
       }
     });
