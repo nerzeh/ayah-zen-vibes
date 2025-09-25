@@ -13,6 +13,9 @@ import Library from "./pages/Library";
 import Favorites from "./pages/Favorites";
 import Customize from "./pages/Customize";
 import Settings from "./pages/Settings";
+import Welcome from "./pages/Welcome";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -46,6 +49,9 @@ function App() {
                       <Route path="/favorites" element={<Favorites />} />
                       <Route path="/customize" element={<Customize />} />
                       <Route path="/settings" element={<Settings />} />
+                      <Route path="/welcome" element={<Welcome />} />
+                      <Route path="/signup" element={<SignUp />} />
+                      <Route path="/signin" element={<SignIn />} />
                       <Route path="/auth" element={<Auth />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>

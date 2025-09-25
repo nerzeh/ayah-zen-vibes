@@ -28,7 +28,7 @@ const Index = () => {
         
         {!user && (
           <div className="mt-4">
-            <Link to="/auth">
+            <Link to="/welcome">
               <Button variant="outline" className="gap-2">
                 <LogIn className="h-4 w-4" />
                 Sign in to save your preferences
