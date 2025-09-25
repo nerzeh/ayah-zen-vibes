@@ -70,13 +70,9 @@ export const useEnhancedUserSettings = () => {
   const [offlineQueue, setOfflineQueue] = useState<OfflineSettingsUpdate[]>([]);
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
 
-  // Monitor online/offline status
+  // Monitor online status
   useEffect(() => {
-    const handleOnline = () => {
-      setIsOnline(true);
-      syncOfflineChanges();
-    };
-    
+    const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
     window.addEventListener('online', handleOnline);
@@ -88,7 +84,42 @@ export const useEnhancedUserSettings = () => {
     };
   }, []);
 
-  // Real-time subscription for settings changes
+  // Sync offline changes when back online
+  useEffect(() => {
+    if (isOnline && offlineQueue.length > 0) {
+      syncOfflineChanges();
+    }
+  }, [isOnline, offlineQueue.length]);
+
+  // Apply global font size styles
+  useEffect(() => {
+    const existingStyle = document.getElementById('user-font-size-styles');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    const styleElement = document.createElement('style');
+    styleElement.id = 'user-font-size-styles';
+    styleElement.innerHTML = `
+        /* Global font size styles based on user setting */
+        html {
+          font-size: ${settings.fontSize === 'small' ? '14px' : 
+                      settings.fontSize === 'large' ? '18px' : 
+                      settings.fontSize === 'extra-large' ? '20px' : 
+                      '16px'};
+        }
+    `;
+    document.head.appendChild(styleElement);
+
+    return () => {
+      const style = document.getElementById('user-font-size-styles');
+      if (style) {
+        style.remove();
+      }
+    };
+  }, [settings.fontSize]);
+
+  // Setup real-time subscription for settings updates
   useEffect(() => {
     if (!user) return;
 
@@ -100,11 +131,9 @@ export const useEnhancedUserSettings = () => {
           event: 'UPDATE',
           schema: 'public',
           table: 'user_settings',
-          filter: `user_id=eq.${user.id}`
+          filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          handleRemoteSettingsUpdate(payload.new);
-        }
+        handleRemoteSettingsUpdate
       )
       .subscribe();
 
@@ -113,8 +142,10 @@ export const useEnhancedUserSettings = () => {
     };
   }, [user]);
 
-  // Handle remote settings updates (conflict resolution)
-  const handleRemoteSettingsUpdate = useCallback((remoteData: any) => {
+  // Handle remote settings updates with conflict resolution
+  const handleRemoteSettingsUpdate = useCallback((payload: any) => {
+    const remoteData = payload.new;
+    
     const remoteSettings = {
       darkMode: remoteData.dark_mode ?? defaultSettings.darkMode,
       language: remoteData.language ?? defaultSettings.language,
@@ -130,6 +161,10 @@ export const useEnhancedUserSettings = () => {
       highContrast: remoteData.high_contrast ?? defaultSettings.highContrast,
       reducedMotion: remoteData.reduced_motion ?? defaultSettings.reducedMotion,
       screenReaderMode: remoteData.screen_reader_mode ?? defaultSettings.screenReaderMode,
+      translationStyle: (remoteData.translation_style as any) ?? defaultSettings.translationStyle,
+      arabicTextSize: remoteData.arabic_text_size ?? defaultSettings.arabicTextSize,
+      dateFormat: (remoteData.date_format as any) ?? defaultSettings.dateFormat,
+      timeFormat: (remoteData.time_format as any) ?? defaultSettings.timeFormat,
     };
 
     const remoteUpdateTime = new Date(remoteData.updated_at);
@@ -202,28 +237,29 @@ export const useEnhancedUserSettings = () => {
     loadSettings();
   }, [user]);
 
-  // Sync offline changes when coming back online
+  // Sync offline changes to server
   const syncOfflineChanges = async () => {
     if (!user || offlineQueue.length === 0) return;
 
     try {
-      // Merge all offline updates
-      const mergedUpdates = offlineQueue.reduce((acc, update) => ({
-        ...acc,
-        ...update.updates
-      }), {});
+      // Merge all offline changes
+      const mergedUpdates = offlineQueue.reduce(
+        (acc, item) => ({ ...acc, ...item.updates }),
+        {}
+      );
 
       await updateSettingsInDatabase(mergedUpdates);
       setOfflineQueue([]);
       
       toast({
-        title: "Sync Complete",
-        description: "Your settings have been synchronized",
+        title: "Settings Synchronized",
+        description: "Your offline changes have been synced",
       });
     } catch (error) {
+      console.error('Error syncing offline changes:', error);
       toast({
-        title: "Sync Failed", 
-        description: "Some settings couldn't be synchronized. Please try again.",
+        title: "Sync Failed",
+        description: "Failed to sync offline changes. Will retry automatically.",
         variant: "destructive"
       });
     }
@@ -248,6 +284,10 @@ export const useEnhancedUserSettings = () => {
       high_contrast: updates.highContrast,
       reduced_motion: updates.reducedMotion,
       screen_reader_mode: updates.screenReaderMode,
+      translation_style: updates.translationStyle,
+      arabic_text_size: updates.arabicTextSize,
+      date_format: updates.dateFormat,
+      time_format: updates.timeFormat,
     };
 
     // Remove undefined values
@@ -290,29 +330,31 @@ export const useEnhancedUserSettings = () => {
 
       await updateSettingsInDatabase(updates);
       
+      toast({
+        title: "Settings Updated",
+        description: "Your preferences have been saved",
+      });
     } catch (error) {
-      // Revert optimistic update on error
+      console.error('Error updating settings:', error);
+      
+      // Revert optimistic update on failure
       setSettings(prev => {
         const reverted = { ...prev };
         Object.keys(updates).forEach(key => {
-          const defaultValue = defaultSettings[key as keyof UserSettings];
-          if (defaultValue !== undefined) {
-            (reverted as any)[key] = defaultValue;
-          }
+          delete (reverted as any)[key];
         });
         return reverted;
       });
-
-      console.error('Error updating settings:', error);
+      
       toast({
-        title: "Error",
+        title: "Update Failed",
         description: "Failed to save settings. Please try again.",
         variant: "destructive"
       });
     }
   };
 
-  // Reset settings to defaults
+  // Reset all settings to defaults
   const resetSettings = async () => {
     await updateSettings(defaultSettings);
   };

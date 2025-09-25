@@ -2,11 +2,11 @@ import { Palette, Type } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useUserSettings } from "@/hooks/useUserSettings";
+import { useEnhancedUserSettings } from "@/hooks/useEnhancedUserSettings";
 import { useToast } from "@/hooks/use-toast";
 
 const AppearanceSettings = () => {
-  const { settings, updateSettings, isAuthenticated } = useUserSettings();
+  const { settings, updateSettings, isAuthenticated } = useEnhancedUserSettings();
   const { toast } = useToast();
 
   const handleSettingChange = (setting: string, value: any) => {

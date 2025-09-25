@@ -78,6 +78,7 @@ export type Database = {
       }
       user_settings: {
         Row: {
+          arabic_text_size: number | null
           auto_wallpaper: boolean | null
           automation_enabled: boolean | null
           automation_notifications: boolean | null
@@ -85,6 +86,7 @@ export type Database = {
           daily_notifications: boolean | null
           daily_updates: boolean | null
           dark_mode: boolean | null
+          date_format: string | null
           font_size: string | null
           frequency: string | null
           high_contrast: boolean | null
@@ -93,11 +95,14 @@ export type Database = {
           prayer_reminders: boolean | null
           reduced_motion: boolean | null
           screen_reader_mode: boolean | null
+          time_format: string | null
+          translation_style: string | null
           update_time: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          arabic_text_size?: number | null
           auto_wallpaper?: boolean | null
           automation_enabled?: boolean | null
           automation_notifications?: boolean | null
@@ -105,6 +110,7 @@ export type Database = {
           daily_notifications?: boolean | null
           daily_updates?: boolean | null
           dark_mode?: boolean | null
+          date_format?: string | null
           font_size?: string | null
           frequency?: string | null
           high_contrast?: boolean | null
@@ -113,11 +119,14 @@ export type Database = {
           prayer_reminders?: boolean | null
           reduced_motion?: boolean | null
           screen_reader_mode?: boolean | null
+          time_format?: string | null
+          translation_style?: string | null
           update_time?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          arabic_text_size?: number | null
           auto_wallpaper?: boolean | null
           automation_enabled?: boolean | null
           automation_notifications?: boolean | null
@@ -125,6 +134,7 @@ export type Database = {
           daily_notifications?: boolean | null
           daily_updates?: boolean | null
           dark_mode?: boolean | null
+          date_format?: string | null
           font_size?: string | null
           frequency?: string | null
           high_contrast?: boolean | null
@@ -133,6 +143,8 @@ export type Database = {
           prayer_reminders?: boolean | null
           reduced_motion?: boolean | null
           screen_reader_mode?: boolean | null
+          time_format?: string | null
+          translation_style?: string | null
           update_time?: string | null
           updated_at?: string
           user_id?: string
