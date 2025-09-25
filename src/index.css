@@ -17,6 +17,7 @@
     --popover-foreground: 45 100% 90%;
     --primary: 45 100% 65%;           /* Bright Gold Primary */
     --primary-foreground: 210 30% 8%;
+    --primary-glow: 45 100% 75%;      /* Lighter Gold for Glow */
     --secondary: 210 20% 18%;         /* Darker Secondary */
     --secondary-foreground: 45 100% 90%;
     --accent: 35 80% 55%;             /* Warm Amber Accent */
