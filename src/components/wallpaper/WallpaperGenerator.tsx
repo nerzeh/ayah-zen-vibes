@@ -125,11 +125,11 @@ const WallpaperView = () => {
       {/* Wallpaper Preview */}
       <Card className="islamic-card relative overflow-hidden border-0 shadow-card">
         {generatedWallpaper ? (
-          <div className="aspect-[9/16] relative">
+          <div className="relative" style={{ aspectRatio: wallpaperOptions.width / wallpaperOptions.height }}>
             <img
               src={generatedWallpaper}
               alt="Generated Islamic Wallpaper"
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-contain rounded-lg"
             />
             <div className="absolute inset-0 bg-black/20 rounded-lg" />
             <div className="absolute top-4 right-4">
@@ -145,8 +145,9 @@ const WallpaperView = () => {
           </div>
         ) : (
           <div 
-            className="aspect-[9/16] bg-gradient-nature bg-nature-pattern relative flex flex-col items-center justify-center p-8 text-center"
+            className="bg-gradient-nature bg-nature-pattern relative flex flex-col items-center justify-center p-8 text-center"
             style={{
+              aspectRatio: wallpaperOptions.width / wallpaperOptions.height,
               background: `
                 var(--gradient-hero),
                 url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M40 0L60 20L80 0L80 40L60 60L80 80L40 80L20 60L0 80L0 40L20 20L0 0L40 0Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
