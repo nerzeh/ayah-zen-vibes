@@ -70,3 +70,7 @@ export const useFavoriteVerse = () => {
     }
   });
 };
+
+// Re-export enhanced hooks
+export { useFavorites } from './useFavorites';
+export { useEnhancedUserSettings } from './useEnhancedUserSettings';

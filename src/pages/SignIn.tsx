@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Mail, Lock, Loader2, ArrowLeft } from 'lucide-react';
+import { PasswordResetDialog } from '@/components/auth/PasswordResetDialog';
 import { z } from 'zod';
 
 const signInSchema = z.object({
@@ -18,6 +19,7 @@ const signInSchema = z.object({
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -26,6 +28,7 @@ const SignIn = () => {
 
   const { user, signIn, signInWithGoogle } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Redirect if already authenticated
   if (user) {
@@ -117,10 +120,7 @@ const SignIn = () => {
   };
 
   const handleForgotPassword = () => {
-    toast({
-      title: "Reset Password",
-      description: "Password reset functionality will be available soon. Please contact support if needed.",
-    });
+    setResetDialogOpen(true);
   };
 
   return (
@@ -284,6 +284,11 @@ const SignIn = () => {
             </p>
           </div>
         </Card>
+
+        <PasswordResetDialog 
+          open={resetDialogOpen} 
+          onOpenChange={setResetDialogOpen} 
+        />
 
         {/* Islamic Quote */}
         <Card className="p-4 bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/10">

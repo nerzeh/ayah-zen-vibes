@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Verse } from "@/hooks/useVerses";
+import { useFavorites } from '@/hooks/useFavorites';
+import { Verse } from '@/hooks/useVerses';
 
 interface FavoriteVerse extends Verse {
   favorite_id: number;
@@ -16,66 +16,12 @@ interface FavoriteVerse extends Verse {
 
 const Favorites = () => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
-
-  const { data: favorites, isLoading } = useQuery({
-    queryKey: ['favorites'],
-    queryFn: async () => {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return [];
-
-      const { data, error } = await supabase
-        .from('favorites')
-        .select(`
-          id,
-          verse_id,
-          created_date,
-          verses (
-            id,
-            arabic_text,
-            english_translation,
-            surah_number,
-            ayah_number,
-            theme_category
-          )
-        `)
-        .eq('user_id', user.user.id)
-        .order('created_date', { ascending: false });
-
-      if (error) throw error;
-
-      return data?.map(fav => ({
-        ...fav.verses,
-        favorite_id: fav.id,
-        created_date: fav.created_date
-      })) as FavoriteVerse[];
-    },
-  });
-
-  const removeFavorite = useMutation({
-    mutationFn: async (favoriteId: number) => {
-      const { error } = await supabase
-        .from('favorites')
-        .delete()
-        .eq('id', favoriteId);
-      
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
-      toast({
-        title: "Removed from favorites",
-        description: "This verse has been removed from your favorites",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to remove verse from favorites",
-        variant: "destructive"
-      });
-    }
-  });
+  const {
+    favorites,
+    isLoading,
+    removeFavorite,
+    isRemovingFavorite
+  } = useFavorites();
 
   const shareVerse = async (verse: Verse) => {
     const shareText = `"${verse.english_translation}"\n\n— Quran ${verse.surah_number}:${verse.ayah_number}\n\nShared via Ayah Wallpapers`;
@@ -207,8 +153,9 @@ const Favorites = () => {
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction 
-                            onClick={() => removeFavorite.mutate(verse.favorite_id)}
+                            onClick={() => removeFavorite({ favoriteId: verse.favorite_id })}
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            disabled={isRemovingFavorite}
                           >
                             Remove
                           </AlertDialogAction>
