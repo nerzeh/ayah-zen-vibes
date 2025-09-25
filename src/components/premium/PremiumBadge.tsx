@@ -8,9 +8,9 @@ interface PremiumBadgeProps {
 
 const PremiumBadge: React.FC<PremiumBadgeProps> = ({ className = '' }) => {
   return (
-    <Badge 
-      className={`bg-gradient-primary text-primary-foreground border-0 ${className}`}
-    >
+      <Badge 
+        className="bg-primary text-primary-foreground border-0"
+      >
       <Crown className="h-3 w-3 mr-1" />
       Premium
     </Badge>

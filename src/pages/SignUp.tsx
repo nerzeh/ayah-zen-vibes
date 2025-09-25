@@ -134,7 +134,7 @@ const SignUp = () => {
 
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-gradient-primary shadow-glow mb-4">
+          <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-primary mb-4">
             <span className="text-xl font-bold text-primary-foreground">آ</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground">Create Your Account</h1>
@@ -262,7 +262,7 @@ const SignUp = () => {
             {/* Sign Up Button */}
             <Button 
               type="submit" 
-              className="w-full bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+              className="w-full"
               disabled={loading}
               size="lg"
             >

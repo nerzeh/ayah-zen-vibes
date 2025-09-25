@@ -43,7 +43,7 @@ const Welcome = () => {
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="relative inline-block">
-            <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-gradient-primary shadow-glow mb-4">
+            <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-primary mb-4">
               <span className="text-2xl font-bold text-primary-foreground">آ</span>
             </div>
             <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-secondary animate-pulse" />
@@ -74,7 +74,7 @@ const Welcome = () => {
             <div className="grid grid-cols-2 gap-4">
               {benefits.map((benefit, index) => (
                 <div key={index} className="text-center space-y-2">
-                  <div className="mx-auto w-12 h-12 bg-gradient-primary/10 rounded-full flex items-center justify-center">
+                  <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                     <benefit.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div>
@@ -104,7 +104,7 @@ const Welcome = () => {
         <div className="space-y-3">
           <Link to="/signup">
             <Button 
-              className="w-full bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+              className="w-full"
               size="lg"
             >
               <BookOpen className="mr-2 h-5 w-5" />

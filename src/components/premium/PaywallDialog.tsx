@@ -61,7 +61,7 @@ const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => 
       <DialogContent className="sm:max-w-md mx-auto bg-gradient-to-br from-background to-background/95 border-primary/20">
         <DialogHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className="bg-gradient-primary p-3 rounded-full">
+            <div className="bg-primary p-3 rounded-full">
               <Crown className="h-6 w-6 text-primary-foreground" />
             </div>
           </div>
@@ -100,7 +100,7 @@ const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => 
 
             {/* Premium Plan */}
             <Card className="p-4 border-primary bg-gradient-to-br from-primary/5 to-secondary/5 relative">
-              <div className="absolute -top-2 -right-2 bg-gradient-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-semibold">
+              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-semibold">
                 PREMIUM
               </div>
               <div className="text-center">
@@ -127,7 +127,7 @@ const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => 
           {/* Premium Features */}
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
-              <div className="bg-gradient-primary p-2 rounded-full">
+              <div className="bg-primary p-2 rounded-full">
                 <Download className="h-4 w-4 text-primary-foreground" />
               </div>
               <div>
@@ -137,7 +137,7 @@ const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => 
             </div>
 
             <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
-              <div className="bg-gradient-elegant p-2 rounded-full">
+              <div className="bg-primary p-2 rounded-full">
                 <Smartphone className="h-4 w-4 text-primary-foreground" />
               </div>
               <div>
@@ -147,7 +147,7 @@ const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => 
             </div>
 
             <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
-              <div className="bg-gradient-secondary p-2 rounded-full">
+              <div className="bg-primary p-2 rounded-full">
                 <Palette className="h-4 w-4 text-primary-foreground" />
               </div>
               <div>
@@ -161,7 +161,8 @@ const PaywallDialog: React.FC<PaywallDialogProps> = ({ open, onOpenChange }) => 
           <div className="space-y-3">
             <Button 
               onClick={handlePurchase}
-              className="w-full bg-gradient-primary hover:shadow-glow h-12 text-lg font-semibold"
+              className="w-full h-12 text-lg font-semibold"
+              size="lg"
             >
               <Crown className="mr-2 h-5 w-5" />
               Upgrade to Premium - $2.99

@@ -95,7 +95,7 @@ const PremiumSettings: React.FC = () => {
             <div className="pt-4 border-t">
               <Button 
                 onClick={() => setShowPaywall(true)}
-                className="w-full bg-gradient-primary hover:shadow-glow"
+                className="w-full"
                 size="lg"
               >
                 <Crown className="mr-2 h-5 w-5" />

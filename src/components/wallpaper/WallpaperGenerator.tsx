@@ -153,7 +153,7 @@ const WallpaperView = () => {
                 onClick={() => setGeneratedWallpaper(null)}
                 variant="secondary"
                 size="sm"
-                className="glass-effect hover:bg-primary/20"
+                className="hover:bg-primary/20"
               >
                 {t('customize.showOriginal')}
               </Button>
@@ -170,8 +170,8 @@ const WallpaperView = () => {
               `
             }}
           >
-            {/* Modern Glass Border */}
-            <div className="absolute inset-4 glass-effect rounded-3xl" />
+            {/* Modern Border */}
+            <div className="absolute inset-4 backdrop-blur-sm bg-white/10 rounded-3xl" />
             <div className="absolute inset-6 border border-primary/30 rounded-2xl" />
             
             {/* Arabic Text */}
@@ -187,7 +187,7 @@ const WallpaperView = () => {
                 </p>
                 <div className="flex items-center justify-center space-x-4">
                   <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-                  <p className="text-primary text-sm font-semibold px-4 py-2 glass-effect rounded-full">
+                  <p className="text-primary text-sm font-semibold px-4 py-2 backdrop-blur-sm bg-white/10 rounded-full">
                     {t('common.surah', 'Surah')} {currentVerse.surah_number}:{currentVerse.ayah_number}
                   </p>
                   <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
@@ -196,10 +196,10 @@ const WallpaperView = () => {
             </div>
 
             {/* Nature-inspired Decorative Elements */}
-            <div className="absolute top-8 left-8 w-20 h-20 glass-effect rounded-full animate-float flex items-center justify-center">
+            <div className="absolute top-8 left-8 w-20 h-20 backdrop-blur-sm bg-white/10 rounded-full animate-float flex items-center justify-center">
               <div className="w-10 h-10 bg-primary/20 rounded-full animate-glow"></div>
             </div>
-            <div className="absolute bottom-8 right-8 w-16 h-16 glass-effect rounded-full animate-float flex items-center justify-center" style={{ animationDelay: '1s' }}>
+            <div className="absolute bottom-8 right-8 w-16 h-16 backdrop-blur-sm bg-white/10 rounded-full animate-float flex items-center justify-center" style={{ animationDelay: '1s' }}>
               <div className="w-8 h-8 bg-primary/30 rounded-full"></div>
             </div>
             <div className="absolute top-1/3 right-12 w-4 h-4 bg-primary/60 rounded-full animate-shimmer" style={{ animationDelay: '2s' }}></div>
@@ -235,7 +235,7 @@ const WallpaperView = () => {
           
           <Button
             onClick={downloadGeneratedWallpaper}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-glow relative"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 relative"
             size="lg"
           >
             <Download className="mr-2 h-4 w-4" />
@@ -251,7 +251,7 @@ const WallpaperView = () => {
             onClick={handleFavorite}
             variant="outline"
             size="lg"
-            className="glass-effect border-primary/30 hover:bg-primary/20 hover:shadow-glow"
+            className="border-primary/30 hover:bg-primary/20"
             disabled={favoriteVerse.isPending}
           >
             <Heart className="h-4 w-4" />
@@ -262,7 +262,8 @@ const WallpaperView = () => {
         <div className="flex gap-3">
           <Button
             onClick={() => setShowCustomizer(!showCustomizer)}
-            className="flex-1 glass-effect border-primary/30 hover:bg-primary/10"
+            className="flex-1 border-primary/30 hover:bg-primary/10"
+            variant="outline"
             size="lg"
           >
             <Settings className="mr-2 h-4 w-4" />
@@ -274,7 +275,7 @@ const WallpaperView = () => {
               onClick={generateWallpaperPreview}
               disabled={isGenerating}
               variant="outline"
-              className="flex-1 glass-effect border-primary/30 hover:bg-primary/20 hover:shadow-glow"
+              className="flex-1 border-primary/30 hover:bg-primary/20"
               size="lg"
             >
             {t('customize.generatePreview')}

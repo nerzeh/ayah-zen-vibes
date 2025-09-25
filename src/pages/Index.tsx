@@ -79,7 +79,7 @@ const Index = () => {
         <section className="space-y-4 max-w-md mx-auto">
           <Card className="p-4 bg-gradient-card border-primary/10 hover:shadow-card transition-all duration-300">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-primary p-2 rounded-full">
+              <div className="bg-primary p-2 rounded-full">
                 <Download className="h-4 w-4 text-primary-foreground" />
               </div>
               <div className="flex-1">
@@ -91,7 +91,7 @@ const Index = () => {
 
           <Card className="p-4 bg-gradient-card border-primary/10 hover:shadow-card transition-all duration-300">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-elegant p-2 rounded-full">
+              <div className="bg-primary p-2 rounded-full">
                 <Sparkles className="h-4 w-4 text-primary-foreground" />
               </div>
               <div className="flex-1">
@@ -103,7 +103,7 @@ const Index = () => {
 
           <Card className="p-4 bg-gradient-card border-primary/10 hover:shadow-card transition-all duration-300">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-secondary p-2 rounded-full">
+              <div className="bg-primary p-2 rounded-full">
                 <Heart className="h-4 w-4 text-primary-foreground" />
               </div>
               <div className="flex-1">

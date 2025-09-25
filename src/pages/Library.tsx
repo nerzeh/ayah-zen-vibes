@@ -99,7 +99,7 @@ const Library = () => {
               variant={selectedCategory === category.value ? "default" : "outline"}
               className={`cursor-pointer transition-all duration-300 hover:scale-105 ${
                 selectedCategory === category.value
-                  ? "bg-gradient-primary text-primary-foreground shadow-glow"
+                  ? "bg-primary text-primary-foreground"
                   : "border-primary/30 hover:border-primary hover:bg-primary/5"
               }`}
               onClick={() => setSelectedCategory(category.value)}

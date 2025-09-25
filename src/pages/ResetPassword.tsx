@@ -83,7 +83,7 @@ const ResetPassword = () => {
             </p>
             <Button 
               onClick={() => navigate('/')}
-              className="w-full bg-gradient-primary text-primary-foreground hover:shadow-glow"
+              className="w-full"
             >
               Continue to App
             </Button>
@@ -198,7 +198,7 @@ const ResetPassword = () => {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full bg-gradient-primary text-primary-foreground hover:shadow-glow"
+            className="w-full"
             disabled={isLoading || !passwordValidation.isValid || !passwordsMatch}
           >
             {isLoading ? (
