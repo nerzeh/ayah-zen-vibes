@@ -64,35 +64,45 @@ const WidgetConfiguration = () => {
           <Label className="text-base font-medium mb-3 block">Widget Preview</Label>
           <div className="flex justify-center">
             <div 
-              className={`relative bg-gradient-primary rounded-2xl text-primary-foreground p-4 shadow-elegant ${
+              className={`relative rounded-2xl p-4 shadow-2xl backdrop-blur-sm ${
                 config.size === '2x2' ? 'w-32 h-32' :
                 config.size === '4x2' ? 'w-64 h-32' :
                 'w-64 h-64'
               }`}
+              style={{
+                background: 'linear-gradient(135deg, hsl(142, 76%, 36%) 0%, hsl(158, 64%, 52%) 100%)',
+                position: 'relative'
+              }}
             >
+              {/* Semi-transparent black overlay */}
+              <div 
+                className="absolute inset-0 rounded-2xl"
+                style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+              ></div>
+              
               {/* Islamic Pattern Background */}
               <div className="absolute inset-0 opacity-10 rounded-2xl bg-islamic-pattern"></div>
               
               {/* Content */}
-              <div className="relative h-full flex flex-col justify-between">
-                <div className="text-xs opacity-80">Today's Verse</div>
+              <div className="relative h-full flex flex-col justify-between text-white p-2">
+                <div className="text-xs font-medium opacity-90">Today's Verse</div>
                 
                 <div className="flex-1 flex flex-col justify-center text-center">
                   {config.showArabic && (
-                    <p className="font-arabic text-sm mb-2 leading-relaxed">
+                    <p className="font-arabic text-sm mb-2 leading-relaxed text-white">
                       بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                     </p>
                   )}
                   {config.showTranslation && config.size !== '2x2' && (
-                    <p className="text-xs opacity-90 leading-tight">
-                      "In the name of Allah..."
+                    <p className="text-xs leading-tight text-white/95">
+                      "In the name of Allah, the Most Gracious, the Most Merciful"
                     </p>
                   )}
                 </div>
                 
                 <div className="flex justify-between items-end">
-                  <div className="text-xs opacity-70">Al-Fatiha 1:1</div>
-                  <div className="w-4 h-4 bg-white/20 rounded-full"></div>
+                  <div className="text-xs font-medium text-white/80">Al-Fatiha 1:1</div>
+                  <div className="w-4 h-4 bg-white/30 rounded-full backdrop-blur-sm"></div>
                 </div>
               </div>
             </div>
@@ -221,7 +231,7 @@ const WidgetConfiguration = () => {
         <div className="flex gap-3 mt-8">
           <Button
             onClick={saveConfiguration}
-            className="flex-1 bg-gradient-primary hover:opacity-90 text-primary-foreground"
+            className="flex-1"
           >
             <Settings className="mr-2 h-4 w-4" />
             Save Configuration
@@ -231,7 +241,7 @@ const WidgetConfiguration = () => {
             <Button
               onClick={installWidget}
               variant="outline"
-              className="flex-1 border-primary/20 hover:bg-primary/5"
+              className="flex-1"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
               Install Widget
