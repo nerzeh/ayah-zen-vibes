@@ -27,48 +27,25 @@ const WallpaperCustomizer = ({
       <h3 className="text-lg font-semibold text-foreground">Customize Your Wallpaper</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Background Style */}
+        {/* Background Type */}
         <div className="space-y-2">
-          <Label htmlFor="background-style" className="text-sm font-medium">
-            Background Style
+          <Label htmlFor="background-type" className="text-sm font-medium">
+            Nature Background
           </Label>
           <Select
-            value={options.backgroundStyle}
-            onValueChange={(value) => updateOption('backgroundStyle', value)}
+            value={options.backgroundType}
+            onValueChange={(value) => updateOption('backgroundType', value)}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select background style" />
+              <SelectValue placeholder="Select nature background" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="nature">Nature Garden</SelectItem>
-              <SelectItem value="mountain">Mountain Vista</SelectItem>
-              <SelectItem value="forest">Forest Peace</SelectItem>
-              <SelectItem value="ocean">Ocean Serenity</SelectItem>
-              <SelectItem value="sunset">Sunset Glory</SelectItem>
-              <SelectItem value="desert">Desert Calm</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Color Scheme */}
-        <div className="space-y-2">
-          <Label htmlFor="color-scheme" className="text-sm font-medium">
-            Color Scheme
-          </Label>
-          <Select
-            value={options.colorScheme}
-            onValueChange={(value) => updateOption('colorScheme', value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select color scheme" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="nature">Nature Green</SelectItem>
-              <SelectItem value="mountain">Mountain Gray</SelectItem>
-              <SelectItem value="forest">Forest Deep</SelectItem>
-              <SelectItem value="ocean">Ocean Blue</SelectItem>
-              <SelectItem value="sunset">Sunset Warm</SelectItem>
-              <SelectItem value="desert">Desert Gold</SelectItem>
+              <SelectItem value="mountain_valley">Mountain Valley</SelectItem>
+              <SelectItem value="sunset_water">Sunset Over Water</SelectItem>
+              <SelectItem value="starry_night">Starry Night</SelectItem>
+              <SelectItem value="desert_dunes">Desert Dunes</SelectItem>
+              <SelectItem value="forest_path">Forest Path</SelectItem>
+              <SelectItem value="ocean_cliffs">Ocean Cliffs</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -100,7 +77,7 @@ const WallpaperCustomizer = ({
         </div>
 
         {/* Generate Button */}
-        <div className="flex items-end">
+        <div className="flex items-end col-span-2">
           <Button
             onClick={onGenerate}
             disabled={isGenerating}
@@ -114,21 +91,32 @@ const WallpaperCustomizer = ({
 
       {/* Style Preview */}
       <div className="space-y-3">
-        <Label className="text-sm font-medium">Style Preview</Label>
-        <div className="grid grid-cols-6 gap-3">
-          {(['nature', 'mountain', 'forest', 'ocean', 'sunset', 'desert'] as const).map((style) => (
+        <Label className="text-sm font-medium">Nature Backgrounds</Label>
+        <div className="grid grid-cols-3 gap-3">
+          {([
+            { key: 'mountain_valley', label: 'Mountain Valley' },
+            { key: 'sunset_water', label: 'Sunset Water' },
+            { key: 'starry_night', label: 'Starry Night' },
+            { key: 'desert_dunes', label: 'Desert Dunes' },
+            { key: 'forest_path', label: 'Forest Path' },
+            { key: 'ocean_cliffs', label: 'Ocean Cliffs' }
+          ] as const).map(({ key, label }) => (
             <button
-              key={style}
-              onClick={() => updateOption('backgroundStyle', style)}
-              className={`aspect-square rounded-xl border-2 transition-all ${
-                options.backgroundStyle === style
-                  ? 'border-primary shadow-glow glass-effect'
-                  : 'border-border hover:border-primary/50 hover:glass-effect'
+              key={key}
+              onClick={() => updateOption('backgroundType', key)}
+              className={`aspect-square rounded-xl border-2 transition-all flex items-center justify-center text-xs font-medium ${
+                options.backgroundType === key
+                  ? 'border-primary shadow-glow glass-effect text-primary'
+                  : 'border-border hover:border-primary/50 hover:glass-effect text-muted-foreground'
               }`}
             >
               <div
-                className={`w-full h-full rounded-md ${getStylePreviewClass(style, options.colorScheme)}`}
-              />
+                className={`w-full h-full rounded-md flex items-center justify-center ${getBackgroundPreviewClass(key)}`}
+              >
+                <span className="text-white text-center p-2 font-semibold text-shadow">
+                  {label}
+                </span>
+              </div>
             </button>
           ))}
         </div>
@@ -137,31 +125,22 @@ const WallpaperCustomizer = ({
   );
 };
 
-function getStylePreviewClass(style: string, colorScheme: string): string {
-  const baseClasses = {
-    nature: 'from-green-900 to-amber-500',
-    mountain: 'from-gray-800 to-gray-400', 
-    forest: 'from-green-900 to-green-600',
-    ocean: 'from-blue-900 to-cyan-500',
-    sunset: 'from-orange-800 to-amber-500',
-    desert: 'from-yellow-800 to-amber-400'
-  };
-
-  switch (style) {
-    case 'nature':
-      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'mountain':
-      return `bg-gradient-to-t ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'forest':
-      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'ocean':
-      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'sunset':
-      return `bg-gradient-to-r ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'desert':
-      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
+function getBackgroundPreviewClass(backgroundType: string): string {
+  switch (backgroundType) {
+    case 'mountain_valley':
+      return 'bg-gradient-to-b from-blue-900 via-green-800 to-green-600';
+    case 'sunset_water':
+      return 'bg-gradient-to-b from-orange-500 via-yellow-500 to-blue-900';
+    case 'starry_night':
+      return 'bg-gradient-to-b from-purple-900 via-blue-900 to-black';
+    case 'desert_dunes':
+      return 'bg-gradient-to-b from-yellow-600 via-orange-500 to-red-600';
+    case 'forest_path':
+      return 'bg-gradient-to-b from-green-900 via-green-700 to-green-600';
+    case 'ocean_cliffs':
+      return 'bg-gradient-to-b from-blue-500 via-blue-700 to-blue-900';
     default:
-      return `bg-gradient-to-br ${baseClasses.nature}`;
+      return 'bg-gradient-to-b from-blue-900 via-green-800 to-green-600';
   }
 }
 

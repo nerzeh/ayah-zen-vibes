@@ -19,8 +19,7 @@ const Customize = () => {
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
     return {
-      backgroundStyle: 'nature',
-      colorScheme: 'nature',
+      backgroundType: 'mountain_valley',
       width: dimensions.width,
       height: dimensions.height
     };

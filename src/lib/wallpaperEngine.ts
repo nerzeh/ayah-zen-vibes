@@ -1,8 +1,7 @@
 import { Verse } from '@/hooks/useVerses';
 
 export interface WallpaperOptions {
-  backgroundStyle: 'nature' | 'mountain' | 'forest' | 'ocean' | 'sunset' | 'desert';
-  colorScheme: 'nature' | 'mountain' | 'forest' | 'ocean' | 'sunset' | 'desert';
+  backgroundType: 'mountain_valley' | 'sunset_water' | 'starry_night' | 'desert_dunes' | 'forest_path' | 'ocean_cliffs';
   width: number;
   height: number;
 }
@@ -50,302 +49,98 @@ export class WallpaperGenerator {
   }
 
   private async generateBackground(options: WallpaperOptions): Promise<void> {
-    const { width, height, backgroundStyle, colorScheme } = options;
+    const { width, height, backgroundType } = options;
 
-    switch (backgroundStyle) {
-      case 'nature':
-        this.generateMosqueBackground(width, height, colorScheme);
-        break;
-      case 'mountain':
-        this.generateIslamicGeometric(width, height, colorScheme);
-        break;
-      case 'forest':
-        this.generateArabesqueBackground(width, height, colorScheme);
-        break;
-      case 'ocean':
-        this.generateCalligraphyBackground(width, height, colorScheme);
-        break;
-      case 'sunset':
-        this.generateNightSkyBackground(width, height, colorScheme);
-        break;
-      case 'desert':
-        this.generateCrescentBackground(width, height, colorScheme);
-        break;
+    try {
+      // Generate AI background image
+      const backgroundImage = await this.generateAINatureBackground(backgroundType);
+      
+      // Draw the background image
+      this.ctx.drawImage(backgroundImage, 0, 0, width, height);
+      
+      // Add subtle overlay for better text readability
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      this.ctx.fillRect(0, 0, width, height);
+      
+    } catch (error) {
+      console.error('Failed to generate AI background, using fallback:', error);
+      // Fallback to simple gradient
+      this.generateFallbackBackground(width, height, backgroundType);
     }
   }
 
-  private generateMosqueBackground(width: number, height: number, colorScheme: string): void {
+  private async generateAINatureBackground(backgroundType: string): Promise<HTMLImageElement> {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    
+    const response = await fetch(`${supabaseUrl}/functions/v1/generate-nature-background`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ backgroundType }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = data.image;
+    });
+  }
+
+  private generateFallbackBackground(width: number, height: number, backgroundType: string): void {
     const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
     
-    switch (colorScheme) {
-      case 'emerald':
-        gradient.addColorStop(0, 'hsl(155, 85%, 15%)');
-        gradient.addColorStop(0.3, 'hsl(155, 75%, 20%)');
-        gradient.addColorStop(0.7, 'hsl(155, 65%, 35%)');
-        gradient.addColorStop(1, 'hsl(45, 90%, 55%)');
+    switch (backgroundType) {
+      case 'mountain_valley':
+        gradient.addColorStop(0, 'hsl(210, 60%, 20%)');
+        gradient.addColorStop(0.3, 'hsl(150, 40%, 30%)');
+        gradient.addColorStop(0.7, 'hsl(120, 60%, 40%)');
+        gradient.addColorStop(1, 'hsl(90, 80%, 50%)');
         break;
-      case 'gold':
-        gradient.addColorStop(0, 'hsl(45, 80%, 25%)');
-        gradient.addColorStop(0.5, 'hsl(45, 85%, 40%)');
-        gradient.addColorStop(1, 'hsl(45, 95%, 65%)');
-        break;
-      case 'midnight':
-        gradient.addColorStop(0, 'hsl(220, 60%, 10%)');
-        gradient.addColorStop(0.4, 'hsl(220, 50%, 15%)');
-        gradient.addColorStop(0.8, 'hsl(155, 60%, 25%)');
-        gradient.addColorStop(1, 'hsl(45, 90%, 55%)');
-        break;
-      case 'sunset':
+      case 'sunset_water':
         gradient.addColorStop(0, 'hsl(25, 90%, 55%)');
         gradient.addColorStop(0.5, 'hsl(45, 90%, 55%)');
-        gradient.addColorStop(1, 'hsl(155, 85%, 15%)');
+        gradient.addColorStop(1, 'hsl(220, 60%, 20%)');
         break;
-      case 'royal':
-        gradient.addColorStop(0, 'hsl(260, 80%, 20%)');
-        gradient.addColorStop(0.5, 'hsl(155, 85%, 15%)');
-        gradient.addColorStop(1, 'hsl(45, 90%, 55%)');
+      case 'starry_night':
+        gradient.addColorStop(0, 'hsl(220, 60%, 8%)');
+        gradient.addColorStop(0.4, 'hsl(220, 50%, 12%)');
+        gradient.addColorStop(1, 'hsl(220, 40%, 15%)');
         break;
-    }
-
-    this.ctx.fillStyle = gradient;
-    this.ctx.fillRect(0, 0, width, height);
-
-    // Add subtle mosque silhouette
-    this.drawMosqueSilhouette(width, height);
-  }
-
-  private drawMosqueSilhouette(width: number, height: number): void {
-    this.ctx.globalAlpha = 0.1;
-    this.ctx.fillStyle = '#000000';
-
-    const centerX = width / 2;
-    const baseY = height * 0.85;
-    const domeRadius = width * 0.15;
-
-    // Main dome
-    this.ctx.beginPath();
-    this.ctx.arc(centerX, baseY - domeRadius, domeRadius, 0, Math.PI, true);
-    this.ctx.fill();
-
-    // Minaret
-    const minaretWidth = width * 0.03;
-    const minaretHeight = height * 0.4;
-    this.ctx.fillRect(centerX + domeRadius, baseY - minaretHeight, minaretWidth, minaretHeight);
-
-    // Crescent on minaret
-    this.ctx.beginPath();
-    this.ctx.arc(centerX + domeRadius + minaretWidth/2, baseY - minaretHeight, minaretWidth/2, 0, Math.PI * 2);
-    this.ctx.fill();
-
-    this.ctx.globalAlpha = 1;
-  }
-
-  private generateIslamicGeometric(width: number, height: number, colorScheme: string): void {
-    this.generateMosqueBackground(width, height, colorScheme);
-
-    this.ctx.globalAlpha = 0.15;
-    this.ctx.fillStyle = '#ffffff';
-
-    const size = Math.min(width, height) / 12;
-    
-    // Draw Islamic star pattern
-    for (let x = 0; x < width; x += size * 2) {
-      for (let y = 0; y < height; y += size * 2) {
-        this.drawIslamicStar(x + size, y + size, size * 0.4);
-      }
-    }
-
-    this.ctx.globalAlpha = 1;
-  }
-
-  private drawIslamicStar(centerX: number, centerY: number, radius: number): void {
-    const points = 8;
-    const innerRadius = radius * 0.5;
-    
-    this.ctx.beginPath();
-    for (let i = 0; i < points * 2; i++) {
-      const angle = (i * Math.PI) / points;
-      const r = i % 2 === 0 ? radius : innerRadius;
-      const x = centerX + Math.cos(angle) * r;
-      const y = centerY + Math.sin(angle) * r;
-      
-      if (i === 0) this.ctx.moveTo(x, y);
-      else this.ctx.lineTo(x, y);
-    }
-    this.ctx.closePath();
-    this.ctx.fill();
-  }
-
-  private generateArabesqueBackground(width: number, height: number, colorScheme: string): void {
-    const gradient = this.ctx.createRadialGradient(width * 0.3, height * 0.3, 0, width * 0.7, height * 0.7, Math.max(width, height));
-    
-    switch (colorScheme) {
-      case 'emerald':
-        gradient.addColorStop(0, 'hsl(155, 70%, 25%)');
-        gradient.addColorStop(0.6, 'hsl(155, 85%, 15%)');
-        gradient.addColorStop(1, 'hsl(155, 90%, 8%)');
+      case 'desert_dunes':
+        gradient.addColorStop(0, 'hsl(45, 80%, 70%)');
+        gradient.addColorStop(0.5, 'hsl(35, 85%, 60%)');
+        gradient.addColorStop(1, 'hsl(25, 90%, 50%)');
         break;
-      case 'gold':
-        gradient.addColorStop(0, 'hsl(45, 85%, 50%)');
-        gradient.addColorStop(0.6, 'hsl(45, 90%, 35%)');
-        gradient.addColorStop(1, 'hsl(45, 95%, 20%)');
+      case 'forest_path':
+        gradient.addColorStop(0, 'hsl(120, 40%, 20%)');
+        gradient.addColorStop(0.5, 'hsl(110, 50%, 30%)');
+        gradient.addColorStop(1, 'hsl(100, 60%, 40%)');
+        break;
+      case 'ocean_cliffs':
+        gradient.addColorStop(0, 'hsl(210, 70%, 40%)');
+        gradient.addColorStop(0.5, 'hsl(200, 80%, 50%)');
+        gradient.addColorStop(1, 'hsl(190, 90%, 60%)');
         break;
       default:
-        gradient.addColorStop(0, 'hsl(155, 70%, 25%)');
-        gradient.addColorStop(0.6, 'hsl(155, 85%, 15%)');
-        gradient.addColorStop(1, 'hsl(155, 90%, 8%)');
+        gradient.addColorStop(0, 'hsl(210, 60%, 20%)');
+        gradient.addColorStop(0.5, 'hsl(150, 40%, 30%)');
+        gradient.addColorStop(1, 'hsl(120, 60%, 40%)');
     }
 
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(0, 0, width, height);
-
-    // Add arabesque pattern
-    this.drawArabesquePattern(width, height);
   }
 
-  private drawArabesquePattern(width: number, height: number): void {
-    this.ctx.globalAlpha = 0.08;
-    this.ctx.strokeStyle = '#ffffff';
-    this.ctx.lineWidth = 2;
-
-    const spacing = Math.min(width, height) / 8;
-    
-    for (let x = spacing; x < width; x += spacing) {
-      for (let y = spacing; y < height; y += spacing) {
-        this.drawArabesqueMotif(x, y, spacing * 0.3);
-      }
-    }
-
-    this.ctx.globalAlpha = 1;
-  }
-
-  private drawArabesqueMotif(x: number, y: number, size: number): void {
-    this.ctx.beginPath();
-    
-    // Draw flowing curves typical of arabesque
-    this.ctx.moveTo(x - size, y);
-    this.ctx.bezierCurveTo(x - size/2, y - size, x + size/2, y - size, x + size, y);
-    this.ctx.bezierCurveTo(x + size/2, y + size, x - size/2, y + size, x - size, y);
-    
-    // Add decorative swirls
-    this.ctx.moveTo(x, y - size/2);
-    this.ctx.bezierCurveTo(x + size/3, y - size/3, x + size/3, y + size/3, x, y + size/2);
-    
-    this.ctx.stroke();
-  }
-
-  private generateCalligraphyBackground(width: number, height: number, colorScheme: string): void {
-    this.generateMosqueBackground(width, height, colorScheme);
-
-    // Add subtle calligraphy-inspired flowing lines
-    this.ctx.globalAlpha = 0.06;
-    this.ctx.strokeStyle = '#ffffff';
-    this.ctx.lineWidth = 3;
-
-    for (let i = 0; i < 5; i++) {
-      const startX = (width / 6) * (i + 1);
-      const startY = height * 0.2;
-      const endY = height * 0.8;
-
-      this.ctx.beginPath();
-      this.ctx.moveTo(startX, startY);
-      
-      for (let y = startY; y < endY; y += 20) {
-        const wave = Math.sin((y - startY) / 100) * 30;
-        this.ctx.lineTo(startX + wave, y);
-      }
-      
-      this.ctx.stroke();
-    }
-
-    this.ctx.globalAlpha = 1;
-  }
-
-  private generateNightSkyBackground(width: number, height: number, colorScheme: string): void {
-    const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, 'hsl(220, 60%, 8%)');
-    gradient.addColorStop(0.4, 'hsl(220, 50%, 12%)');
-    gradient.addColorStop(0.8, 'hsl(220, 40%, 15%)');
-    gradient.addColorStop(1, 'hsl(155, 30%, 20%)');
-
-    this.ctx.fillStyle = gradient;
-    this.ctx.fillRect(0, 0, width, height);
-
-    // Add stars
-    this.drawStars(width, height);
-    
-    // Add crescent moon
-    this.drawCrescent(width * 0.8, height * 0.2, width * 0.08);
-  }
-
-  private drawStars(width: number, height: number): void {
-    this.ctx.fillStyle = '#ffffff';
-    
-    for (let i = 0; i < 100; i++) {
-      const x = Math.random() * width;
-      const y = Math.random() * height * 0.7; // Keep stars in upper portion
-      const radius = Math.random() * 2;
-      
-      this.ctx.globalAlpha = Math.random() * 0.8 + 0.2;
-      this.ctx.beginPath();
-      this.ctx.arc(x, y, radius, 0, Math.PI * 2);
-      this.ctx.fill();
-    }
-    
-    this.ctx.globalAlpha = 1;
-  }
-
-  private drawCrescent(x: number, y: number, radius: number): void {
-    this.ctx.fillStyle = 'hsl(45, 90%, 75%)';
-    this.ctx.globalAlpha = 0.9;
-    
-    // Draw outer circle
-    this.ctx.beginPath();
-    this.ctx.arc(x, y, radius, 0, Math.PI * 2);
-    this.ctx.fill();
-    
-    // Cut out inner circle to create crescent
-    this.ctx.globalCompositeOperation = 'destination-out';
-    this.ctx.beginPath();
-    this.ctx.arc(x + radius * 0.3, y, radius * 0.8, 0, Math.PI * 2);
-    this.ctx.fill();
-    
-    this.ctx.globalCompositeOperation = 'source-over';
-    this.ctx.globalAlpha = 1;
-  }
-
-  private generateCrescentBackground(width: number, height: number, colorScheme: string): void {
-    const gradient = this.ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, Math.max(width, height) / 2);
-    
-    switch (colorScheme) {
-      case 'emerald':
-        gradient.addColorStop(0, 'hsl(155, 60%, 30%)');
-        gradient.addColorStop(0.7, 'hsl(155, 80%, 15%)');
-        gradient.addColorStop(1, 'hsl(155, 90%, 8%)');
-        break;
-      case 'gold':
-        gradient.addColorStop(0, 'hsl(45, 70%, 40%)');
-        gradient.addColorStop(0.7, 'hsl(45, 85%, 25%)');
-        gradient.addColorStop(1, 'hsl(45, 95%, 15%)');
-        break;
-      default:
-        gradient.addColorStop(0, 'hsl(155, 60%, 30%)');
-        gradient.addColorStop(0.7, 'hsl(155, 80%, 15%)');
-        gradient.addColorStop(1, 'hsl(155, 90%, 8%)');
-    }
-
-    this.ctx.fillStyle = gradient;
-    this.ctx.fillRect(0, 0, width, height);
-
-    // Add large decorative crescent
-    const centerX = width * 0.75;
-    const centerY = height * 0.3;
-    const crescentRadius = Math.min(width, height) * 0.2;
-    
-    this.ctx.globalAlpha = 0.1;
-    this.drawCrescent(centerX, centerY, crescentRadius);
-    this.ctx.globalAlpha = 1;
-  }
 
   private async renderText(verse: Verse, options: WallpaperOptions): Promise<void> {
     const { width, height } = options;
