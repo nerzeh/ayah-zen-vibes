@@ -300,7 +300,7 @@ export const useEnhancedUserSettings = () => {
       arabic_text_size: updates.arabicTextSize,
       date_format: updates.dateFormat,
       time_format: updates.timeFormat,
-    };
+    } as const;
 
     // Remove undefined values
     const cleanUpdates = Object.fromEntries(
@@ -309,8 +309,13 @@ export const useEnhancedUserSettings = () => {
 
     const { error } = await supabase
       .from('user_settings')
-      .update(cleanUpdates)
-      .eq('user_id', user.id);
+      .upsert(
+        {
+          user_id: user.id,
+          ...cleanUpdates,
+        },
+        { onConflict: 'user_id' }
+      );
 
     if (error) throw error;
     setLastSyncTime(new Date());
