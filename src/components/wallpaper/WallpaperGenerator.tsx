@@ -20,7 +20,7 @@ const WallpaperView = () => {
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
     return {
-      backgroundStyle: 'gradient',
+      backgroundStyle: 'mosque',
       colorScheme: 'emerald',
       width: dimensions.width,
       height: dimensions.height
@@ -146,37 +146,48 @@ const WallpaperView = () => {
           </div>
         ) : (
           <div 
-            className="aspect-[9/16] bg-gradient-hero bg-islamic-pattern relative flex flex-col items-center justify-center p-8 text-center"
+            className="aspect-[9/16] bg-gradient-hero bg-arabesque relative flex flex-col items-center justify-center p-8 text-center"
             style={{
               background: `
-                linear-gradient(135deg, hsl(155 85% 15% / 0.9) 0%, hsl(155 70% 30% / 0.8) 50%, hsl(45 100% 55% / 0.7) 100%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+                var(--gradient-hero),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 50m-20 0a20,20 0 1,1 40,0a20,20 0 1,1 -40,0M50 10m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M50 90m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M10 50m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M90 50m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
               `
             }}
           >
-            {/* Decorative Border */}
-            <div className="absolute inset-4 border-2 border-white/20 rounded-2xl" />
+            {/* Decorative Islamic Border */}
+            <div className="absolute inset-4 border-2 border-white/30 rounded-2xl" />
+            <div className="absolute inset-6 border border-white/20 rounded-xl" />
             
             {/* Arabic Text */}
             <div className="space-y-6 z-10">
-              <p className={`font-arabic text-2xl md:text-3xl lg:text-4xl text-white leading-relaxed ${isGenerating ? 'animate-pulse' : ''}`}>
+              <p className={`font-quran text-2xl md:text-3xl lg:text-4xl text-white leading-relaxed ${isGenerating ? 'animate-pulse' : ''}`}>
                 {currentVerse.arabic_text}
               </p>
               
               {/* Translation */}
-              <div className="space-y-2">
-                <p className="text-white/90 text-base md:text-lg font-light leading-relaxed">
+              <div className="space-y-3">
+                <p className="text-white/95 text-base md:text-lg font-light leading-relaxed italic">
                   "{currentVerse.english_translation}"
                 </p>
-                <p className="text-secondary text-sm font-medium">
-                  Surah {currentVerse.surah_number}:{currentVerse.ayah_number}
-                </p>
+                <div className="flex items-center justify-center space-x-3">
+                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-secondary to-transparent"></div>
+                  <p className="text-secondary text-sm font-medium">
+                    Surah {currentVerse.surah_number}:{currentVerse.ayah_number}
+                  </p>
+                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-secondary to-transparent"></div>
+                </div>
               </div>
             </div>
 
-            {/* Decorative Elements */}
-            <div className="absolute top-8 left-8 w-12 h-12 border-2 border-secondary/30 rounded-full animate-float" />
-            <div className="absolute bottom-8 right-8 w-8 h-8 bg-secondary/20 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+            {/* Decorative Islamic Elements */}
+            <div className="absolute top-6 left-6 w-16 h-16 border-2 border-secondary/30 rounded-full animate-float flex items-center justify-center">
+              <div className="w-8 h-8 border border-secondary/40 rounded-full"></div>
+            </div>
+            <div className="absolute bottom-6 right-6 w-12 h-12 bg-secondary/20 rounded-full animate-float flex items-center justify-center" style={{ animationDelay: '1s' }}>
+              <div className="w-6 h-6 bg-secondary/30 rounded-full"></div>
+            </div>
+            <div className="absolute top-1/4 right-8 w-3 h-3 bg-secondary/40 rounded-full animate-shimmer" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute bottom-1/3 left-8 w-2 h-2 bg-secondary/50 rounded-full animate-shimmer" style={{ animationDelay: '0.5s' }}></div>
           </div>
         )}
       </Card>
@@ -198,7 +209,7 @@ const WallpaperView = () => {
           <Button
             onClick={generateNewVerse}
             disabled={isGenerating}
-            className="flex-1 bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+            variant="mosque"
             size="lg"
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
@@ -207,8 +218,7 @@ const WallpaperView = () => {
           
           <Button
             onClick={downloadGeneratedWallpaper}
-            variant="secondary"
-            className="flex-1 bg-gradient-secondary hover:opacity-90"
+            variant="gold"
             size="lg"
           >
             <Download className="mr-2 h-4 w-4" />
@@ -219,7 +229,7 @@ const WallpaperView = () => {
             onClick={handleFavorite}
             variant="outline"
             size="lg"
-            className="border-primary/20 hover:bg-primary/5"
+            className="border-primary/30 hover:bg-primary/10 hover:shadow-glow"
             disabled={favoriteVerse.isPending}
           >
             <Heart className="h-4 w-4" />
@@ -230,8 +240,8 @@ const WallpaperView = () => {
         <div className="flex gap-3">
           <Button
             onClick={() => setShowCustomizer(!showCustomizer)}
-            variant="outline"
-            className="flex-1 border-primary/20 hover:bg-primary/5"
+            variant="elegant"
+            className="flex-1"
             size="lg"
           >
             <Settings className="mr-2 h-4 w-4" />
@@ -243,7 +253,7 @@ const WallpaperView = () => {
               onClick={generateWallpaperPreview}
               disabled={isGenerating}
               variant="outline"
-              className="flex-1 border-primary/20 hover:bg-primary/5"
+              className="flex-1 border-primary/30 hover:bg-primary/10 hover:shadow-glow"
               size="lg"
             >
               Generate Preview

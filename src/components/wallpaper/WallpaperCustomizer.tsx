@@ -40,10 +40,12 @@ const WallpaperCustomizer = ({
               <SelectValue placeholder="Select background style" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="gradient">Gradient</SelectItem>
-              <SelectItem value="geometric">Islamic Geometric</SelectItem>
-              <SelectItem value="nature">Nature Inspired</SelectItem>
-              <SelectItem value="solid">Solid Color</SelectItem>
+              <SelectItem value="mosque">Sacred Mosque</SelectItem>
+              <SelectItem value="geometric">Islamic Geometry</SelectItem>
+              <SelectItem value="arabesque">Arabesque Pattern</SelectItem>
+              <SelectItem value="calligraphy">Calligraphy Style</SelectItem>
+              <SelectItem value="night">Night Prayer</SelectItem>
+              <SelectItem value="crescent">Crescent Moon</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -62,9 +64,10 @@ const WallpaperCustomizer = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="emerald">Emerald & Gold</SelectItem>
-              <SelectItem value="teal">Teal & Ocean</SelectItem>
-              <SelectItem value="gold">Gold & Amber</SelectItem>
-              <SelectItem value="navy">Navy & Silver</SelectItem>
+              <SelectItem value="gold">Royal Gold</SelectItem>
+              <SelectItem value="midnight">Midnight Blue</SelectItem>
+              <SelectItem value="sunset">Sunset Glow</SelectItem>
+              <SelectItem value="royal">Royal Purple</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -111,8 +114,8 @@ const WallpaperCustomizer = ({
       {/* Style Preview */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">Style Preview</Label>
-        <div className="grid grid-cols-4 gap-3">
-          {(['gradient', 'geometric', 'nature', 'solid'] as const).map((style) => (
+        <div className="grid grid-cols-6 gap-3">
+          {(['mosque', 'geometric', 'arabesque', 'calligraphy', 'night', 'crescent'] as const).map((style) => (
             <button
               key={style}
               onClick={() => updateOption('backgroundStyle', style)}
@@ -136,20 +139,25 @@ const WallpaperCustomizer = ({
 function getStylePreviewClass(style: string, colorScheme: string): string {
   const baseClasses = {
     emerald: 'from-emerald-900 to-amber-500',
-    teal: 'from-teal-900 to-teal-500',
-    gold: 'from-amber-800 to-amber-400',
-    navy: 'from-blue-900 to-blue-600'
+    gold: 'from-amber-800 to-amber-400', 
+    midnight: 'from-slate-900 to-blue-600',
+    sunset: 'from-orange-800 to-amber-500',
+    royal: 'from-purple-900 to-emerald-600'
   };
 
   switch (style) {
-    case 'gradient':
+    case 'mosque':
       return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
     case 'geometric':
       return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]} opacity-90`;
-    case 'nature':
+    case 'arabesque':
       return `bg-radial-gradient ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'solid':
+    case 'calligraphy':
       return `bg-gradient-to-r ${baseClasses[colorScheme as keyof typeof baseClasses]} bg-blend-multiply`;
+    case 'night':
+      return `bg-gradient-to-t ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
+    case 'crescent':
+      return `bg-radial-gradient ${baseClasses[colorScheme as keyof typeof baseClasses]} opacity-80`;
     default:
       return `bg-gradient-to-br ${baseClasses.emerald}`;
   }
