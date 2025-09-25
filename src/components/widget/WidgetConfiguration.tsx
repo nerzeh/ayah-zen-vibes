@@ -27,6 +27,7 @@ const WidgetConfiguration = () => {
     showTranslation: true
   });
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const updateConfig = (key: keyof WidgetConfig, value: any) => {
     setConfig(prev => ({ ...prev, [key]: value }));
