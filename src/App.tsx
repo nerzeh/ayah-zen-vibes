@@ -39,39 +39,39 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <LanguageProvider>
-              <PremiumProvider>
+      <PremiumProvider>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+              <LanguageProvider>
                 <AccessibilityProvider>
                   <TooltipProvider delayDuration={300}>
-                  <div className="min-h-screen bg-background">
-                    <main id="main-content">
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/library" element={<Library />} />
-                        <Route path="/favorites" element={<Favorites />} />
-                        <Route path="/customize" element={<Customize />} />
-                        <Route path="/settings" element={<Settings />} />
-              <Route path="/welcome" element={<Welcome />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-                        <Route path="/auth" element={<Auth />} />
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </main>
-                  </div>
-                  <Toaster />
-                  <OfflineIndicator />
+                    <div className="min-h-screen bg-background">
+                      <main id="main-content">
+                        <Routes>
+                          <Route path="/" element={<Index />} />
+                          <Route path="/library" element={<Library />} />
+                          <Route path="/favorites" element={<Favorites />} />
+                          <Route path="/customize" element={<Customize />} />
+                          <Route path="/settings" element={<Settings />} />
+                          <Route path="/welcome" element={<Welcome />} />
+                          <Route path="/signup" element={<SignUp />} />
+                          <Route path="/signin" element={<SignIn />} />
+                          <Route path="/reset-password" element={<ResetPassword />} />
+                          <Route path="/auth" element={<Auth />} />
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </main>
+                    </div>
+                    <Toaster />
+                    <OfflineIndicator />
                   </TooltipProvider>
                 </AccessibilityProvider>
-              </PremiumProvider>
-            </LanguageProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </BrowserRouter>
+              </LanguageProvider>
+            </AuthProvider>
+          </QueryClientProvider>
+        </BrowserRouter>
+      </PremiumProvider>
     </ErrorBoundary>
   );
 }
