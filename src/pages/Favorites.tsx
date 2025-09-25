@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useFavorites } from '@/hooks/useFavorites';
 import { Verse } from '@/hooks/useVerses';
+import BottomNavigation from "@/components/navigation/BottomNavigation";
 
 interface FavoriteVerse extends Verse {
   favorite_id: number;
@@ -216,6 +217,9 @@ const Favorites = () => {
           </div>
         </>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 };

@@ -8,6 +8,7 @@ import WallpaperCustomizer from "@/components/wallpaper/WallpaperCustomizer";
 import { WallpaperGenerator as WallpaperEngine, WallpaperOptions, getDeviceScreenDimensions, downloadWallpaper } from "@/lib/wallpaperEngine";
 import { useRandomVerse } from "@/hooks/useVerses";
 import { useToast } from "@/hooks/use-toast";
+import BottomNavigation from "@/components/navigation/BottomNavigation";
 
 const Customize = () => {
   const [wallpaperEngine] = useState(() => new WallpaperEngine());
@@ -152,71 +153,8 @@ const Customize = () => {
         isGenerating={isGenerating}
       />
 
-      {/* Quick Presets */}
-      <Card className="mt-8 p-6 bg-gradient-card border-primary/10">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Islamic Style Presets</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button
-            variant="outline"
-            className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
-            onClick={() => {
-          setWallpaperOptions(prev => ({
-            ...prev,
-            backgroundStyle: 'nature',
-            colorScheme: 'nature'
-          }));
-            }}
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-900 to-amber-500 rounded mb-2"></div>
-            <span className="text-sm font-medium">Sacred Mosque</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
-            onClick={() => {
-          setWallpaperOptions(prev => ({
-            ...prev,
-            backgroundStyle: 'mountain',
-            colorScheme: 'mountain'
-          }));
-            }}
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-amber-800 to-amber-400 rounded mb-2"></div>
-            <span className="text-sm font-medium">Sacred Geometry</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
-            onClick={() => {
-          setWallpaperOptions(prev => ({
-            ...prev,
-            backgroundStyle: 'forest',
-            colorScheme: 'forest'
-          }));
-            }}
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-900 to-emerald-600 rounded mb-2"></div>
-            <span className="text-sm font-medium">Royal Arabesque</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
-            onClick={() => {
-          setWallpaperOptions(prev => ({
-            ...prev,
-            backgroundStyle: 'sunset',
-            colorScheme: 'sunset'
-          }));
-            }}
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-slate-900 to-blue-600 rounded mb-2"></div>
-            <span className="text-sm font-medium">Night Prayer</span>
-          </Button>
-        </div>
-      </Card>
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 };

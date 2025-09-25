@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import ShareDialog from "@/components/sharing/ShareDialog";
 import LoadingScreen from "@/components/ui/loading-screen";
 import { useAccessibility } from "@/components/accessibility/AccessibilityProvider";
+import BottomNavigation from "@/components/navigation/BottomNavigation";
 
 const categories = [
   { name: "All", value: "" },
@@ -192,6 +193,9 @@ const Library = () => {
           </p>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import AppearanceSettings from "@/components/settings/AppearanceSettings";
 import LanguageSettings from "@/components/settings/LanguageSettings";
 import NotificationSettings from "@/components/settings/NotificationSettings";
 import DataPrivacySettings from "@/components/settings/DataPrivacySettings";
+import BottomNavigation from "@/components/navigation/BottomNavigation";
 
 const Settings = () => {
   const { user } = useAuth();
@@ -56,6 +57,9 @@ const Settings = () => {
         {/* Data & Privacy */}
         <DataPrivacySettings />
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 };
