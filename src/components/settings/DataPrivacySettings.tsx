@@ -19,8 +19,8 @@ const DataPrivacySettings = () => {
   const handleDataSync = async () => {
     if (!user) {
       toast({
-        title: "Sign in required",
-        description: "Please sign in to sync your data across devices.",
+        title: t('privacy.signInRequired', 'Sign in required'),
+        description: t('privacy.signInToSync', 'Please sign in to sync your data across devices.'),
         variant: "destructive"
       });
       return;
@@ -31,13 +31,13 @@ const DataPrivacySettings = () => {
       // Simulate sync process
       await new Promise(resolve => setTimeout(resolve, 2000));
       toast({
-        title: "Data synced successfully",
-        description: "Your preferences and favorites are now up to date across all devices.",
+        title: t('privacy.syncSuccess'),
+        description: t('privacy.syncSuccessDesc'),
       });
     } catch (error) {
       toast({
-        title: "Sync failed",
-        description: "There was an error syncing your data. Please try again.",
+        title: t('privacy.syncFailed'),
+        description: t('privacy.syncFailedDesc'),
         variant: "destructive"
       });
     } finally {
@@ -61,13 +61,13 @@ const DataPrivacySettings = () => {
       keysToRemove.forEach(key => localStorage.removeItem(key));
       
       toast({
-        title: "Cache cleared",
-        description: "App cache and temporary data have been cleared successfully.",
+        title: t('privacy.cacheCleared'),
+        description: t('privacy.cacheClearedDesc'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to clear cache. Please try again.",
+        title: t('common.error'),
+        description: t('privacy.cacheClearError'),
         variant: "destructive"
       });
     } finally {
@@ -78,8 +78,8 @@ const DataPrivacySettings = () => {
   const handleExportData = () => {
     if (!user) {
       toast({
-        title: "Sign in required",
-        description: "Please sign in to export your data.",
+        title: t('privacy.signInRequired', 'Sign in required'),
+        description: t('privacy.signInToExport', 'Please sign in to export your data.'),
         variant: "destructive"
       });
       return;
@@ -116,8 +116,8 @@ const DataPrivacySettings = () => {
     URL.revokeObjectURL(url);
     
     toast({
-      title: "Data exported",
-      description: "Your data has been downloaded to your device.",
+      title: t('privacy.dataExported'),
+      description: t('privacy.dataExportedDesc'),
     });
   };
 
@@ -138,21 +138,21 @@ const DataPrivacySettings = () => {
             <div className="space-y-1">
               <Label className="text-base font-medium flex items-center">
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Data Synchronization
+                {t('privacy.dataSync')}
               </Label>
               <p className="text-sm text-muted-foreground">
-                {user ? "Sync your settings and favorites across devices" : "Sign in to enable data sync"}
+                {user ? t('privacy.dataSyncDesc') : t('privacy.dataSyncDisabled')}
               </p>
             </div>
             <Badge variant={user ? "default" : "secondary"}>
-              {user ? "Enabled" : "Disabled"}
+              {user ? t('privacy.enabled') : t('privacy.disabled')}
             </Badge>
           </div>
 
           {user && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Last sync:</span>
+                <span className="text-muted-foreground">{t('privacy.lastSync')}</span>
                 <span className="text-foreground">2 minutes ago</span>
               </div>
               <Button
@@ -161,17 +161,17 @@ const DataPrivacySettings = () => {
                 disabled={isSyncing}
                 className="w-full"
               >
-                {isSyncing ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Syncing...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Sync Now
-                  </>
-                )}
+                  {isSyncing ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      {t('privacy.syncing')}
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      {t('privacy.syncNow')}
+                    </>
+                  )}
               </Button>
             </div>
           )}
@@ -181,12 +181,12 @@ const DataPrivacySettings = () => {
         <div className="space-y-3 pt-4 border-t border-border/50">
           <Label className="text-base font-medium flex items-center">
             <Database className="h-4 w-4 mr-2" />
-            Storage Usage
+            {t('privacy.storage')}
           </Label>
           
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Used:</span>
+              <span className="text-muted-foreground">{t('privacy.used')}</span>
               <span className="text-foreground">{storageUsed}MB of {storageLimit}MB</span>
             </div>
             <Progress value={(storageUsed / storageLimit) * 100} className="h-2" />
@@ -195,21 +195,21 @@ const DataPrivacySettings = () => {
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Wallpapers:</span>
+                <span className="text-muted-foreground">{t('privacy.wallpapers')}</span>
                 <span>1.8MB</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Settings:</span>
+                <span className="text-muted-foreground">{t('privacy.settings')}</span>
                 <span>0.1MB</span>
               </div>
             </div>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Favorites:</span>
+                <span className="text-muted-foreground">{t('privacy.favorites')}</span>
                 <span>0.3MB</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Cache:</span>
+                <span className="text-muted-foreground">{t('privacy.cache')}</span>
                 <span>0.1MB</span>
               </div>
             </div>
@@ -219,7 +219,7 @@ const DataPrivacySettings = () => {
         {/* Data Management */}
         <div className="space-y-3 pt-4 border-t border-border/50">
           <Label className="text-base font-medium">
-            Data Management
+            {t('privacy.dataManagement')}
           </Label>
           
           <div className="space-y-3">
@@ -230,7 +230,7 @@ const DataPrivacySettings = () => {
               disabled={!user}
             >
               <Download className="h-4 w-4 mr-2" />
-              Export My Data
+              {t('privacy.exportData')}
             </Button>
             
             <Button
@@ -242,12 +242,12 @@ const DataPrivacySettings = () => {
               {isClearing ? (
               <>
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                Clearing Cache...
+                {t('privacy.clearingCache')}
               </>
               ) : (
                 <>
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Clear Cache & Temporary Files
+                  {t('privacy.clearCache')}
                 </>
               )}
             </Button>
@@ -255,7 +255,7 @@ const DataPrivacySettings = () => {
 
           {!user && (
             <p className="text-xs text-muted-foreground">
-              Sign in to access data export and sync features
+              {t('privacy.signInToExport')}
             </p>
           )}
         </div>
@@ -263,17 +263,17 @@ const DataPrivacySettings = () => {
         {/* Privacy Controls */}
         <div className="space-y-4 pt-4 border-t border-border/50">
           <Label className="text-base font-medium">
-            Privacy Controls
+            {t('privacy.privacyControls')}
           </Label>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <Label htmlFor="analytics" className="text-sm font-medium">
-                  Anonymous Analytics
+                  {t('privacy.analytics')}
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Help improve the app by sharing anonymous usage data
+                  {t('privacy.analyticsDesc')}
                 </p>
               </div>
               <Switch
@@ -293,10 +293,10 @@ const DataPrivacySettings = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <Label htmlFor="crash-reports" className="text-sm font-medium">
-                  Crash Reports
+                  {t('privacy.crashReports')}
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Send crash reports to help us fix issues
+                  {t('privacy.crashReportsDesc')}
                 </p>
               </div>
               <Switch
@@ -318,32 +318,32 @@ const DataPrivacySettings = () => {
         {/* Privacy Links */}
         <div className="space-y-3 pt-4 border-t border-border/50">
           <Label className="text-base font-medium">
-            Legal & Privacy
+            {t('privacy.legal')}
           </Label>
           
           <div className="space-y-2">
             <Button
               variant="ghost"
               className="w-full justify-start text-primary hover:bg-primary/5"
-              onClick={() => toast({ title: "Coming Soon", description: "Privacy policy will be available soon." })}
+              onClick={() => toast({ title: t('privacy.comingSoon'), description: t('privacy.policyComingSoon') })}
             >
-              Privacy Policy
+              {t('privacy.privacyPolicy')}
             </Button>
             
             <Button
               variant="ghost"
               className="w-full justify-start text-primary hover:bg-primary/5"
-              onClick={() => toast({ title: "Coming Soon", description: "Terms of service will be available soon." })}
+              onClick={() => toast({ title: t('privacy.comingSoon'), description: t('privacy.termsComingSoon') })}
             >
-              Terms of Service
+              {t('privacy.termsOfService')}
             </Button>
             
             <Button
               variant="ghost"
               className="w-full justify-start text-primary hover:bg-primary/5"
-              onClick={() => toast({ title: "Coming Soon", description: "Data policy will be available soon." })}
+              onClick={() => toast({ title: t('privacy.comingSoon'), description: t('privacy.dataComingSoon') })}
             >
-              Data Usage Policy
+              {t('privacy.dataPolicy')}
             </Button>
           </div>
         </div>
@@ -353,27 +353,27 @@ const DataPrivacySettings = () => {
           <div className="flex items-center space-x-2">
             <AlertTriangle className="h-5 w-5 text-destructive" />
             <Label className="text-base font-medium text-destructive">
-              Danger Zone
+              {t('privacy.dangerZone')}
             </Label>
           </div>
           
           <div className="bg-destructive/5 border border-destructive/20 p-4 rounded-lg space-y-3">
             <div>
-              <h4 className="text-sm font-medium text-destructive">Delete Account</h4>
+              <h4 className="text-sm font-medium text-destructive">{t('privacy.deleteAccount')}</h4>
               <p className="text-xs text-muted-foreground">
-                Permanently delete your account and all associated data. This action cannot be undone.
+                {t('privacy.deleteAccountDesc')}
               </p>
             </div>
             
             <Button
               variant="destructive"
               onClick={() => toast({ 
-                title: "Contact Support", 
-                description: "Please email us at support@ayahwallpapers.com for account deletion requests.",
+                title: t('account.contactSupport'), 
+                description: t('account.deletionRequest'),
                 duration: 5000 
               })}
             >
-              Request Account Deletion
+              {t('privacy.requestDeletion')}
             </Button>
           </div>
         </div>

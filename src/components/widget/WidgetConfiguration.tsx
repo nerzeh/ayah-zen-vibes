@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Smartphone, RefreshCw, Settings, Clock, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface WidgetConfig {
   enabled: boolean;
@@ -37,8 +38,8 @@ const WidgetConfiguration = () => {
     localStorage.setItem('widgetConfig', JSON.stringify(config));
     
     toast({
-      title: "Widget configured",
-      description: "Your home screen widget settings have been saved",
+      title: t('widget.configured'),
+      description: t('widget.configuredDesc'),
     });
   };
 
@@ -46,8 +47,8 @@ const WidgetConfiguration = () => {
     // This would trigger native widget installation
     // For now, we'll simulate the process
     toast({
-      title: "Widget installation",
-      description: "Please add the Ayah Widget from your device's widget gallery",
+      title: t('widget.installation'),
+      description: t('widget.installationDesc'),
     });
   };
 
@@ -56,12 +57,12 @@ const WidgetConfiguration = () => {
       <Card className="p-6 bg-gradient-card border-primary/10">
         <div className="flex items-center mb-6">
           <Smartphone className="h-6 w-6 text-primary mr-2" />
-          <h2 className="text-xl font-semibold text-foreground">Home Screen Widget</h2>
+          <h2 className="text-xl font-semibold text-foreground">{t('widget.title')}</h2>
         </div>
 
         {/* Widget Preview */}
         <div className="mb-6">
-          <Label className="text-base font-medium mb-3 block">Widget Preview</Label>
+          <Label className="text-base font-medium mb-3 block">{t('widget.preview')}</Label>
           <div className="flex justify-center">
             <div 
               className={`relative rounded-2xl p-4 shadow-2xl backdrop-blur-sm ${
@@ -85,7 +86,7 @@ const WidgetConfiguration = () => {
               
               {/* Content */}
               <div className="relative h-full flex flex-col justify-between text-white p-2">
-                <div className="text-xs font-medium opacity-90">Today's Verse</div>
+                <div className="text-xs font-medium opacity-90">{t('widget.todayVerse')}</div>
                 
                 <div className="flex-1 flex flex-col justify-center text-center">
                   {config.showArabic && (
@@ -115,10 +116,10 @@ const WidgetConfiguration = () => {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label htmlFor="widget-enabled" className="text-base font-medium">
-                Enable Widget
+                {t('widget.enable')}
               </Label>
               <p className="text-sm text-muted-foreground">
-                Show daily verses on your home screen
+                {t('widget.enableDesc')}
               </p>
             </div>
             <Switch
@@ -134,16 +135,16 @@ const WidgetConfiguration = () => {
               <div className="space-y-2">
                 <Label className="text-base font-medium flex items-center">
                   <Settings className="h-4 w-4 mr-2" />
-                  Widget Size
+                  {t('widget.size')}
                 </Label>
                 <Select value={config.size} onValueChange={(value) => updateConfig('size', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select widget size" />
+                    <SelectValue placeholder={t('widget.selectSize')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="2x2">Small (2×2) - Arabic only</SelectItem>
-                    <SelectItem value="4x2">Medium (4×2) - Arabic + Translation</SelectItem>
-                    <SelectItem value="4x4">Large (4×4) - Full verse display</SelectItem>
+                    <SelectItem value="2x2">{t('widget.sizeSmall')}</SelectItem>
+                    <SelectItem value="4x2">{t('widget.sizeMedium')}</SelectItem>
+                    <SelectItem value="4x4">{t('widget.sizeLarge')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -152,20 +153,20 @@ const WidgetConfiguration = () => {
               <div className="space-y-2">
                 <Label className="text-base font-medium flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
-                  Update Frequency
+                  {t('widget.frequency')}
                 </Label>
                 <Select value={config.updateFrequency} onValueChange={(value) => updateConfig('updateFrequency', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select update frequency" />
+                    <SelectValue placeholder={t('widget.selectFrequency')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="daily">Daily (Recommended)</SelectItem>
-                    <SelectItem value="twice-daily">Twice Daily</SelectItem>
-                    <SelectItem value="hourly">Every Hour</SelectItem>
+                    <SelectItem value="daily">{t('widget.frequencyDaily')}</SelectItem>
+                    <SelectItem value="twice-daily">{t('widget.frequencyTwice')}</SelectItem>
+                    <SelectItem value="hourly">{t('widget.frequencyHourly')}</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-muted-foreground">
-                  More frequent updates may impact battery life
+                  {t('widget.frequencyNote')}
                 </p>
               </div>
 
@@ -173,31 +174,31 @@ const WidgetConfiguration = () => {
               <div className="space-y-2">
                 <Label className="text-base font-medium flex items-center">
                   <Palette className="h-4 w-4 mr-2" />
-                  Widget Theme
+                  {t('widget.theme')}
                 </Label>
                 <Select value={config.theme} onValueChange={(value) => updateConfig('theme', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select widget theme" />
+                    <SelectValue placeholder={t('widget.selectTheme')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="classic">Classic Green & Gold</SelectItem>
-                    <SelectItem value="minimal">Minimal Dark</SelectItem>
-                    <SelectItem value="elegant">Elegant Teal</SelectItem>
+                    <SelectItem value="classic">{t('widget.themeClassic')}</SelectItem>
+                    <SelectItem value="minimal">{t('widget.themeMinimal')}</SelectItem>
+                    <SelectItem value="elegant">{t('widget.themeElegant')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Content Options */}
               <div className="space-y-4">
-                <Label className="text-base font-medium">Content Display</Label>
+                <Label className="text-base font-medium">{t('widget.content')}</Label>
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <Label htmlFor="show-arabic" className="text-sm font-medium">
-                      Show Arabic Text
+                      {t('widget.showArabic')}
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      Display original Arabic verse
+                      {t('widget.showArabicDesc')}
                     </p>
                   </div>
                   <Switch
@@ -210,10 +211,10 @@ const WidgetConfiguration = () => {
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <Label htmlFor="show-translation" className="text-sm font-medium">
-                      Show Translation
+                      {t('widget.showTranslation')}
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      Display English translation
+                      {t('widget.showTranslationDesc')}
                     </p>
                   </div>
                   <Switch
@@ -234,7 +235,7 @@ const WidgetConfiguration = () => {
             className="flex-1"
           >
             <Settings className="mr-2 h-4 w-4" />
-            Save Configuration
+            {t('widget.saveConfig')}
           </Button>
           
           {config.enabled && (
@@ -244,7 +245,7 @@ const WidgetConfiguration = () => {
               className="flex-1"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
-              Install Widget
+              {t('widget.installWidget')}
             </Button>
           )}
         </div>
@@ -252,12 +253,12 @@ const WidgetConfiguration = () => {
         {/* Installation Instructions */}
         {config.enabled && (
           <Card className="mt-6 p-4 bg-muted/50 border-primary/10">
-            <h3 className="font-medium text-foreground mb-2">Installation Instructions</h3>
+            <h3 className="font-medium text-foreground mb-2">{t('widget.instructionsTitle')}</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p><strong>iOS:</strong> Long press on home screen → Add Widget → Search "Ayah Wallpapers"</p>
-              <p><strong>Android:</strong> Long press on home screen → Widgets → Find "Daily Verse Widget"</p>
+              <p><strong>iOS:</strong> {t('widget.instructionsIOS')}</p>
+              <p><strong>Android:</strong> {t('widget.instructionsAndroid')}</p>
               <p className="text-xs mt-3 text-primary">
-                💡 Tip: Place the widget where you'll see it first thing in the morning for daily inspiration
+                {t('widget.tip')}
               </p>
             </div>
           </Card>

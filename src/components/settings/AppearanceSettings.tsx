@@ -12,7 +12,7 @@ const AppearanceSettings = () => {
   const { t } = useLanguage();
   const handleSettingChange = (setting: string, value: any) => {
     toast({
-      title: "Appearance updated",
+      title: t('appearance.updated'),
       description: `${setting} has been ${value ? 'enabled' : 'updated'}`,
     });
   };
@@ -28,7 +28,7 @@ const AppearanceSettings = () => {
       <div className="space-y-6">
         {!isAuthenticated && (
           <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded border">
-            Sign in to save your appearance preferences across devices.
+            {t('appearance.signInNote', 'Sign in to save your appearance preferences across devices.')}
           </div>
         )}
 
@@ -37,7 +37,7 @@ const AppearanceSettings = () => {
         <div className="space-y-3">
           <Label className="text-base font-medium flex items-center">
             <Type className="h-4 w-4 mr-2" />
-            Font Size
+            {t('appearance.fontSize')}
           </Label>
           
           <div className="space-y-2">
@@ -49,13 +49,13 @@ const AppearanceSettings = () => {
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select font size" />
+                <SelectValue placeholder={t('appearance.selectFontSize', 'Select font size')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="small">Small</SelectItem>
-                <SelectItem value="medium">Medium (Default)</SelectItem>
-                <SelectItem value="large">Large</SelectItem>
-                <SelectItem value="extra-large">Extra Large</SelectItem>
+                <SelectItem value="small">{t('appearance.fontSizeSmall')}</SelectItem>
+                <SelectItem value="medium">{t('appearance.fontSizeMedium')}</SelectItem>
+                <SelectItem value="large">{t('appearance.fontSizeLarge')}</SelectItem>
+                <SelectItem value="extra-large">{t('appearance.fontSizeExtraLarge')}</SelectItem>
               </SelectContent>
             </Select>
             
@@ -73,7 +73,7 @@ const AppearanceSettings = () => {
                          '16px'
               }}
             >
-              Preview: Sample text in {settings.fontSize} size - Lorem ipsum dolor sit amet
+              {t('appearance.previewText', 'Preview: Sample text in {size} size - Lorem ipsum dolor sit amet').replace('{size}', settings.fontSize)}
             </div>
           </div>
         </div>

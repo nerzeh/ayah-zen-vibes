@@ -45,8 +45,8 @@ const AccountSettings = () => {
   const handleSignOut = async () => {
     await signOut();
     toast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
+      title: t('account.signedOut'),
+      description: t('account.signedOutSuccess'),
     });
   };
 
@@ -64,8 +64,8 @@ const AccountSettings = () => {
       if (error) {
         console.error('Error updating profile:', error);
         toast({
-          title: "Error",
-          description: "Failed to update profile. Please try again.",
+          title: t('common.error'),
+          description: t('account.profileUpdateError'),
           variant: "destructive"
         });
         return;
@@ -76,14 +76,14 @@ const AccountSettings = () => {
 
       setIsEditing(false);
       toast({
-        title: "Profile updated",
-        description: "Your display name has been updated successfully.",
+        title: t('account.profileUpdated'),
+        description: t('account.profileUpdateSuccess'),
       });
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
+        title: t('common.error'),
+        description: t('account.profileUpdateError'),
         variant: "destructive"
       });
     }
@@ -115,7 +115,7 @@ const AccountSettings = () => {
               size="sm"
               variant="outline"
               className="absolute -bottom-1 -right-1 h-8 w-8 p-0 rounded-full bg-background border-2"
-              onClick={() => toast({ title: "Coming Soon", description: "Profile picture upload will be available soon!" })}
+              onClick={() => toast({ title: t('common.comingSoon', 'Coming Soon'), description: t('account.photoUploadSoon') })}
             >
               <Camera className="h-3 w-3" />
             </Button>
@@ -175,7 +175,7 @@ const AccountSettings = () => {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Email changes require verification and will be available soon
+            {t('account.emailChangeNote')}
           </p>
         </div>
 
@@ -195,8 +195,8 @@ const AccountSettings = () => {
               variant="outline" 
               className="w-full justify-start border-muted text-muted-foreground"
               onClick={() => toast({ 
-                title: "Contact Support", 
-                description: "Please email us at support@ayahwallpapers.com for account deletion requests." 
+                title: t('account.contactSupport'), 
+                description: t('account.deletionRequest')
               })}
             >
               {t('account.deleteAccount')}

@@ -14,7 +14,7 @@ const NotificationSettings = () => {
   const { t } = useLanguage();
   const handleSettingChange = (setting: string, value: any) => {
     toast({
-      title: "Notification updated",
+      title: t('notifications.updated'),
       description: `${setting} has been ${value ? 'enabled' : 'updated'}`,
     });
   };
@@ -65,7 +65,7 @@ const NotificationSettings = () => {
       <div className="space-y-6">
         {!isAuthenticated && (
           <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded border">
-            Sign in to save your notification preferences across devices.
+            {t('notifications.signInNote')}
           </div>
         )}
 
@@ -77,10 +77,10 @@ const NotificationSettings = () => {
                 <Bell className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                 <div>
                   <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                    Enable Push Notifications
+                    {t('notifications.enablePush')}
                   </h3>
                   <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                    Allow notifications to receive daily verse reminders
+                    {t('notifications.enablePushDesc')}
                   </p>
                 </div>
               </div>
@@ -89,7 +89,7 @@ const NotificationSettings = () => {
                 onClick={requestNotificationPermission}
                 className="bg-yellow-600 hover:bg-yellow-700 text-white"
               >
-                Enable
+                {t('notifications.enable')}
               </Button>
             </div>
           </div>
@@ -100,10 +100,10 @@ const NotificationSettings = () => {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label htmlFor="daily-reminders" className="text-base font-medium">
-                Daily Verse Reminders
+                {t('notifications.dailyReminders')}
               </Label>
               <p className="text-sm text-muted-foreground">
-                Get notified when new verses are available
+                {t('notifications.dailyRemindersDesc')}
               </p>
             </div>
             <Switch
@@ -119,10 +119,10 @@ const NotificationSettings = () => {
           {settings.dailyNotifications && (
             <div className="ml-6 space-y-3">
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Reminder Time</Label>
+                <Label className="text-sm font-medium">{t('notifications.reminderTime')}</Label>
                 <Select defaultValue="07:00">
                   <SelectTrigger>
-                    <SelectValue placeholder="Select notification time" />
+                    <SelectValue placeholder={t('notifications.selectTime')} />
                   </SelectTrigger>
                   <SelectContent>
                     {notificationTimes.map((time) => (
@@ -141,10 +141,10 @@ const NotificationSettings = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <Label htmlFor="prayer-reminders" className="text-base font-medium">
-              Prayer Time Reminders
+              {t('notifications.prayerReminders')}
             </Label>
             <p className="text-sm text-muted-foreground">
-              Get notifications for prayer times with verses
+              {t('notifications.prayerRemindersDesc')}
             </p>
           </div>
           <Switch
@@ -162,10 +162,10 @@ const NotificationSettings = () => {
           <div className="space-y-1">
             <Label htmlFor="feature-updates" className="text-base font-medium flex items-center">
               <Star className="h-4 w-4 mr-2" />
-              New Features & Updates
+              {t('notifications.features')}
             </Label>
             <p className="text-sm text-muted-foreground">
-              Be notified about new app features and improvements
+              {t('notifications.featuresDesc')}
             </p>
           </div>
           <Switch
@@ -181,17 +181,17 @@ const NotificationSettings = () => {
         <div className="space-y-4 pt-4 border-t border-border/50">
           <Label className="text-base font-medium flex items-center">
             <Volume2 className="h-4 w-4 mr-2" />
-            Sound & Vibration
+            {t('notifications.sound')}
           </Label>
           
           <div className="space-y-4 ml-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <Label htmlFor="notification-sound" className="text-sm font-medium">
-                  Notification Sound
+                  {t('notifications.soundEnabled')}
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Play sound for notifications
+                  {t('notifications.soundEnabledDesc')}
                 </p>
               </div>
               <Switch
@@ -207,10 +207,10 @@ const NotificationSettings = () => {
               <div className="space-y-1">
                 <Label htmlFor="vibration" className="text-sm font-medium flex items-center">
                   <Smartphone className="h-4 w-4 mr-2" />
-                  Vibration
+                  {t('notifications.vibration')}
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Vibrate on mobile devices
+                  {t('notifications.vibrationDesc')}
                 </p>
               </div>
               <Switch
@@ -223,17 +223,17 @@ const NotificationSettings = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Notification Sound</Label>
+              <Label className="text-sm font-medium">{t('notifications.soundSelect')}</Label>
               <Select defaultValue="default">
                 <SelectTrigger>
-                  <SelectValue placeholder="Select notification sound" />
+                  <SelectValue placeholder={t('notifications.selectSound')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="adhan">Adhan Call</SelectItem>
-                  <SelectItem value="chime">Gentle Chime</SelectItem>
-                  <SelectItem value="bell">Bell</SelectItem>
-                  <SelectItem value="silent">Silent</SelectItem>
+                  <SelectItem value="default">{t('notifications.soundDefault')}</SelectItem>
+                  <SelectItem value="adhan">{t('notifications.soundAdhan')}</SelectItem>
+                  <SelectItem value="chime">{t('notifications.soundChime')}</SelectItem>
+                  <SelectItem value="bell">{t('notifications.soundBell')}</SelectItem>
+                  <SelectItem value="silent">{t('notifications.soundSilent')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -245,10 +245,10 @@ const NotificationSettings = () => {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <Label htmlFor="quiet-hours" className="text-base font-medium">
-                Quiet Hours
+                {t('notifications.quietHours')}
               </Label>
               <p className="text-sm text-muted-foreground">
-                Disable notifications during specified hours
+                {t('notifications.quietHoursDesc')}
               </p>
             </div>
             <Switch

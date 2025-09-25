@@ -14,7 +14,7 @@ const DailyVerseSettings = () => {
 
   const handleSettingChange = (setting: string, value: any) => {
     toast({
-      title: "Setting updated",
+      title: t('daily.settingUpdated'),
       description: `${setting} has been ${value ? 'enabled' : 'updated'}`,
     });
   };
@@ -59,10 +59,10 @@ const DailyVerseSettings = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <Label htmlFor="daily-verse-enabled" className="text-base font-medium">
-              Daily Verse Updates
+              {t('daily.updates')}
             </Label>
             <p className="text-sm text-muted-foreground">
-              Automatically get a new verse each day
+              {t('daily.updatesDesc')}
             </p>
           </div>
           <Switch
@@ -81,7 +81,7 @@ const DailyVerseSettings = () => {
             <div className="space-y-2">
               <Label className="text-base font-medium flex items-center">
                 <Clock className="h-4 w-4 mr-2" />
-                Daily Update Time
+                {t('daily.updateTime')}
               </Label>
               <Select
                 value={settings.updateTime}
@@ -91,7 +91,7 @@ const DailyVerseSettings = () => {
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select time" />
+                  <SelectValue placeholder={t('daily.selectTime')} />
                 </SelectTrigger>
                 <SelectContent className="max-h-48">
                   {timeOptions.map((option) => (
@@ -102,7 +102,7 @@ const DailyVerseSettings = () => {
                 </SelectContent>
               </Select>
               <p className="text-sm text-muted-foreground">
-                Choose when to receive your daily verse
+                {t('daily.updateTimeDesc')}
               </p>
             </div>
 
@@ -110,10 +110,10 @@ const DailyVerseSettings = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <Label htmlFor="auto-wallpaper" className="text-base font-medium">
-                  Auto-Download Wallpaper
+                  {t('daily.autoWallpaper')}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Automatically download new wallpapers for easy setting
+                  {t('daily.autoWallpaperDesc')}
                 </p>
               </div>
               <Switch
@@ -131,10 +131,10 @@ const DailyVerseSettings = () => {
               <div className="space-y-1">
                 <Label htmlFor="daily-notifications" className="text-base font-medium flex items-center">
                   <Bell className="h-4 w-4 mr-2" />
-                  Daily Verse Notifications
+                  {t('daily.notifications')}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Get notified when your daily verse is ready
+                  {t('daily.notificationsDesc')}
                 </p>
               </div>
               <Switch
@@ -150,7 +150,7 @@ const DailyVerseSettings = () => {
             {/* Update Frequency */}
             <div className="space-y-2">
               <Label className="text-base font-medium">
-                Update Frequency
+                {t('daily.frequency')}
               </Label>
               <Select
                 value={settings.frequency}
@@ -160,16 +160,16 @@ const DailyVerseSettings = () => {
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select frequency" />
+                  <SelectValue placeholder={t('daily.selectFrequency')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
-                  <SelectItem value="manual">Manual Only</SelectItem>
+                  <SelectItem value="daily">{t('daily.daily')}</SelectItem>
+                  <SelectItem value="weekly">{t('daily.weekly')}</SelectItem>
+                  <SelectItem value="manual">{t('daily.manual')}</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-sm text-muted-foreground">
-                How often to automatically update your verses
+                {t('daily.frequencyDesc')}
               </p>
             </div>
           </>
