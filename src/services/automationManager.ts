@@ -19,6 +19,8 @@ export class AutomationManager {
     if (this.isInitialized) return;
 
     try {
+      console.log('Initializing Automation Manager...');
+      
       // Register service worker
       await this.registerServiceWorker();
       
@@ -32,6 +34,7 @@ export class AutomationManager {
       backgroundProcessor; // Just access to initialize
       
       this.isInitialized = true;
+      console.log('Automation Manager initialized successfully');
       
     } catch (error) {
       console.error('Failed to initialize Automation Manager:', error);
@@ -45,9 +48,11 @@ export class AutomationManager {
           scope: '/'
         });
         
+        console.log('Service Worker registered:', this.serviceWorkerRegistration);
+        
         // Listen for service worker updates
         this.serviceWorkerRegistration.addEventListener('updatefound', () => {
-          // Handle service worker updates
+          console.log('Service Worker update found');
         });
         
       } catch (error) {
@@ -62,6 +67,7 @@ export class AutomationManager {
         // Register background sync for daily updates
         const registration = this.serviceWorkerRegistration as any;
         await registration.sync?.register('daily-verse-update');
+        console.log('Background sync registered');
       } catch (error) {
         console.error('Background sync registration failed:', error);
       }
@@ -110,6 +116,7 @@ export class AutomationManager {
       if (permission === 'granted' && this.serviceWorkerRegistration) {
         // Setup push subscription if needed
         // This would require a push service setup (Firebase, etc.)
+        console.log('Persistent notifications enabled');
         return true;
       }
       
@@ -122,8 +129,18 @@ export class AutomationManager {
 
   public async setWallpaperAutomation(enabled: boolean): Promise<void> {
     try {
+      if (enabled) {
+        // Check if we can write files or trigger downloads
+        if ('showSaveFilePicker' in window) {
+          console.log('File System Access API available for wallpaper automation');
+        } else {
+          console.log('Using download-based wallpaper automation');
+        }
+      }
+      
       // Store automation preference
       localStorage.setItem('wallpaperAutomation', JSON.stringify({ enabled }));
+      
     } catch (error) {
       console.error('Failed to set wallpaper automation:', error);
     }
@@ -150,6 +167,7 @@ export class AutomationManager {
         await Promise.all(
           cacheNames.map(cacheName => caches.delete(cacheName))
         );
+        console.log('All caches cleared');
       }
     } catch (error) {
       console.error('Failed to clear cache:', error);

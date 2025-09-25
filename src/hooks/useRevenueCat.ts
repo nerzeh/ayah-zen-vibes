@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Purchases } from '@revenuecat/purchases-capacitor';
 import { revenueCatService, SubscriptionInfo } from '@/services/revenueCatService';
 import { Capacitor } from '@capacitor/core';
 
@@ -48,7 +47,7 @@ export const useRevenueCat = (userId?: string) => {
 
   const setAppUserId = async (appUserId: string) => {
     try {
-      await Purchases.logIn({ appUserID: appUserId });
+      await revenueCatService.setAppUserId(appUserId);
       // Refresh customer info after setting user ID
       const info = await revenueCatService.getCustomerInfo();
       setCustomerInfo(info);
