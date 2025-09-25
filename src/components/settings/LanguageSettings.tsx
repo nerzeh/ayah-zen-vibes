@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { Globe, Type, Book } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -10,11 +12,49 @@ const LanguageSettings = () => {
   const { settings, updateSettings, isAuthenticated } = useEnhancedUserSettings();
   const { toast } = useToast();
 
-  const handleSettingChange = (setting: string, value: any) => {
-    toast({
-      title: "Language updated",
-      description: `${setting} has been updated`,
-    });
+  // Local (unsaved) values
+  const [localLanguage, setLocalLanguage] = useState(settings.language);
+  const [localTranslationStyle, setLocalTranslationStyle] = useState(settings.translationStyle || 'interpretive');
+  const [localArabicTextSize, setLocalArabicTextSize] = useState<number>(settings.arabicTextSize || 18);
+  const [localDateFormat, setLocalDateFormat] = useState(settings.dateFormat || 'gregorian');
+  const [localTimeFormat, setLocalTimeFormat] = useState(settings.timeFormat || '12h');
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Sync local state when settings change
+  useEffect(() => {
+    setLocalLanguage(settings.language);
+    setLocalTranslationStyle(settings.translationStyle || 'interpretive');
+    setLocalArabicTextSize(settings.arabicTextSize || 18);
+    setLocalDateFormat(settings.dateFormat || 'gregorian');
+    setLocalTimeFormat(settings.timeFormat || '12h');
+  }, [settings.language, settings.translationStyle, settings.arabicTextSize, settings.dateFormat, settings.timeFormat]);
+
+  const isDirty =
+    localLanguage !== settings.language ||
+    localTranslationStyle !== (settings.translationStyle || 'interpretive') ||
+    localArabicTextSize !== (settings.arabicTextSize || 18) ||
+    localDateFormat !== (settings.dateFormat || 'gregorian') ||
+    localTimeFormat !== (settings.timeFormat || '12h');
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      const updates: Record<string, any> = {};
+      if (localLanguage !== settings.language) updates.language = localLanguage;
+      if (localTranslationStyle !== settings.translationStyle) updates.translationStyle = localTranslationStyle;
+      if (localArabicTextSize !== settings.arabicTextSize) updates.arabicTextSize = localArabicTextSize;
+      if (localDateFormat !== settings.dateFormat) updates.dateFormat = localDateFormat;
+      if (localTimeFormat !== settings.timeFormat) updates.timeFormat = localTimeFormat;
+
+      if (Object.keys(updates).length > 0) {
+        await updateSettings(updates);
+        toast({ title: 'Saved', description: 'Language settings updated.' });
+      }
+    } catch (e) {
+      toast({ title: 'Error', description: 'Failed to save settings.', variant: 'destructive' });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const languages = [
@@ -57,10 +97,9 @@ const LanguageSettings = () => {
           </Label>
           
           <Select
-            value={settings.language}
+            value={localLanguage}
             onValueChange={(value) => {
-              updateSettings({ language: value });
-              handleSettingChange("Interface language", value);
+              setLocalLanguage(value);
             }}
           >
             <SelectTrigger>
@@ -91,10 +130,9 @@ const LanguageSettings = () => {
           </Label>
           
           <Select
-            value={settings.translationStyle || 'interpretive'}
+            value={localTranslationStyle}
             onValueChange={(value: 'literal' | 'interpretive' | 'simplified') => {
-              updateSettings({ translationStyle: value });
-              handleSettingChange("Translation style", value);
+              setLocalTranslationStyle(value);
             }}
           >
             <SelectTrigger>
@@ -125,19 +163,16 @@ const LanguageSettings = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">Arabic Text Size</Label>
-              <span className="text-sm text-muted-foreground">{settings.arabicTextSize || 18}px</span>
+              <span className="text-sm text-muted-foreground">{localArabicTextSize}px</span>
             </div>
             
             <Slider
-              value={[settings.arabicTextSize || 18]}
+              value={[localArabicTextSize]}
               max={24}
               min={14}
               step={2}
               className="w-full"
-              onValueChange={(value) => {
-                updateSettings({ arabicTextSize: value[0] });
-                handleSettingChange("Arabic text size", `${value[0]}px`);
-              }}
+              onValueChange={(value) => setLocalArabicTextSize(value[0])}
             />
             
             <div className="flex justify-between text-xs text-muted-foreground">
@@ -152,12 +187,12 @@ const LanguageSettings = () => {
           <div className="bg-gradient-to-r from-primary/5 to-secondary/5 p-4 rounded-lg border border-primary/10">
             <p 
               className="text-center font-arabic text-foreground mb-2"
-              style={{ fontSize: `${settings.arabicTextSize || 18}px` }}
+              style={{ fontSize: `${localArabicTextSize}px` }}
             >
               بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
             </p>
             <p className="text-center text-sm text-muted-foreground">
-              Sample Arabic text with current size settings ({settings.arabicTextSize || 18}px)
+              Sample Arabic text with current size settings ({localArabicTextSize}px)
             </p>
           </div>
         </div>
@@ -172,10 +207,9 @@ const LanguageSettings = () => {
             <div className="space-y-2">
               <Label className="text-sm font-medium">Date Format</Label>
               <Select 
-                value={settings.dateFormat || 'gregorian'}
+                value={localDateFormat}
                 onValueChange={(value: 'gregorian' | 'hijri' | 'both') => {
-                  updateSettings({ dateFormat: value });
-                  handleSettingChange("Date format", value);
+                  setLocalDateFormat(value);
                 }}
               >
                 <SelectTrigger>
@@ -192,10 +226,9 @@ const LanguageSettings = () => {
             <div className="space-y-2">
               <Label className="text-sm font-medium">Time Format</Label>
               <Select 
-                value={settings.timeFormat || '12h'}
+                value={localTimeFormat}
                 onValueChange={(value: '12h' | '24h') => {
-                  updateSettings({ timeFormat: value });
-                  handleSettingChange("Time format", value);
+                  setLocalTimeFormat(value);
                 }}
               >
                 <SelectTrigger>
@@ -208,6 +241,31 @@ const LanguageSettings = () => {
               </Select>
             </div>
           </div>
+
+          {isDirty && (
+            <div className="sticky bottom-4 z-20">
+              <Card className="p-3 bg-background/95 border-primary/20 backdrop-blur flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">You have unsaved changes</span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setLocalLanguage(settings.language);
+                      setLocalTranslationStyle(settings.translationStyle || 'interpretive');
+                      setLocalArabicTextSize(settings.arabicTextSize || 18);
+                      setLocalDateFormat(settings.dateFormat || 'gregorian');
+                      setLocalTimeFormat(settings.timeFormat || '12h');
+                    }}
+                  >
+                    Discard
+                  </Button>
+                  <Button onClick={handleSave} disabled={isSaving}>
+                    {isSaving ? 'Saving...' : 'Save changes'}
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </Card>
