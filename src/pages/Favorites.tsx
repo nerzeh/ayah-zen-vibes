@@ -86,7 +86,7 @@ const Favorites = () => {
           </p>
           <Button 
             onClick={() => window.history.back()}
-            className="bg-gradient-primary text-primary-foreground hover:shadow-glow"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <BookOpen className="h-4 w-4 mr-2" />
             Browse Library
@@ -102,7 +102,7 @@ const Favorites = () => {
                   <p className="text-2xl font-bold text-foreground">{favorites.length}</p>
                   <p className="text-sm text-muted-foreground">Favorite Verses</p>
                 </div>
-                <div className="bg-gradient-primary p-3 rounded-full">
+                <div className="bg-primary p-3 rounded-full">
                   <Heart className="h-6 w-6 text-primary-foreground fill-current" />
                 </div>
               </div>

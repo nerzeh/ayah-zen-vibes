@@ -157,7 +157,7 @@ export default function WallpaperCustomizer({
         <Button
           onClick={onGenerate}
           disabled={isGenerating}
-          className="w-full nature-button text-card-foreground"
+          className="w-full"
           size="lg"
         >
           {isGenerating ? "Generating..." : "Generate Preview"}

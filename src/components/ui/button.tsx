@@ -9,15 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-elegant",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-elegant",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-md",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-gold",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        mosque: "bg-gradient-mosque text-white hover:opacity-90 shadow-mosque crescent-button",
-        gold: "bg-gradient-gold text-white hover:opacity-95 shadow-gold crescent-button",
-        elegant: "bg-gradient-elegant text-white hover:opacity-90 shadow-elegant",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 transition-colors",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors",
+        ghost: "hover:bg-accent hover:text-accent-foreground transition-colors",
+        link: "text-primary underline-offset-4 hover:underline transition-colors",
+        solid: "bg-foreground text-background hover:bg-foreground/90 transition-colors",
+        modern: "bg-card text-card-foreground border border-border hover:bg-muted transition-colors",
+        clean: "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors",
       },
       size: {
         default: "h-10 px-4 py-2",

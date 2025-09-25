@@ -151,7 +151,7 @@ const ShareDialog = ({ verse, wallpaperBlob, trigger }: ShareDialogProps) => {
           {wallpaperBlob && (
             <Button
               onClick={downloadWallpaper}
-              className="w-full bg-gradient-primary text-primary-foreground hover:shadow-glow"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Download className="h-4 w-4 mr-2" />
               Download Wallpaper

@@ -161,17 +161,14 @@
     @apply absolute inset-0 bg-islamic-geometric opacity-30 pointer-events-none;
   }
 
-  .nature-button {
-    @apply relative overflow-hidden;
-    background: var(--gradient-nature);
-    box-shadow: var(--shadow-gold);
-    transition: var(--transition-elegant);
-    border-radius: 1rem;
+  .modern-button {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200;
+    border-radius: 0.75rem;
   }
 
-  .nature-button:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-glow);
+  .clean-button {
+    @apply bg-card text-card-foreground border border-border hover:bg-muted hover:text-muted-foreground transition-all duration-200;
+    border-radius: 0.75rem;
   }
 
   .glass-effect {

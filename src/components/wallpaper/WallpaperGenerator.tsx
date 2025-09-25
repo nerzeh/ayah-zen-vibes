@@ -209,7 +209,7 @@ const WallpaperView = () => {
           <Button
             onClick={generateNewVerse}
             disabled={isGenerating}
-            className="nature-button text-card-foreground"
+            className="text-card-foreground"
             size="lg"
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />

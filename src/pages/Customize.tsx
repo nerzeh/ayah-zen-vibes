@@ -113,7 +113,7 @@ const Customize = () => {
               <Button
                 onClick={generateWallpaperPreview}
                 disabled={isGenerating || !currentVerse}
-                className="bg-gradient-primary hover:opacity-90 text-primary-foreground"
+                className="hover:bg-primary/90 text-primary-foreground"
               >
                 {isGenerating ? "Generating..." : "Generate Preview"}
               </Button>
@@ -126,7 +126,7 @@ const Customize = () => {
           <div className="flex gap-4 justify-center">
             <Button
               onClick={downloadGeneratedWallpaper}
-              className="bg-gradient-primary hover:opacity-90 text-primary-foreground shadow-glow"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               size="lg"
             >
               <Download className="mr-2 h-5 w-5" />

@@ -24,14 +24,14 @@ const BottomNavigation = () => {
               to={path}
               className={`flex flex-col items-center justify-center min-w-0 flex-1 px-1 py-1 rounded-xl transition-all duration-300 ${
                 isActive
-                  ? "bg-gradient-primary text-primary-foreground shadow-glow"
+                  ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
               }`}
               aria-label={label}
             >
-              <div className={`p-2 rounded-full transition-all duration-300 ${
-                isActive ? "bg-white/20 shadow-inner" : ""
-              }`}>
+               <div className={`p-2 rounded-full transition-all duration-300 ${
+                 isActive ? "bg-primary/20" : ""
+               }`}>
                 <Icon 
                   className={`h-5 w-5 transition-all duration-300 ${
                     isActive ? "scale-110" : ""
@@ -48,8 +48,8 @@ const BottomNavigation = () => {
         })}
       </div>
       
-      {/* Islamic decorative border */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+      {/* Decorative border */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-border" />
     </nav>
   );
 };
