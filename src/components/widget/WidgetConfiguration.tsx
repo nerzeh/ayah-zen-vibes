@@ -79,9 +79,7 @@ const WidgetConfiguration = () => {
               <div className="absolute inset-0 opacity-5 rounded-2xl bg-islamic-pattern"></div>
               
               {/* Content */}
-              <div className="relative h-full flex flex-col justify-between text-white p-2">
-                <div className="text-xs font-medium opacity-90">{t('widget.todayVerse')}</div>
-                
+              <div className="relative h-full flex flex-col justify-center text-white p-2">
                 <div className="flex-1 flex flex-col justify-center text-center">
                   {config.showArabic && (
                     <p className="font-arabic text-sm mb-2 leading-relaxed text-white">
