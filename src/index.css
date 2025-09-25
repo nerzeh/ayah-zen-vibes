@@ -4,96 +4,70 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Islamic Design System - Elegant & Beautiful */
+/* Modern Islamic App Design System - Dark Theme with Gold Accents */
 
 @layer base {
   :root {
-    /* Islamic Color Palette - Emerald, Gold & Midnight */
-    --background: 20 14% 97%;         /* Warm Pearl White */
-    --foreground: 155 20% 15%;        /* Deep Forest Green */
-    --card: 0 0% 100%;
-    --card-foreground: 155 20% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 155 20% 15%;
-    --primary: 155 85% 15%;           /* Islamic Deep Green */
-    --primary-foreground: 45 100% 96%;
-    --primary-light: 155 65% 35%;
-    --secondary: 45 90% 55%;          /* Rich Gold */
-    --secondary-foreground: 155 85% 15%;
-    --secondary-light: 45 80% 75%;
-    --accent: 35 85% 45%;             /* Warm Copper */
-    --accent-foreground: 0 0% 100%;
-    --muted: 155 15% 95%;
-    --muted-foreground: 155 25% 45%;
+    /* Islamic Dark Theme - Midnight & Gold */
+    --background: 210 30% 8%;         /* Deep Dark Blue */
+    --foreground: 45 100% 90%;        /* Warm Gold Text */
+    --card: 210 25% 12%;              /* Dark Card Background */
+    --card-foreground: 45 100% 90%;
+    --popover: 210 25% 12%;
+    --popover-foreground: 45 100% 90%;
+    --primary: 45 100% 65%;           /* Bright Gold Primary */
+    --primary-foreground: 210 30% 8%;
+    --secondary: 210 20% 18%;         /* Darker Secondary */
+    --secondary-foreground: 45 100% 90%;
+    --accent: 35 80% 55%;             /* Warm Amber Accent */
+    --accent-foreground: 210 30% 8%;
+    --muted: 210 20% 15%;
+    --muted-foreground: 45 40% 70%;
     --destructive: 0 70% 50%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 155 20% 88%;
-    --input: 155 15% 92%;
-    --ring: 155 85% 15%;
+    --destructive-foreground: 45 100% 90%;
+    --border: 210 25% 20%;
+    --input: 210 20% 15%;
+    --ring: 45 100% 65%;
     --radius: 1rem;
 
-    /* Islamic Sacred Geometry Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(155 85% 15%) 0%, hsl(155 65% 25%) 25%, hsl(45 90% 55%) 100%);
-    --gradient-mosque: linear-gradient(180deg, hsl(155 85% 15%) 0%, hsl(155 75% 20%) 30%, hsl(155 65% 35%) 70%, hsl(45 90% 55%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(45 90% 55%) 0%, hsl(45 85% 60%) 50%, hsl(45 95% 65%) 100%);
-    --gradient-crescent: radial-gradient(circle at 30% 40%, hsl(155 85% 15%) 0%, hsl(155 75% 20%) 25%, hsl(155 65% 35%) 50%, hsl(45 90% 55%) 100%);
-    --gradient-night: linear-gradient(135deg, hsl(220 60% 10%) 0%, hsl(155 85% 15%) 50%, hsl(45 90% 55%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(25 90% 55%) 0%, hsl(45 90% 55%) 50%, hsl(155 85% 15%) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(155 10% 98%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(155 85% 15% / 0.95) 0%, hsl(155 70% 25% / 0.9) 40%, hsl(45 90% 55% / 0.8) 100%);
+    /* Islamic Gradients - Nature Inspired */
+    --gradient-primary: linear-gradient(135deg, hsl(210 30% 8%) 0%, hsl(210 25% 12%) 50%, hsl(45 100% 65%) 100%);
+    --gradient-nature: linear-gradient(135deg, hsl(120 60% 15%) 0%, hsl(45 100% 45%) 50%, hsl(25 90% 55%) 100%);
+    --gradient-mountain: linear-gradient(180deg, hsl(200 40% 20%) 0%, hsl(120 30% 25%) 40%, hsl(45 80% 60%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(25 90% 55%) 0%, hsl(45 100% 65%) 50%, hsl(200 40% 20%) 100%);
+    --gradient-forest: linear-gradient(180deg, hsl(120 60% 15%) 0%, hsl(120 40% 25%) 60%, hsl(45 90% 50%) 100%);
+    --gradient-ocean: linear-gradient(135deg, hsl(200 80% 20%) 0%, hsl(180 60% 30%) 50%, hsl(45 100% 65%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(210 25% 12%) 0%, hsl(210 20% 15%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(210 30% 8% / 0.95) 0%, hsl(120 40% 15% / 0.9) 40%, hsl(45 100% 45% / 0.8) 100%);
 
-    /* Islamic Calligraphy Shadows & Effects */
-    --shadow-elegant: 0 25px 50px -12px hsl(155 85% 15% / 0.25);
-    --shadow-gold: 0 8px 32px -8px hsl(45 90% 55% / 0.35);
-    --shadow-mosque: 0 15px 35px -5px hsl(155 85% 15% / 0.3);
-    --shadow-glow: 0 0 40px hsl(45 90% 55% / 0.4);
-    --shadow-inner: inset 0 2px 4px hsl(155 85% 15% / 0.1);
-    --shadow-text: 2px 2px 8px hsl(155 85% 15% / 0.3);
+    /* Enhanced Shadows & Effects */
+    --shadow-elegant: 0 25px 50px -12px hsl(210 30% 8% / 0.6);
+    --shadow-gold: 0 8px 32px -8px hsl(45 100% 65% / 0.4);
+    --shadow-card: 0 10px 25px -5px hsl(210 30% 8% / 0.3);
+    --shadow-glow: 0 0 40px hsl(45 100% 65% / 0.3);
+    --shadow-nature: 0 15px 35px -5px hsl(120 40% 15% / 0.4);
 
-    /* Smooth Islamic Transitions */
-    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --transition-elegant: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    /* Smooth Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-elegant: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 210 25% 12%;
+    --sidebar-foreground: 45 100% 90%;
+    --sidebar-primary: 45 100% 65%;
+    --sidebar-primary-foreground: 210 30% 8%;
+    --sidebar-accent: 210 20% 18%;
+    --sidebar-accent-foreground: 45 100% 90%;
+    --sidebar-border: 210 25% 20%;
+    --sidebar-ring: 45 100% 65%;
   }
 
-  .dark {
-    /* Night Mode - Islamic Midnight Theme */
-    --background: 220 40% 8%;         /* Midnight Blue */
-    --foreground: 45 80% 85%;         /* Warm Gold Text */
-    --card: 220 30% 12%;
-    --card-foreground: 45 80% 85%;
-    --popover: 220 30% 12%;
-    --popover-foreground: 45 80% 85%;
-    --primary: 45 90% 55%;            /* Bright Gold */
-    --primary-foreground: 220 40% 8%;
-    --primary-light: 45 70% 65%;
-    --secondary: 155 60% 40%;         /* Muted Green */
-    --secondary-foreground: 45 80% 85%;
-    --secondary-light: 155 40% 50%;
-    --accent: 35 70% 50%;             /* Warm Copper */
-    --accent-foreground: 220 40% 8%;
-    --muted: 220 25% 15%;
-    --muted-foreground: 45 40% 60%;
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 25% 20%;
-    --input: 220 25% 18%;
-    --ring: 45 90% 55%;
-
-    /* Dark Mode Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220 40% 8%) 0%, hsl(155 60% 20%) 50%, hsl(45 90% 55%) 100%);
-    --gradient-mosque: linear-gradient(180deg, hsl(220 40% 8%) 0%, hsl(220 35% 15%) 30%, hsl(155 60% 20%) 70%, hsl(45 90% 55%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(220 40% 8% / 0.95) 0%, hsl(155 60% 20% / 0.9) 40%, hsl(45 90% 55% / 0.8) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(220 30% 12%) 0%, hsl(220 25% 15%) 100%);
+  .light {
+    /* Light Mode Override (keeping dark as default) */
+    --background: 210 30% 8%;
+    --foreground: 45 100% 90%;
+    --card: 210 25% 12%;
+    --card-foreground: 45 100% 90%;
   }
 }
 
@@ -102,10 +76,16 @@
     @apply border-border;
   }
 
+  * {
+    @apply border-border;
+  }
+
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "liga" 1, "kern" 1;
     text-rendering: optimizeLegibility;
+    background: var(--gradient-primary);
+    min-height: 100vh;
   }
   
   .font-arabic {
@@ -124,19 +104,19 @@
     direction: rtl;
   }
 
-  /* Islamic Geometric Patterns */
-  .bg-islamic-pattern {
+  /* Nature & Islamic Patterns */
+  .bg-nature-pattern {
     background-image: 
-      radial-gradient(circle at 25% 25%, hsl(45 90% 55% / 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, hsl(155 85% 15% / 0.1) 0%, transparent 50%);
+      radial-gradient(circle at 25% 25%, hsl(45 100% 65% / 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, hsl(120 40% 25% / 0.1) 0%, transparent 50%);
   }
 
-  .bg-geometric-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  .bg-mountain-texture {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M30 0L45 20L60 0L60 30L30 30Z M0 0L15 20L30 0L30 30L0 30Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
-  .bg-arabesque {
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 50m-20 0a20,20 0 1,1 40,0a20,20 0 1,1 -40,0M50 10m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M50 90m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M10 50m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M90 50m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  .bg-islamic-geometric {
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M40 0L60 20L80 0L80 40L60 60L80 80L40 80L20 60L0 80L0 40L20 20L0 0L40 0Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   /* Islamic Animation Effects */
@@ -167,28 +147,41 @@
     100% { background-position: 200% 0; }
   }
 
-  /* Islamic UI Components */
-  .mosque-card {
+  /* Modern Islamic UI Components */
+  .islamic-card {
     @apply relative overflow-hidden;
     background: var(--gradient-card);
     border: 1px solid hsl(var(--border));
-    box-shadow: var(--shadow-elegant);
+    box-shadow: var(--shadow-card);
+    border-radius: 1.5rem;
   }
 
-  .mosque-card::before {
+  .islamic-card::before {
     content: '';
-    @apply absolute inset-0 bg-arabesque opacity-50 pointer-events-none;
+    @apply absolute inset-0 bg-islamic-geometric opacity-30 pointer-events-none;
   }
 
-  .crescent-button {
+  .nature-button {
     @apply relative overflow-hidden;
-    background: var(--gradient-gold);
+    background: var(--gradient-nature);
     box-shadow: var(--shadow-gold);
     transition: var(--transition-elegant);
+    border-radius: 1rem;
   }
 
-  .crescent-button:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-gold), 0 8px 25px hsl(45 90% 55% / 0.25);
+  .nature-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-md bg-black/20 border border-white/10;
+  }
+
+  .gradient-text {
+    background: var(--gradient-nature);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

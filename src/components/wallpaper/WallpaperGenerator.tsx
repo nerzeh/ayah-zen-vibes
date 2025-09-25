@@ -20,8 +20,8 @@ const WallpaperView = () => {
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
     return {
-      backgroundStyle: 'mosque',
-      colorScheme: 'emerald',
+      backgroundStyle: 'nature',
+      colorScheme: 'nature',
       width: dimensions.width,
       height: dimensions.height
     };
@@ -113,9 +113,9 @@ const WallpaperView = () => {
     return (
       <div className="space-y-6">
         <Card className="relative overflow-hidden border-0 shadow-elegant">
-          <div className="aspect-[9/16] bg-gradient-hero flex items-center justify-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-white" />
-          </div>
+            <div className="aspect-[9/16] bg-gradient-nature flex items-center justify-center">
+              <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+            </div>
         </Card>
       </div>
     );
@@ -124,7 +124,7 @@ const WallpaperView = () => {
   return (
     <div className="space-y-6">
       {/* Wallpaper Preview */}
-      <Card className="relative overflow-hidden border-0 shadow-elegant">
+      <Card className="islamic-card relative overflow-hidden border-0 shadow-card">
         {generatedWallpaper ? (
           <div className="aspect-[9/16] relative">
             <img
@@ -138,7 +138,7 @@ const WallpaperView = () => {
                 onClick={() => setGeneratedWallpaper(null)}
                 variant="secondary"
                 size="sm"
-                className="bg-white/20 backdrop-blur-sm hover:bg-white/30"
+                className="glass-effect hover:bg-primary/20"
               >
                 Show Original
               </Button>
@@ -146,17 +146,17 @@ const WallpaperView = () => {
           </div>
         ) : (
           <div 
-            className="aspect-[9/16] bg-gradient-hero bg-arabesque relative flex flex-col items-center justify-center p-8 text-center"
+            className="aspect-[9/16] bg-gradient-nature bg-nature-pattern relative flex flex-col items-center justify-center p-8 text-center"
             style={{
               background: `
                 var(--gradient-hero),
-                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 50m-20 0a20,20 0 1,1 40,0a20,20 0 1,1 -40,0M50 10m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M50 90m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M10 50m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0M90 50m-5 0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+                url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M40 0L60 20L80 0L80 40L60 60L80 80L40 80L20 60L0 80L0 40L20 20L0 0L40 0Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
               `
             }}
           >
-            {/* Decorative Islamic Border */}
-            <div className="absolute inset-4 border-2 border-white/30 rounded-2xl" />
-            <div className="absolute inset-6 border border-white/20 rounded-xl" />
+            {/* Modern Glass Border */}
+            <div className="absolute inset-4 glass-effect rounded-3xl" />
+            <div className="absolute inset-6 border border-primary/30 rounded-2xl" />
             
             {/* Arabic Text */}
             <div className="space-y-6 z-10">
@@ -165,29 +165,30 @@ const WallpaperView = () => {
               </p>
               
               {/* Translation */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <p className="text-white/95 text-base md:text-lg font-light leading-relaxed italic">
                   "{currentVerse.english_translation}"
                 </p>
-                <div className="flex items-center justify-center space-x-3">
-                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-secondary to-transparent"></div>
-                  <p className="text-secondary text-sm font-medium">
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                  <p className="text-primary text-sm font-semibold px-4 py-2 glass-effect rounded-full">
                     Surah {currentVerse.surah_number}:{currentVerse.ayah_number}
                   </p>
-                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-secondary to-transparent"></div>
+                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
                 </div>
               </div>
             </div>
 
-            {/* Decorative Islamic Elements */}
-            <div className="absolute top-6 left-6 w-16 h-16 border-2 border-secondary/30 rounded-full animate-float flex items-center justify-center">
-              <div className="w-8 h-8 border border-secondary/40 rounded-full"></div>
+            {/* Nature-inspired Decorative Elements */}
+            <div className="absolute top-8 left-8 w-20 h-20 glass-effect rounded-full animate-float flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary/20 rounded-full animate-glow"></div>
             </div>
-            <div className="absolute bottom-6 right-6 w-12 h-12 bg-secondary/20 rounded-full animate-float flex items-center justify-center" style={{ animationDelay: '1s' }}>
-              <div className="w-6 h-6 bg-secondary/30 rounded-full"></div>
+            <div className="absolute bottom-8 right-8 w-16 h-16 glass-effect rounded-full animate-float flex items-center justify-center" style={{ animationDelay: '1s' }}>
+              <div className="w-8 h-8 bg-primary/30 rounded-full"></div>
             </div>
-            <div className="absolute top-1/4 right-8 w-3 h-3 bg-secondary/40 rounded-full animate-shimmer" style={{ animationDelay: '2s' }}></div>
-            <div className="absolute bottom-1/3 left-8 w-2 h-2 bg-secondary/50 rounded-full animate-shimmer" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute top-1/3 right-12 w-4 h-4 bg-primary/60 rounded-full animate-shimmer" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute bottom-1/4 left-12 w-3 h-3 bg-primary/70 rounded-full animate-shimmer" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute top-2/3 left-1/4 w-2 h-2 bg-primary/50 rounded-full animate-shimmer" style={{ animationDelay: '1.5s' }}></div>
           </div>
         )}
       </Card>
@@ -209,7 +210,7 @@ const WallpaperView = () => {
           <Button
             onClick={generateNewVerse}
             disabled={isGenerating}
-            variant="mosque"
+            className="nature-button text-card-foreground"
             size="lg"
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
@@ -218,7 +219,7 @@ const WallpaperView = () => {
           
           <Button
             onClick={downloadGeneratedWallpaper}
-            variant="gold"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-glow"
             size="lg"
           >
             <Download className="mr-2 h-4 w-4" />
@@ -229,7 +230,7 @@ const WallpaperView = () => {
             onClick={handleFavorite}
             variant="outline"
             size="lg"
-            className="border-primary/30 hover:bg-primary/10 hover:shadow-glow"
+            className="glass-effect border-primary/30 hover:bg-primary/20 hover:shadow-glow"
             disabled={favoriteVerse.isPending}
           >
             <Heart className="h-4 w-4" />
@@ -240,8 +241,7 @@ const WallpaperView = () => {
         <div className="flex gap-3">
           <Button
             onClick={() => setShowCustomizer(!showCustomizer)}
-            variant="elegant"
-            className="flex-1"
+            className="flex-1 glass-effect border-primary/30 hover:bg-primary/10"
             size="lg"
           >
             <Settings className="mr-2 h-4 w-4" />
@@ -253,7 +253,7 @@ const WallpaperView = () => {
               onClick={generateWallpaperPreview}
               disabled={isGenerating}
               variant="outline"
-              className="flex-1 border-primary/30 hover:bg-primary/10 hover:shadow-glow"
+              className="flex-1 glass-effect border-primary/30 hover:bg-primary/20 hover:shadow-glow"
               size="lg"
             >
               Generate Preview

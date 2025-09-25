@@ -226,8 +226,8 @@ export const useDailyAutomation = () => {
       const dimensions = getDeviceScreenDimensions();
       
       const wallpaperBlob = await generator.generateWallpaper(verse, {
-        backgroundStyle: 'geometric',
-        colorScheme: 'emerald',
+      backgroundStyle: 'nature',
+      colorScheme: 'nature',
         width: dimensions.width,
         height: dimensions.height
       });

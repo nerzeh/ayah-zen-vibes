@@ -1,8 +1,8 @@
 import { Verse } from '@/hooks/useVerses';
 
 export interface WallpaperOptions {
-  backgroundStyle: 'mosque' | 'geometric' | 'arabesque' | 'calligraphy' | 'night' | 'crescent';
-  colorScheme: 'emerald' | 'gold' | 'midnight' | 'sunset' | 'royal';
+  backgroundStyle: 'nature' | 'mountain' | 'forest' | 'ocean' | 'sunset' | 'desert';
+  colorScheme: 'nature' | 'mountain' | 'forest' | 'ocean' | 'sunset' | 'desert';
   width: number;
   height: number;
 }
@@ -53,22 +53,22 @@ export class WallpaperGenerator {
     const { width, height, backgroundStyle, colorScheme } = options;
 
     switch (backgroundStyle) {
-      case 'mosque':
+      case 'nature':
         this.generateMosqueBackground(width, height, colorScheme);
         break;
-      case 'geometric':
+      case 'mountain':
         this.generateIslamicGeometric(width, height, colorScheme);
         break;
-      case 'arabesque':
+      case 'forest':
         this.generateArabesqueBackground(width, height, colorScheme);
         break;
-      case 'calligraphy':
+      case 'ocean':
         this.generateCalligraphyBackground(width, height, colorScheme);
         break;
-      case 'night':
+      case 'sunset':
         this.generateNightSkyBackground(width, height, colorScheme);
         break;
-      case 'crescent':
+      case 'desert':
         this.generateCrescentBackground(width, height, colorScheme);
         break;
     }

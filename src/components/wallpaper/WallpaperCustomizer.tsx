@@ -23,7 +23,7 @@ const WallpaperCustomizer = ({
   };
 
   return (
-    <Card className="p-6 space-y-6 bg-gradient-subtle border-primary/10">
+    <Card className="islamic-card p-6 space-y-6 bg-gradient-card border-primary/20">
       <h3 className="text-lg font-semibold text-foreground">Customize Your Wallpaper</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -40,12 +40,12 @@ const WallpaperCustomizer = ({
               <SelectValue placeholder="Select background style" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="mosque">Sacred Mosque</SelectItem>
-              <SelectItem value="geometric">Islamic Geometry</SelectItem>
-              <SelectItem value="arabesque">Arabesque Pattern</SelectItem>
-              <SelectItem value="calligraphy">Calligraphy Style</SelectItem>
-              <SelectItem value="night">Night Prayer</SelectItem>
-              <SelectItem value="crescent">Crescent Moon</SelectItem>
+              <SelectItem value="nature">Nature Garden</SelectItem>
+              <SelectItem value="mountain">Mountain Vista</SelectItem>
+              <SelectItem value="forest">Forest Peace</SelectItem>
+              <SelectItem value="ocean">Ocean Serenity</SelectItem>
+              <SelectItem value="sunset">Sunset Glory</SelectItem>
+              <SelectItem value="desert">Desert Calm</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -63,11 +63,12 @@ const WallpaperCustomizer = ({
               <SelectValue placeholder="Select color scheme" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="emerald">Emerald & Gold</SelectItem>
-              <SelectItem value="gold">Royal Gold</SelectItem>
-              <SelectItem value="midnight">Midnight Blue</SelectItem>
-              <SelectItem value="sunset">Sunset Glow</SelectItem>
-              <SelectItem value="royal">Royal Purple</SelectItem>
+              <SelectItem value="nature">Nature Green</SelectItem>
+              <SelectItem value="mountain">Mountain Gray</SelectItem>
+              <SelectItem value="forest">Forest Deep</SelectItem>
+              <SelectItem value="ocean">Ocean Blue</SelectItem>
+              <SelectItem value="sunset">Sunset Warm</SelectItem>
+              <SelectItem value="desert">Desert Gold</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -103,7 +104,7 @@ const WallpaperCustomizer = ({
           <Button
             onClick={onGenerate}
             disabled={isGenerating}
-            className="w-full bg-gradient-primary hover:opacity-90 text-primary-foreground"
+            className="w-full nature-button text-card-foreground"
             size="lg"
           >
             {isGenerating ? "Generating..." : "Generate Preview"}
@@ -115,14 +116,14 @@ const WallpaperCustomizer = ({
       <div className="space-y-3">
         <Label className="text-sm font-medium">Style Preview</Label>
         <div className="grid grid-cols-6 gap-3">
-          {(['mosque', 'geometric', 'arabesque', 'calligraphy', 'night', 'crescent'] as const).map((style) => (
+          {(['nature', 'mountain', 'forest', 'ocean', 'sunset', 'desert'] as const).map((style) => (
             <button
               key={style}
               onClick={() => updateOption('backgroundStyle', style)}
-              className={`aspect-square rounded-lg border-2 transition-all ${
+              className={`aspect-square rounded-xl border-2 transition-all ${
                 options.backgroundStyle === style
-                  ? 'border-primary shadow-glow'
-                  : 'border-border hover:border-primary/50'
+                  ? 'border-primary shadow-glow glass-effect'
+                  : 'border-border hover:border-primary/50 hover:glass-effect'
               }`}
             >
               <div
@@ -138,28 +139,29 @@ const WallpaperCustomizer = ({
 
 function getStylePreviewClass(style: string, colorScheme: string): string {
   const baseClasses = {
-    emerald: 'from-emerald-900 to-amber-500',
-    gold: 'from-amber-800 to-amber-400', 
-    midnight: 'from-slate-900 to-blue-600',
+    nature: 'from-green-900 to-amber-500',
+    mountain: 'from-gray-800 to-gray-400', 
+    forest: 'from-green-900 to-green-600',
+    ocean: 'from-blue-900 to-cyan-500',
     sunset: 'from-orange-800 to-amber-500',
-    royal: 'from-purple-900 to-emerald-600'
+    desert: 'from-yellow-800 to-amber-400'
   };
 
   switch (style) {
-    case 'mosque':
+    case 'nature':
       return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'geometric':
-      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]} opacity-90`;
-    case 'arabesque':
-      return `bg-radial-gradient ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'calligraphy':
-      return `bg-gradient-to-r ${baseClasses[colorScheme as keyof typeof baseClasses]} bg-blend-multiply`;
-    case 'night':
+    case 'mountain':
       return `bg-gradient-to-t ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
-    case 'crescent':
-      return `bg-radial-gradient ${baseClasses[colorScheme as keyof typeof baseClasses]} opacity-80`;
+    case 'forest':
+      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
+    case 'ocean':
+      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
+    case 'sunset':
+      return `bg-gradient-to-r ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
+    case 'desert':
+      return `bg-gradient-to-br ${baseClasses[colorScheme as keyof typeof baseClasses]}`;
     default:
-      return `bg-gradient-to-br ${baseClasses.emerald}`;
+      return `bg-gradient-to-br ${baseClasses.nature}`;
   }
 }
 

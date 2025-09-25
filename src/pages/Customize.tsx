@@ -19,8 +19,8 @@ const Customize = () => {
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
     return {
-      backgroundStyle: 'mosque',
-      colorScheme: 'emerald',
+      backgroundStyle: 'nature',
+      colorScheme: 'nature',
       width: dimensions.width,
       height: dimensions.height
     };
@@ -161,11 +161,11 @@ const Customize = () => {
             variant="outline"
             className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
             onClick={() => {
-              setWallpaperOptions(prev => ({
-                ...prev,
-                backgroundStyle: 'mosque',
-                colorScheme: 'emerald'
-              }));
+          setWallpaperOptions(prev => ({
+            ...prev,
+            backgroundStyle: 'nature',
+            colorScheme: 'nature'
+          }));
             }}
           >
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-900 to-amber-500 rounded mb-2"></div>
@@ -176,11 +176,11 @@ const Customize = () => {
             variant="outline"
             className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
             onClick={() => {
-              setWallpaperOptions(prev => ({
-                ...prev,
-                backgroundStyle: 'geometric',
-                colorScheme: 'gold'
-              }));
+          setWallpaperOptions(prev => ({
+            ...prev,
+            backgroundStyle: 'mountain',
+            colorScheme: 'mountain'
+          }));
             }}
           >
             <div className="w-8 h-8 bg-gradient-to-br from-amber-800 to-amber-400 rounded mb-2"></div>
@@ -191,11 +191,11 @@ const Customize = () => {
             variant="outline"
             className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
             onClick={() => {
-              setWallpaperOptions(prev => ({
-                ...prev,
-                backgroundStyle: 'arabesque',
-                colorScheme: 'royal'
-              }));
+          setWallpaperOptions(prev => ({
+            ...prev,
+            backgroundStyle: 'forest',
+            colorScheme: 'forest'
+          }));
             }}
           >
             <div className="w-8 h-8 bg-gradient-to-br from-purple-900 to-emerald-600 rounded mb-2"></div>
@@ -206,11 +206,11 @@ const Customize = () => {
             variant="outline"
             className="h-20 border-primary/20 hover:bg-primary/5 flex flex-col items-center justify-center"
             onClick={() => {
-              setWallpaperOptions(prev => ({
-                ...prev,
-                backgroundStyle: 'night',
-                colorScheme: 'midnight'
-              }));
+          setWallpaperOptions(prev => ({
+            ...prev,
+            backgroundStyle: 'sunset',
+            colorScheme: 'sunset'
+          }));
             }}
           >
             <div className="w-8 h-8 bg-gradient-to-br from-slate-900 to-blue-600 rounded mb-2"></div>

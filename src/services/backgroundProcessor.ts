@@ -111,8 +111,8 @@ export class BackgroundProcessor {
   public addWallpaperJob(verse: Verse, options?: Partial<WallpaperOptions>, priority: 'high' | 'normal' | 'low' = 'normal'): string {
     const dimensions = getDeviceScreenDimensions();
     const wallpaperOptions: WallpaperOptions = {
-      backgroundStyle: 'geometric',
-      colorScheme: 'emerald',
+        backgroundStyle: 'nature',
+        colorScheme: 'nature',
       width: dimensions.width,
       height: dimensions.height,
       ...options
