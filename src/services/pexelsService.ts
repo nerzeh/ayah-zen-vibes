@@ -34,10 +34,23 @@ export interface PexelsSearchResponse {
 
 export class PexelsService {
   private static readonly FILTERED_KEYWORDS = [
-    'people', 'person', 'man', 'woman', 'child', 'human', 'face', 'portrait',
-    'text', 'writing', 'sign', 'letter', 'word',
-    'animal', 'bird', 'cat', 'dog', 'wildlife', 'pet',
-    'statue', 'sculpture', 'monument'
+    // People and humans
+    'people', 'person', 'man', 'woman', 'child', 'children', 'human', 'face', 'portrait',
+    'boy', 'girl', 'male', 'female', 'adult', 'tourist', 'tourists', 'couple', 'couples',
+    'family', 'group', 'crowd', 'silhouette', 'silhouettes', 'wedding', 'bride', 'groom',
+    'dancer', 'dancing', 'walker', 'walking', 'runner', 'running', 'standing', 'sitting',
+    
+    // Text and writing
+    'text', 'writing', 'sign', 'letter', 'word', 'alphabet', 'calligraphy',
+    
+    // Animals and wildlife
+    'animal', 'animals', 'bird', 'birds', 'cat', 'cats', 'dog', 'dogs', 'wildlife', 'pet', 'pets',
+    'horse', 'horses', 'cow', 'cows', 'sheep', 'goat', 'lion', 'elephant', 'tiger', 'deer',
+    'fish', 'whale', 'dolphin', 'shark', 'eagle', 'owl', 'rabbit', 'fox', 'bear', 'wolf',
+    'butterfly', 'bee', 'spider', 'snake', 'camel', 'camels', 'flamingo', 'seagull',
+    
+    // Statues and monuments
+    'statue', 'statues', 'sculpture', 'monument', 'bust'
   ];
 
   private static readonly SEARCH_QUERIES = [
