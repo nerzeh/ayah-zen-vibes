@@ -9,7 +9,10 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import OfflineIndicator from "@/components/performance/OfflineIndicator";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/navigation/AppSidebar";
 import { automationManager } from "@/services/automationManager";
+import { useIsMobile } from "@/hooks/use-mobile";
 import Index from "./pages/Index";
 import Library from "./pages/Library";
 import Favorites from "./pages/Favorites";
@@ -31,6 +34,59 @@ const queryClient = new QueryClient({
   },
 });
 
+function AppContent() {
+  const isMobile = useIsMobile();
+
+  // For mobile devices, don't show sidebar
+  if (isMobile) {
+    return (
+      <div className="relative">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/customize" element={<Customize />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster />
+        <OfflineIndicator />
+      </div>
+    );
+  }
+
+  // For tablets and desktop, show sidebar
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/library" element={<Library />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/customize" element={<Customize />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Toaster />
+        <OfflineIndicator />
+      </div>
+    </SidebarProvider>
+  );
+}
+
 function App() {
   // Initialize automation services after React is ready
   React.useEffect(() => {
@@ -38,41 +94,23 @@ function App() {
   }, []);
 
   return (
-    <ErrorBoundary>
-      <PremiumProvider>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              <LanguageProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <ErrorBoundary>
+          <AuthProvider>
+            <LanguageProvider>
+              <PremiumProvider>
                 <AccessibilityProvider>
-                  <TooltipProvider delayDuration={300}>
-                    <div className="min-h-screen bg-background">
-                      <main id="main-content">
-                        <Routes>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/library" element={<Library />} />
-                          <Route path="/favorites" element={<Favorites />} />
-                          <Route path="/customize" element={<Customize />} />
-                          <Route path="/settings" element={<Settings />} />
-                          <Route path="/welcome" element={<Welcome />} />
-                          <Route path="/signup" element={<SignUp />} />
-                          <Route path="/signin" element={<SignIn />} />
-                          <Route path="/reset-password" element={<ResetPassword />} />
-                          <Route path="/auth" element={<Auth />} />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </main>
-                    </div>
-                    <Toaster />
-                    <OfflineIndicator />
+                  <TooltipProvider>
+                    <AppContent />
                   </TooltipProvider>
                 </AccessibilityProvider>
-              </LanguageProvider>
-            </AuthProvider>
-          </QueryClientProvider>
-        </BrowserRouter>
-      </PremiumProvider>
-    </ErrorBoundary>
+              </PremiumProvider>
+            </LanguageProvider>
+          </AuthProvider>
+        </ErrorBoundary>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
