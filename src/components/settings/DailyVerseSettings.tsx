@@ -5,10 +5,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUserSettings } from "@/hooks/useUserSettings";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const DailyVerseSettings = () => {
   const { settings, updateSettings, isAuthenticated } = useUserSettings();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSettingChange = (setting: string, value: any) => {
     toast({
@@ -43,13 +45,13 @@ const DailyVerseSettings = () => {
     <Card className="p-6 bg-gradient-card border-primary/10">
       <div className="flex items-center mb-6">
         <Smartphone className="h-6 w-6 text-primary mr-2" />
-        <h2 className="text-xl font-semibold text-foreground">Daily Verse Settings</h2>
+        <h2 className="text-xl font-semibold text-foreground">{t('daily.title', 'Daily Verse Settings')}</h2>
       </div>
       
       <div className="space-y-6">
         {!isAuthenticated && (
           <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded border">
-            Sign in to save your daily verse preferences and sync across devices.
+            {t('daily.signInNote', 'Sign in to save your daily verse preferences and sync across devices.')}
           </div>
         )}
         

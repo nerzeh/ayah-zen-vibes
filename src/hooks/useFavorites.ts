@@ -4,6 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Verse } from './useVerses';
+import { useVerseTranslations } from '@/hooks/useVerseTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FavoriteVerse extends Verse {
   favorite_id: number;
@@ -22,7 +24,8 @@ export const useFavorites = () => {
   const queryClient = useQueryClient();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [offlineQueue, setOfflineQueue] = useState<OfflineFavorite[]>([]);
-
+  const { getTranslation } = useVerseTranslations();
+  const { currentLanguage } = useLanguage();
   // Monitor online/offline status
   useEffect(() => {
     const handleOnline = () => {
@@ -68,7 +71,7 @@ export const useFavorites = () => {
 
   // Fetch favorites with proper error handling
   const { data: favorites, isLoading, error } = useQuery({
-    queryKey: ['favorites', user?.id],
+    queryKey: ['favorites', user?.id, currentLanguage],
     queryFn: async () => {
       if (!user) return [];
 
@@ -92,10 +95,11 @@ export const useFavorites = () => {
 
       if (error) throw error;
 
-      return data?.map(fav => ({
+      return (data || []).map((fav) => ({
         ...fav.verses,
+        translated_text: getTranslation(fav.verses.id, fav.verses.english_translation),
         favorite_id: fav.id,
-        created_date: fav.created_date
+        created_date: fav.created_date,
       })) as FavoriteVerse[];
     },
     enabled: !!user,

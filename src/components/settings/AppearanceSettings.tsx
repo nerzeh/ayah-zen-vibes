@@ -4,11 +4,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEnhancedUserSettings } from "@/hooks/useEnhancedUserSettings";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const AppearanceSettings = () => {
   const { settings, updateSettings, isAuthenticated } = useEnhancedUserSettings();
   const { toast } = useToast();
-
+  const { t } = useLanguage();
   const handleSettingChange = (setting: string, value: any) => {
     toast({
       title: "Appearance updated",
@@ -21,7 +22,7 @@ const AppearanceSettings = () => {
     <Card className="p-6 bg-gradient-card border-primary/10">
       <div className="flex items-center mb-6">
         <Palette className="h-6 w-6 text-primary mr-2" />
-        <h2 className="text-xl font-semibold text-foreground">Appearance</h2>
+        <h2 className="text-xl font-semibold text-foreground">{t('settings.appearance')}</h2>
       </div>
       
       <div className="space-y-6">

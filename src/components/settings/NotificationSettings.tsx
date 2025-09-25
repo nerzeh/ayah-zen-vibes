@@ -6,11 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUserSettings } from "@/hooks/useUserSettings";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const NotificationSettings = () => {
   const { settings, updateSettings, isAuthenticated } = useUserSettings();
   const { toast } = useToast();
-
+  const { t } = useLanguage();
   const handleSettingChange = (setting: string, value: any) => {
     toast({
       title: "Notification updated",
@@ -58,7 +59,7 @@ const NotificationSettings = () => {
     <Card className="p-6 bg-gradient-card border-primary/10">
       <div className="flex items-center mb-6">
         <Bell className="h-6 w-6 text-primary mr-2" />
-        <h2 className="text-xl font-semibold text-foreground">Notifications</h2>
+        <h2 className="text-xl font-semibold text-foreground">{t('settings.notifications')}</h2>
       </div>
       
       <div className="space-y-6">

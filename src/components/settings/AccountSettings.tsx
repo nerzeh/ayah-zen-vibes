@@ -8,10 +8,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Mail, Camera, LogOut, Edit2, Check, X } from 'lucide-react';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const AccountSettings = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(user?.user_metadata?.display_name || '');
 
@@ -96,7 +98,7 @@ const AccountSettings = () => {
     <Card className="p-6 bg-gradient-card border-primary/10">
       <div className="flex items-center mb-6">
         <User className="h-6 w-6 text-primary mr-2" />
-        <h2 className="text-xl font-semibold text-foreground">Account</h2>
+        <h2 className="text-xl font-semibold text-foreground">{t('settings.account')}</h2>
       </div>
       
       <div className="space-y-6">
@@ -120,9 +122,9 @@ const AccountSettings = () => {
           </div>
           
           <div className="flex-1">
-            <h3 className="font-medium text-foreground">Profile Picture</h3>
+            <h3 className="font-medium text-foreground">{t('account.profilePicture', 'Profile Picture')}</h3>
             <p className="text-sm text-muted-foreground">
-              Add a photo to personalize your account
+              {t('account.profilePictureHint', 'Add a photo to personalize your account')}
             </p>
           </div>
         </div>
@@ -130,7 +132,7 @@ const AccountSettings = () => {
         {/* Display Name */}
         <div className="space-y-2">
           <Label htmlFor="display-name" className="text-base font-medium">
-            Display Name
+            {t('account.displayName')}
           </Label>
           {isEditing ? (
             <div className="flex space-x-2">
@@ -138,7 +140,7 @@ const AccountSettings = () => {
                 id="display-name"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Enter your display name"
+                placeholder={t('account.enterDisplayName', 'Enter your display name')}
                 className="flex-1"
               />
               <Button size="sm" onClick={handleSaveProfile}>
@@ -151,7 +153,7 @@ const AccountSettings = () => {
           ) : (
             <div className="flex items-center space-x-2">
               <p className="text-foreground flex-1">
-                {displayName || 'No display name set'}
+                {displayName || t('account.noDisplayName', 'No display name set')}
               </p>
               <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}>
                 <Edit2 className="h-4 w-4" />
@@ -164,12 +166,12 @@ const AccountSettings = () => {
         <div className="space-y-2">
           <Label className="text-base font-medium flex items-center">
             <Mail className="h-4 w-4 mr-2" />
-            Email Address
+            {t('account.email')}
           </Label>
           <div className="flex items-center justify-between">
             <p className="text-foreground">{user.email}</p>
             <Button size="sm" variant="outline" disabled>
-              Verified
+              {t('account.verified')}
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
@@ -186,7 +188,7 @@ const AccountSettings = () => {
               className="w-full justify-start border-destructive/20 text-destructive hover:bg-destructive/5"
             >
               <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
+              {t('account.signOut')}
             </Button>
             
             <Button 
@@ -197,7 +199,7 @@ const AccountSettings = () => {
                 description: "Please email us at support@ayahwallpapers.com for account deletion requests." 
               })}
             >
-              Request Account Deletion
+              {t('account.deleteAccount')}
             </Button>
           </div>
         </div>

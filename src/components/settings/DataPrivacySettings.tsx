@@ -8,13 +8,14 @@ import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const DataPrivacySettings = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isSyncing, setIsSyncing] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
-
+  const { t } = useLanguage();
   const handleDataSync = async () => {
     if (!user) {
       toast({
@@ -127,7 +128,7 @@ const DataPrivacySettings = () => {
     <Card className="p-6 bg-gradient-card border-primary/10">
       <div className="flex items-center mb-6">
         <Shield className="h-6 w-6 text-primary mr-2" />
-        <h2 className="text-xl font-semibold text-foreground">Data & Privacy</h2>
+        <h2 className="text-xl font-semibold text-foreground">{t('settings.privacy')}</h2>
       </div>
       
       <div className="space-y-6">
