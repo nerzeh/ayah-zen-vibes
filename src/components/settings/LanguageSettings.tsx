@@ -3,11 +3,11 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { useUserSettings } from "@/hooks/useUserSettings";
+import { useEnhancedUserSettings } from "@/hooks/useEnhancedUserSettings";
 import { useToast } from "@/hooks/use-toast";
 
 const LanguageSettings = () => {
-  const { settings, updateSettings, isAuthenticated } = useUserSettings();
+  const { settings, updateSettings, isAuthenticated } = useEnhancedUserSettings();
   const { toast } = useToast();
 
   const handleSettingChange = (setting: string, value: any) => {
@@ -91,8 +91,9 @@ const LanguageSettings = () => {
           </Label>
           
           <Select
-            defaultValue="interpretive"
-            onValueChange={(value) => {
+            value={settings.translationStyle || 'interpretive'}
+            onValueChange={(value: 'literal' | 'interpretive' | 'simplified') => {
+              updateSettings({ translationStyle: value });
               handleSettingChange("Translation style", value);
             }}
           >
@@ -124,16 +125,17 @@ const LanguageSettings = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">Arabic Text Size</Label>
-              <span className="text-sm text-muted-foreground">Large</span>
+              <span className="text-sm text-muted-foreground">{settings.arabicTextSize || 18}px</span>
             </div>
             
             <Slider
-              defaultValue={[18]}
+              value={[settings.arabicTextSize || 18]}
               max={24}
               min={14}
               step={2}
               className="w-full"
               onValueChange={(value) => {
+                updateSettings({ arabicTextSize: value[0] });
                 handleSettingChange("Arabic text size", `${value[0]}px`);
               }}
             />
@@ -148,11 +150,14 @@ const LanguageSettings = () => {
 
           {/* Sample Arabic Text */}
           <div className="bg-gradient-to-r from-primary/5 to-secondary/5 p-4 rounded-lg border border-primary/10">
-            <p className="text-center font-arabic text-lg text-foreground mb-2">
+            <p 
+              className="text-center font-arabic text-foreground mb-2"
+              style={{ fontSize: `${settings.arabicTextSize || 18}px` }}
+            >
               بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
             </p>
             <p className="text-center text-sm text-muted-foreground">
-              Sample Arabic text with current size settings
+              Sample Arabic text with current size settings ({settings.arabicTextSize || 18}px)
             </p>
           </div>
         </div>
@@ -166,7 +171,13 @@ const LanguageSettings = () => {
           <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <Label className="text-sm font-medium">Date Format</Label>
-              <Select defaultValue="gregorian">
+              <Select 
+                value={settings.dateFormat || 'gregorian'}
+                onValueChange={(value: 'gregorian' | 'hijri' | 'both') => {
+                  updateSettings({ dateFormat: value });
+                  handleSettingChange("Date format", value);
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -180,7 +191,13 @@ const LanguageSettings = () => {
             
             <div className="space-y-2">
               <Label className="text-sm font-medium">Time Format</Label>
-              <Select defaultValue="12h">
+              <Select 
+                value={settings.timeFormat || '12h'}
+                onValueChange={(value: '12h' | '24h') => {
+                  updateSettings({ timeFormat: value });
+                  handleSettingChange("Time format", value);
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

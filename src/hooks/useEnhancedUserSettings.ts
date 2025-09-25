@@ -27,6 +27,12 @@ interface UserSettings {
   highContrast: boolean;
   reducedMotion: boolean;
   screenReaderMode: boolean;
+  
+  // Language & Text settings
+  translationStyle: 'literal' | 'interpretive' | 'simplified';
+  arabicTextSize: number;
+  dateFormat: 'gregorian' | 'hijri' | 'both';
+  timeFormat: '12h' | '24h';
 }
 
 interface OfflineSettingsUpdate {
@@ -49,6 +55,10 @@ const defaultSettings: UserSettings = {
   highContrast: false,
   reducedMotion: false,
   screenReaderMode: false,
+  translationStyle: 'interpretive',
+  arabicTextSize: 18,
+  dateFormat: 'gregorian',
+  timeFormat: '12h',
 };
 
 export const useEnhancedUserSettings = () => {
@@ -173,6 +183,10 @@ export const useEnhancedUserSettings = () => {
             highContrast: data.high_contrast ?? defaultSettings.highContrast,
             reducedMotion: data.reduced_motion ?? defaultSettings.reducedMotion,
             screenReaderMode: data.screen_reader_mode ?? defaultSettings.screenReaderMode,
+            translationStyle: (data.translation_style as any) ?? defaultSettings.translationStyle,
+            arabicTextSize: data.arabic_text_size ?? defaultSettings.arabicTextSize,
+            dateFormat: (data.date_format as any) ?? defaultSettings.dateFormat,
+            timeFormat: (data.time_format as any) ?? defaultSettings.timeFormat,
           };
           
           setSettings(loadedSettings);

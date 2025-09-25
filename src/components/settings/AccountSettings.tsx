@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { User, Mail, Camera, LogOut, Edit2, Check, X } from 'lucide-react';
 
 const AccountSettings = () => {
@@ -31,13 +32,41 @@ const AccountSettings = () => {
     });
   };
 
-  const handleSaveProfile = () => {
-    // TODO: Implement profile update functionality
-    setIsEditing(false);
-    toast({
-      title: "Profile updated",
-      description: "Your profile has been updated successfully.",
-    });
+  const handleSaveProfile = async () => {
+    if (!user || !displayName.trim()) return;
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          display_name: displayName.trim(),
+          email: user.email
+        });
+
+      if (error) {
+        console.error('Error updating profile:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update profile. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setIsEditing(false);
+      toast({
+        title: "Profile updated",
+        description: "Your display name has been updated successfully.",
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleCancelEdit = () => {
