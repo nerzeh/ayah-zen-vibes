@@ -21,7 +21,8 @@ const WallpaperView = () => {
     const dimensions = getDeviceScreenDimensions();
     return {
       width: dimensions.width,
-      height: dimensions.height
+      height: dimensions.height,
+      backgroundImage: undefined
     };
   });
 

@@ -1,8 +1,10 @@
 import { Verse } from '@/hooks/useVerses';
+import { PexelsService } from '@/services/pexelsService';
 
 export interface WallpaperOptions {
   width: number;
   height: number;
+  backgroundImage?: string;
 }
 
 export class WallpaperGenerator {
@@ -48,8 +50,30 @@ export class WallpaperGenerator {
   }
 
   private async generateBackground(options: WallpaperOptions): Promise<void> {
-    const { width, height } = options;
+    const { width, height, backgroundImage } = options;
 
+    if (backgroundImage) {
+      try {
+        // Load image with dark overlay from Pexels service
+        const overlayCanvas = await PexelsService.loadImageWithOverlay(backgroundImage);
+        
+        // Scale and draw the background image
+        this.ctx.drawImage(overlayCanvas, 0, 0, width, height);
+        
+        // Add additional overlay for better text readability
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        this.ctx.fillRect(0, 0, width, height);
+      } catch (error) {
+        console.error('Failed to load background image:', error);
+        // Fallback to gradient
+        this.generateGradientBackground(width, height);
+      }
+    } else {
+      this.generateGradientBackground(width, height);
+    }
+  }
+
+  private generateGradientBackground(width: number, height: number): void {
     // Simple elegant gradient background
     const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
     gradient.addColorStop(0, 'hsl(210, 60%, 15%)');
