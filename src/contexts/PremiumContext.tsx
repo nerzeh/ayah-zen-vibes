@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Capacitor } from '@capacitor/core';
 
 interface PremiumContextType {
   isPremium: boolean;
@@ -52,13 +51,13 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('user_premium')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('Error loading premium status:', error);
         return;
       }
@@ -75,48 +74,27 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
   };
 
   const purchasePremium = async () => {
-    if (!Capacitor.isNativePlatform()) {
-      // For web testing, just set premium status
-      await updatePremiumStatus(true);
-      return;
-    }
-
-    try {
-      // Native purchase logic would go here
-      // For now, simulate premium purchase
-      await updatePremiumStatus(true);
-    } catch (error) {
-      console.error('Purchase failed:', error);
-      throw error;
-    }
+    // For web/demo, just set premium status
+    await updatePremiumStatus(true);
   };
 
   const restorePurchases = async () => {
-    if (!Capacitor.isNativePlatform()) {
-      return;
-    }
-
-    try {
-      // Native restore logic would go here
-      await loadPremiumStatus();
-    } catch (error) {
-      console.error('Restore failed:', error);
-      throw error;
-    }
+    // For web/demo, reload premium status
+    await loadPremiumStatus();
   };
 
   const updatePremiumStatus = async (premium: boolean) => {
     if (!user) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('user_premium')
-        .upsert({
+        .upsert([{
           user_id: user.id,
           is_premium: premium,
           wallpaper_count: wallpaperCount,
           updated_at: new Date().toISOString(),
-        });
+        }]);
 
       if (error) {
         console.error('Error updating premium status:', error);
@@ -135,14 +113,14 @@ export const PremiumProvider: React.FC<PremiumProviderProps> = ({ children }) =>
     const newCount = wallpaperCount + 1;
     
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('user_premium')
-        .upsert({
+        .upsert([{
           user_id: user.id,
           is_premium: isPremium,
           wallpaper_count: newCount,
           updated_at: new Date().toISOString(),
-        });
+        }]);
 
       if (error) {
         console.error('Error updating wallpaper count:', error);

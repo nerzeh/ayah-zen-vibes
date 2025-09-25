@@ -76,6 +76,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_premium: {
+        Row: {
+          created_at: string
+          id: string
+          is_premium: boolean
+          purchase_date: string | null
+          updated_at: string
+          user_id: string
+          wallpaper_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          purchase_date?: string | null
+          updated_at?: string
+          user_id: string
+          wallpaper_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          purchase_date?: string | null
+          updated_at?: string
+          user_id?: string
+          wallpaper_count?: number
+        }
+        Relationships: []
+      }
       user_settings: {
         Row: {
           arabic_text_size: number | null

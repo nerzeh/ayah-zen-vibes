@@ -7,16 +7,20 @@ import { useRandomVerse, useFavoriteVerse, type Verse } from "@/hooks/useVerses"
 import { WallpaperGenerator as WallpaperEngine, WallpaperOptions, getDeviceScreenDimensions, downloadWallpaper } from "@/lib/wallpaperEngine";
 import WallpaperCustomizer from "./WallpaperCustomizer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePremium } from "@/contexts/PremiumContext";
+import PaywallDialog from "@/components/premium/PaywallDialog";
 const WallpaperView = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showCustomizer, setShowCustomizer] = useState(false);
   const [generatedWallpaper, setGeneratedWallpaper] = useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
   const [wallpaperEngine] = useState(() => new WallpaperEngine());
   
   const { data: currentVerse, refetch, isLoading } = useRandomVerse();
   const favoriteVerse = useFavoriteVerse();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { canDownloadWallpaper, wallpaperCount, wallpaperLimit, incrementWallpaperCount, isPremium } = usePremium();
   
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
@@ -73,10 +77,21 @@ const WallpaperView = () => {
   const downloadGeneratedWallpaper = async () => {
     if (!currentVerse) return;
     
+    // Check if user can download wallpaper
+    if (!canDownloadWallpaper) {
+      setShowPaywall(true);
+      return;
+    }
+    
     try {
       const blob = await wallpaperEngine.generateWallpaper(currentVerse, wallpaperOptions);
       const filename = `islamic-wallpaper-${currentVerse.surah_number}-${currentVerse.ayah_number}.png`;
       downloadWallpaper(blob, filename);
+      
+      // Increment count for free users
+      if (!isPremium) {
+        await incrementWallpaperCount();
+      }
       
       toast({
         title: t('wallpaper.downloaded'),
@@ -220,11 +235,16 @@ const WallpaperView = () => {
           
           <Button
             onClick={downloadGeneratedWallpaper}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-glow"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-glow relative"
             size="lg"
           >
             <Download className="mr-2 h-4 w-4" />
             {t('customize.download')}
+            {!isPremium && (
+              <span className="ml-2 text-xs bg-primary-foreground/20 px-2 py-1 rounded-full">
+                {wallpaperCount}/{wallpaperLimit}
+              </span>
+            )}
           </Button>
           
           <Button
@@ -262,6 +282,12 @@ const WallpaperView = () => {
           )}
         </div>
       </div>
+
+      {/* Paywall Dialog */}
+      <PaywallDialog
+        open={showPaywall}
+        onOpenChange={setShowPaywall}
+      />
     </div>
   );
 };

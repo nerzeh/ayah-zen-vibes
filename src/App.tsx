@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { PremiumProvider } from "@/contexts/PremiumContext";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import OfflineIndicator from "@/components/performance/OfflineIndicator";
 import { automationManager } from "@/services/automationManager";
@@ -42,8 +43,9 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <LanguageProvider>
-              <AccessibilityProvider>
-                <TooltipProvider delayDuration={300}>
+              <PremiumProvider>
+                <AccessibilityProvider>
+                  <TooltipProvider delayDuration={300}>
                   <div className="min-h-screen bg-background">
                     <main id="main-content">
                       <Routes>
@@ -63,8 +65,9 @@ function App() {
                   </div>
                   <Toaster />
                   <OfflineIndicator />
-                </TooltipProvider>
-              </AccessibilityProvider>
+                  </TooltipProvider>
+                </AccessibilityProvider>
+              </PremiumProvider>
             </LanguageProvider>
           </AuthProvider>
         </QueryClientProvider>

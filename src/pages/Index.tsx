@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Download, Palette, BookOpen, Settings, Heart, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePremium } from "@/contexts/PremiumContext";
+import PremiumBadge from "@/components/premium/PremiumBadge";
 import { useLanguage } from "@/contexts/LanguageContext";
 const Index = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { isPremium } = usePremium();
   const displayName = user ? (user.user_metadata?.display_name || user.email?.split('@')[0]) : '';
 
   return (
@@ -19,8 +22,9 @@ const Index = () => {
       {/* Header */}
       <div className="text-center pt-8 pb-6 px-4">
         <div className="relative inline-block mb-4">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2 flex items-center gap-3">
             {user ? t('home.welcomeBack', 'Welcome back, {name}!').replace('{name}', displayName) : t('home.todayVerse')}
+            {user && isPremium && <PremiumBadge className="text-sm" />}
           </h1>
           <Sparkles className="absolute -top-1 -right-6 h-6 w-6 text-secondary animate-pulse" />
         </div>

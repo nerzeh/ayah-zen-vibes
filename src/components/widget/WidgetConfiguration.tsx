@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Smartphone, RefreshCw, Settings, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePremium } from "@/contexts/PremiumContext";
+import PaywallDialog from "@/components/premium/PaywallDialog";
 
 interface WidgetConfig {
   enabled: boolean;
@@ -24,8 +26,10 @@ const WidgetConfiguration = () => {
     showArabic: true,
     showTranslation: true
   });
+  const [showPaywall, setShowPaywall] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { isPremium } = usePremium();
 
   const updateConfig = (key: keyof WidgetConfig, value: any) => {
     setConfig(prev => ({ ...prev, [key]: value }));
@@ -43,6 +47,11 @@ const WidgetConfiguration = () => {
   };
 
   const installWidget = async () => {
+    if (!isPremium) {
+      setShowPaywall(true);
+      return;
+    }
+    
     // This would trigger native widget installation
     // For now, we'll simulate the process
     toast({
@@ -239,6 +248,11 @@ const WidgetConfiguration = () => {
           </Card>
         )}
       </Card>
+
+      <PaywallDialog
+        open={showPaywall}
+        onOpenChange={setShowPaywall}
+      />
     </div>
   );
 };

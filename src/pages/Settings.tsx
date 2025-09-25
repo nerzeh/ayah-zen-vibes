@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Settings as SettingsIcon, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import PremiumSettings from "@/components/settings/PremiumSettings";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Navigate, Link } from "react-router-dom";
 import AccountSettings from "@/components/settings/AccountSettings";
@@ -42,6 +43,9 @@ const Settings = () => {
       </div>
 
       <div className="space-y-8 max-w-2xl mx-auto">
+        {/* Premium Status */}
+        <PremiumSettings />
+
         {/* Account Section */}
         <AccountSettings />
 
