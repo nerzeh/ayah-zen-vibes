@@ -111,7 +111,6 @@ export class BackgroundProcessor {
   public addWallpaperJob(verse: Verse, options?: Partial<WallpaperOptions>, priority: 'high' | 'normal' | 'low' = 'normal'): string {
     const dimensions = getDeviceScreenDimensions();
     const wallpaperOptions: WallpaperOptions = {
-        backgroundType: 'mountain_valley',
       width: dimensions.width,
       height: dimensions.height,
       ...options

@@ -20,7 +20,6 @@ const WallpaperView = () => {
   const [wallpaperOptions, setWallpaperOptions] = useState<WallpaperOptions>(() => {
     const dimensions = getDeviceScreenDimensions();
     return {
-      backgroundType: 'mountain_valley',
       width: dimensions.width,
       height: dimensions.height
     };

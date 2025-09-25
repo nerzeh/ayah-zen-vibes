@@ -1,7 +1,6 @@
 import { Verse } from '@/hooks/useVerses';
 
 export interface WallpaperOptions {
-  backgroundType: 'mountain_valley' | 'sunset_water' | 'starry_night' | 'desert_dunes' | 'forest_path' | 'ocean_cliffs';
   width: number;
   height: number;
 }
@@ -49,97 +48,22 @@ export class WallpaperGenerator {
   }
 
   private async generateBackground(options: WallpaperOptions): Promise<void> {
-    const { width, height, backgroundType } = options;
+    const { width, height } = options;
 
-    try {
-      // Generate AI background image
-      const backgroundImage = await this.generateAINatureBackground(backgroundType);
-      
-      // Draw the background image
-      this.ctx.drawImage(backgroundImage, 0, 0, width, height);
-      
-      // Add subtle overlay for better text readability
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-      this.ctx.fillRect(0, 0, width, height);
-      
-    } catch (error) {
-      console.error('Failed to generate AI background, using fallback:', error);
-      // Fallback to simple gradient
-      this.generateFallbackBackground(width, height, backgroundType);
-    }
-  }
-
-  private async generateAINatureBackground(backgroundType: string): Promise<HTMLImageElement> {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    
-    const response = await fetch(`${supabaseUrl}/functions/v1/generate-nature-background`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${supabaseAnonKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ backgroundType }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = data.image;
-    });
-  }
-
-  private generateFallbackBackground(width: number, height: number, backgroundType: string): void {
+    // Simple elegant gradient background
     const gradient = this.ctx.createLinearGradient(0, 0, 0, height);
-    
-    switch (backgroundType) {
-      case 'mountain_valley':
-        gradient.addColorStop(0, 'hsl(210, 60%, 20%)');
-        gradient.addColorStop(0.3, 'hsl(150, 40%, 30%)');
-        gradient.addColorStop(0.7, 'hsl(120, 60%, 40%)');
-        gradient.addColorStop(1, 'hsl(90, 80%, 50%)');
-        break;
-      case 'sunset_water':
-        gradient.addColorStop(0, 'hsl(25, 90%, 55%)');
-        gradient.addColorStop(0.5, 'hsl(45, 90%, 55%)');
-        gradient.addColorStop(1, 'hsl(220, 60%, 20%)');
-        break;
-      case 'starry_night':
-        gradient.addColorStop(0, 'hsl(220, 60%, 8%)');
-        gradient.addColorStop(0.4, 'hsl(220, 50%, 12%)');
-        gradient.addColorStop(1, 'hsl(220, 40%, 15%)');
-        break;
-      case 'desert_dunes':
-        gradient.addColorStop(0, 'hsl(45, 80%, 70%)');
-        gradient.addColorStop(0.5, 'hsl(35, 85%, 60%)');
-        gradient.addColorStop(1, 'hsl(25, 90%, 50%)');
-        break;
-      case 'forest_path':
-        gradient.addColorStop(0, 'hsl(120, 40%, 20%)');
-        gradient.addColorStop(0.5, 'hsl(110, 50%, 30%)');
-        gradient.addColorStop(1, 'hsl(100, 60%, 40%)');
-        break;
-      case 'ocean_cliffs':
-        gradient.addColorStop(0, 'hsl(210, 70%, 40%)');
-        gradient.addColorStop(0.5, 'hsl(200, 80%, 50%)');
-        gradient.addColorStop(1, 'hsl(190, 90%, 60%)');
-        break;
-      default:
-        gradient.addColorStop(0, 'hsl(210, 60%, 20%)');
-        gradient.addColorStop(0.5, 'hsl(150, 40%, 30%)');
-        gradient.addColorStop(1, 'hsl(120, 60%, 40%)');
-    }
+    gradient.addColorStop(0, 'hsl(210, 60%, 15%)');
+    gradient.addColorStop(0.5, 'hsl(220, 50%, 25%)');
+    gradient.addColorStop(1, 'hsl(230, 40%, 35%)');
 
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(0, 0, width, height);
+    
+    // Add subtle overlay for better text readability
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    this.ctx.fillRect(0, 0, width, height);
   }
+
 
 
   private async renderText(verse: Verse, options: WallpaperOptions): Promise<void> {
