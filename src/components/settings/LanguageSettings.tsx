@@ -68,15 +68,10 @@ const LanguageSettings = () => {
 
   const languages = [
     { code: 'en', name: 'English', native: 'English' },
-    { code: 'ar', name: 'Arabic', native: 'العربية' },
-    { code: 'ur', name: 'Urdu', native: 'اردو' },
-    { code: 'id', name: 'Indonesian', native: 'Bahasa Indonesia' },
-    { code: 'tr', name: 'Turkish', native: 'Türkçe' },
     { code: 'fr', name: 'French', native: 'Français' },
     { code: 'es', name: 'Spanish', native: 'Español' },
     { code: 'de', name: 'German', native: 'Deutsch' },
-    { code: 'bn', name: 'Bengali', native: 'বাংলা' },
-    { code: 'fa', name: 'Persian', native: 'فارسی' },
+    { code: 'ar', name: 'Arabic', native: 'العربية' },
   ];
 
   const translationStyles = [
