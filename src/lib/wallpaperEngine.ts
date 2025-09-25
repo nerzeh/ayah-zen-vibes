@@ -93,48 +93,68 @@ export class WallpaperGenerator {
   private async renderText(verse: Verse, options: WallpaperOptions): Promise<void> {
     const { width, height } = options;
     
-    // Calculate initial font sizes
-    let baseFontSize = Math.min(width, height) / 25;
-    let arabicFontSize = baseFontSize * 1.6;
-    let translationFontSize = baseFontSize * 0.85;
-    let referenceFontSize = baseFontSize * 0.65;
-
-    // Layout calculations
-    const topMargin = height * 0.12;
-    const bottomMargin = height * 0.12;
-    const textSpacing = baseFontSize * 0.6;
+    // More conservative margins for different aspect ratios
+    const topMargin = height * 0.08;
+    const bottomMargin = height * 0.08;
     const availableHeight = height - topMargin - bottomMargin;
+    const availableWidth = width * 0.9; // More generous width for text
 
-    // Set initial text properties
+    // Calculate responsive base font size
+    const aspectRatio = width / height;
+    let baseFontSize: number;
+    
+    if (aspectRatio > 1.5) {
+      // Wide format (desktop)
+      baseFontSize = Math.min(width, height) / 35;
+    } else if (aspectRatio < 0.8) {
+      // Tall format (mobile portrait)
+      baseFontSize = Math.min(width, height) / 45;
+    } else {
+      // Square or balanced format
+      baseFontSize = Math.min(width, height) / 40;
+    }
+
+    // Initial font size ratios
+    let arabicFontSize = baseFontSize * 1.8;
+    let translationFontSize = baseFontSize * 1.0;
+    let referenceFontSize = baseFontSize * 0.8;
+
+    // Set text properties
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
 
-    // Calculate text dimensions and adjust font sizes if needed
+    // Text fitting algorithm with more iterations
     let attempts = 0;
-    let totalTextHeight: number;
     let arabicLines: string[];
     let translationLines: string[];
+    let totalTextHeight: number;
+    const maxAttempts = 10;
 
     do {
+      // Calculate text spacing based on current font sizes
+      const textSpacing = Math.max(arabicFontSize * 0.4, 10);
+      
       // Get text lines with current font sizes
       this.ctx.font = `${arabicFontSize}px "Amiri", "Scheherazade New", serif`;
-      arabicLines = this.wrapText(verse.arabic_text, width * 0.85, arabicFontSize);
+      arabicLines = this.wrapText(verse.arabic_text, availableWidth, arabicFontSize);
       
       this.ctx.font = `${translationFontSize}px "Inter", sans-serif`;
-      translationLines = this.wrapText(`"${verse.english_translation}"`, width * 0.9, translationFontSize);
+      translationLines = this.wrapText(`"${verse.english_translation}"`, availableWidth, translationFontSize);
 
-      // Calculate total height needed
-      const arabicHeight = arabicLines.length * arabicFontSize * 1.4;
-      const translationHeight = translationLines.length * translationFontSize * 1.4;
-      const spacingHeight = textSpacing * 4; // spacing between sections and separator
+      // Calculate heights for each section
+      const arabicHeight = arabicLines.length * arabicFontSize * 1.3;
+      const translationHeight = translationLines.length * translationFontSize * 1.3;
       const referenceHeight = referenceFontSize * 1.2;
+      const decorativeHeight = textSpacing * 2; // Space for separator
       
-      totalTextHeight = arabicHeight + translationHeight + spacingHeight + referenceHeight;
+      // Total spacing between sections
+      const sectionSpacing = textSpacing * 3; // Between Arabic, translation, and reference
+      
+      totalTextHeight = arabicHeight + translationHeight + referenceHeight + decorativeHeight + sectionSpacing;
 
-      // If text doesn't fit, reduce font sizes
-      if (totalTextHeight > availableHeight && attempts < 5) {
-        const scaleFactor = 0.85;
-        baseFontSize *= scaleFactor;
+      // If text doesn't fit, scale down more aggressively
+      if (totalTextHeight > availableHeight && attempts < maxAttempts) {
+        const scaleFactor = Math.max(0.8, Math.sqrt(availableHeight / totalTextHeight));
         arabicFontSize *= scaleFactor;
         translationFontSize *= scaleFactor;
         referenceFontSize *= scaleFactor;
@@ -142,54 +162,61 @@ export class WallpaperGenerator {
       } else {
         break;
       }
-    } while (attempts < 5);
+    } while (attempts < maxAttempts);
 
-    // Now render the text with proper spacing
+    // Ensure minimum font sizes for readability
+    arabicFontSize = Math.max(arabicFontSize, 12);
+    translationFontSize = Math.max(translationFontSize, 10);
+    referenceFontSize = Math.max(referenceFontSize, 8);
+
+    // Calculate final spacing
+    const finalSpacing = Math.max(arabicFontSize * 0.4, 8);
+
+    // Position text vertically centered
+    let currentY = topMargin + (availableHeight - totalTextHeight) / 2;
+
+    // Enhanced text shadow for Islamic calligraphy effect
+    this.ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+    this.ctx.shadowBlur = 6;
+    this.ctx.shadowOffsetX = 2;
+    this.ctx.shadowOffsetY = 2;
+
+    // Render Arabic text
+    this.ctx.font = `${arabicFontSize}px "Amiri", "Scheherazade New", serif`;
     this.ctx.fillStyle = '#ffffff';
     
-    // Enhanced text shadow for Islamic calligraphy effect
-    this.ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-    this.ctx.shadowBlur = 6;
-    this.ctx.shadowOffsetX = 3;
-    this.ctx.shadowOffsetY = 3;
-
-    // Calculate starting position to center all content vertically
-    const contentHeight = totalTextHeight;
-    let currentY = topMargin + (availableHeight - contentHeight) / 2 + arabicFontSize * 0.7;
-
-    // Render Arabic text with Islamic calligraphy font
-    this.ctx.font = `${arabicFontSize}px "Amiri", "Scheherazade New", serif`;
+    currentY += arabicFontSize * 0.7; // Start position adjustment
     
     for (const line of arabicLines) {
       // Add golden glow for Arabic text
-      this.ctx.shadowColor = 'rgba(212, 175, 55, 0.5)';
-      this.ctx.shadowBlur = 12;
+      this.ctx.shadowColor = 'rgba(212, 175, 55, 0.6)';
+      this.ctx.shadowBlur = 8;
       this.ctx.fillText(line, width / 2, currentY);
-      currentY += arabicFontSize * 1.4;
+      currentY += arabicFontSize * 1.3;
     }
 
-    currentY += textSpacing * 2;
+    currentY += finalSpacing * 1.5;
 
-    // Render English translation with elegant styling
+    // Render English translation
     this.ctx.font = `${translationFontSize}px "Inter", sans-serif`;
     this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-    this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    this.ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
     this.ctx.shadowBlur = 4;
     
     for (const line of translationLines) {
       this.ctx.fillText(line, width / 2, currentY);
-      currentY += translationFontSize * 1.4;
+      currentY += translationFontSize * 1.3;
     }
 
     // Add decorative separator
-    currentY += textSpacing;
-    this.drawDecorativeSeparator(width / 2, currentY, width * 0.3);
-    currentY += textSpacing * 1.5;
+    currentY += finalSpacing;
+    this.drawDecorativeSeparator(width / 2, currentY, Math.min(width * 0.3, 200));
+    currentY += finalSpacing * 1.2;
 
-    // Render reference with golden accent
+    // Render reference
     this.ctx.font = `${referenceFontSize}px "Inter", sans-serif`;
-    this.ctx.fillStyle = 'hsl(45, 90%, 70%)';
-    this.ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+    this.ctx.fillStyle = 'hsl(45, 90%, 75%)';
+    this.ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
     this.ctx.shadowBlur = 3;
     
     this.ctx.fillText(
