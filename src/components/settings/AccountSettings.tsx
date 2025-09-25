@@ -38,11 +38,10 @@ const AccountSettings = () => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user.id,
-          display_name: displayName.trim(),
-          email: user.email
-        });
+        .update({
+          display_name: displayName.trim()
+        })
+        .eq('user_id', user.id);
 
       if (error) {
         console.error('Error updating profile:', error);

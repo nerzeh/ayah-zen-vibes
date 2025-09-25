@@ -119,29 +119,6 @@ export const useEnhancedUserSettings = () => {
     };
   }, [settings.fontSize]);
 
-  // Setup real-time subscription for settings updates
-  useEffect(() => {
-    if (!user) return;
-
-    const channel = supabase
-      .channel('user-settings-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'user_settings',
-          filter: `user_id=eq.${user.id}`,
-        },
-        handleRemoteSettingsUpdate
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user]);
-
   // Handle remote settings updates with conflict resolution
   const handleRemoteSettingsUpdate = useCallback((payload: any) => {
     const remoteData = payload.new;
@@ -181,6 +158,29 @@ export const useEnhancedUserSettings = () => {
     }
   }, [lastSyncTime, toast]);
 
+  // Setup real-time subscription for settings updates
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel('user-settings-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'user_settings',
+          filter: `user_id=eq.${user.id}`,
+        },
+        handleRemoteSettingsUpdate
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, handleRemoteSettingsUpdate]);
+
   // Load settings from database
   useEffect(() => {
     if (!user) {
@@ -189,6 +189,8 @@ export const useEnhancedUserSettings = () => {
       return;
     }
 
+    let isMounted = true;
+
     const loadSettings = async () => {
       try {
         const { data, error } = await supabase
@@ -196,6 +198,8 @@ export const useEnhancedUserSettings = () => {
           .select('*')
           .eq('user_id', user.id)
           .single();
+
+        if (!isMounted) return;
 
         if (error && error.code !== 'PGRST116') {
           console.error('Error loading settings:', error);
@@ -228,14 +232,22 @@ export const useEnhancedUserSettings = () => {
           setLastSyncTime(new Date(data.updated_at));
         }
       } catch (error) {
-        console.error('Error loading settings:', error);
+        if (isMounted) {
+          console.error('Error loading settings:', error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadSettings();
-  }, [user]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.id]); // Only depend on user ID, not the entire user object
 
   // Sync offline changes to server
   const syncOfflineChanges = async () => {
@@ -297,10 +309,8 @@ export const useEnhancedUserSettings = () => {
 
     const { error } = await supabase
       .from('user_settings')
-      .upsert({
-        user_id: user.id,
-        ...cleanUpdates,
-      });
+      .update(cleanUpdates)
+      .eq('user_id', user.id);
 
     if (error) throw error;
     setLastSyncTime(new Date());
