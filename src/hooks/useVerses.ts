@@ -18,7 +18,7 @@ export const useVerses = () => {
   const { language } = useLanguage();
   
   return useQuery({
-    queryKey: ['verses', currentLanguage],
+    queryKey: ['verses', language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('verses')
@@ -36,10 +36,10 @@ export const useVerses = () => {
 
 export const useRandomVerse = () => {
   const { getTranslation } = useVerseTranslations();
-  const { currentLanguage } = useLanguage();
+  const { language } = useLanguage();
   
   return useQuery({
-    queryKey: ['random-verse', currentLanguage],
+    queryKey: ['random-verse', language],
     queryFn: async () => {
       // First get the count of verses
       const { count } = await supabase

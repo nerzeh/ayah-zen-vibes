@@ -128,7 +128,7 @@ export const useVerseTranslations = () => {
   const { language } = useLanguage();
   
   const getTranslation = (verseId: number, fallbackText?: string): string => {
-    const translations = verseTranslations[currentLanguage] || verseTranslations.en;
+    const translations = verseTranslations[language] || verseTranslations.en;
     return translations[verseId] || fallbackText || `Translation not available for verse ${verseId}`;
   };
 

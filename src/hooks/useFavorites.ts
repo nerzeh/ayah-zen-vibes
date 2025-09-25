@@ -71,7 +71,7 @@ export const useFavorites = () => {
 
   // Fetch favorites with proper error handling
   const { data: favorites, isLoading, error } = useQuery({
-    queryKey: ['favorites', user?.id, currentLanguage],
+    queryKey: ['favorites', user?.id, language],
     queryFn: async () => {
       if (!user) return [];
 

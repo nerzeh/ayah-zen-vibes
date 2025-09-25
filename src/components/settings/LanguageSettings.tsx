@@ -12,7 +12,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const LanguageSettings = () => {
   const { settings, updateSettings, isAuthenticated } = useEnhancedUserSettings();
   const { toast } = useToast();
-  const { t, changeLanguage } = useLanguage();
+  const { t, setLanguage } = useLanguage();
 
   // Local (unsaved) values
   const [localLanguage, setLocalLanguage] = useState(settings.language);
@@ -44,8 +44,11 @@ const LanguageSettings = () => {
       const updates: Record<string, any> = {};
       if (localLanguage !== settings.language) {
         updates.language = localLanguage;
-        // Change language immediately for UI
-        await changeLanguage(localLanguage);
+        // Change language immediately for UI (only supported app languages)
+        const appLangs = ['en','ar','fr','es'] as const;
+        if ((appLangs as readonly string[]).includes(localLanguage)) {
+          setLanguage(localLanguage as any);
+        }
       }
       if (localTranslationStyle !== settings.translationStyle) updates.translationStyle = localTranslationStyle;
       if (localArabicTextSize !== settings.arabicTextSize) updates.arabicTextSize = localArabicTextSize;
