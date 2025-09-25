@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -17,12 +17,12 @@ interface WallpaperCustomizerProps {
   isGenerating: boolean;
 }
 
-const WallpaperCustomizer = ({ 
+export default function WallpaperCustomizer({ 
   options, 
   onOptionsChange, 
   onGenerate, 
   isGenerating 
-}: WallpaperCustomizerProps) => {
+}: WallpaperCustomizerProps) {
   const [backgroundPhotos, setBackgroundPhotos] = useState<PexelsPhoto[]>([]);
   const [isLoadingBackgrounds, setIsLoadingBackgrounds] = useState(false);
   const { toast } = useToast();
@@ -165,6 +165,4 @@ const WallpaperCustomizer = ({
       </div>
     </Card>
   );
-};
-
-export default WallpaperCustomizer;
+}
