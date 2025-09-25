@@ -46,6 +46,7 @@ const WallpaperCustomizer = ({
               <SelectItem value="desert_dunes">Desert Dunes</SelectItem>
               <SelectItem value="forest_path">Forest Path</SelectItem>
               <SelectItem value="ocean_cliffs">Ocean Cliffs</SelectItem>
+              <SelectItem value="islamic_aesthetic">Islamic Aesthetic</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -99,7 +100,8 @@ const WallpaperCustomizer = ({
             { key: 'starry_night', label: 'Starry Night' },
             { key: 'desert_dunes', label: 'Desert Dunes' },
             { key: 'forest_path', label: 'Forest Path' },
-            { key: 'ocean_cliffs', label: 'Ocean Cliffs' }
+            { key: 'ocean_cliffs', label: 'Ocean Cliffs' },
+            { key: 'islamic_aesthetic', label: 'Islamic Aesthetic' }
           ] as const).map(({ key, label }) => (
             <button
               key={key}
@@ -139,6 +141,8 @@ function getBackgroundPreviewClass(backgroundType: string): string {
       return 'bg-gradient-to-b from-green-900 via-green-700 to-green-600';
     case 'ocean_cliffs':
       return 'bg-gradient-to-b from-blue-500 via-blue-700 to-blue-900';
+    case 'islamic_aesthetic':
+      return 'bg-gradient-to-b from-purple-800 via-indigo-900 to-black';
     default:
       return 'bg-gradient-to-b from-blue-900 via-green-800 to-green-600';
   }

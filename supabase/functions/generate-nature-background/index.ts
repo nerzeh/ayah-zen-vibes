@@ -24,7 +24,8 @@ serve(async (req) => {
       starry_night: "Majestic starry night sky over mountain silhouettes, countless stars, peaceful night landscape. Ultra high resolution, mystical and contemplative atmosphere.",
       desert_dunes: "Beautiful sand dunes at golden hour, warm light, smooth curves of sand, peaceful desert landscape. Ultra high resolution, serene and meditative atmosphere.",
       forest_path: "Serene forest path with dappled sunlight, tall trees, peaceful woodland scene. Ultra high resolution, tranquil and spiritual atmosphere.",
-      ocean_cliffs: "Dramatic ocean cliffs with waves crashing below, clear blue sky, peaceful coastal landscape. Ultra high resolution, powerful and serene."
+      ocean_cliffs: "Dramatic ocean cliffs with waves crashing below, clear blue sky, peaceful coastal landscape. Ultra high resolution, powerful and serene.",
+      islamic_aesthetic: "Aesthetic Islamic-inspired background photography. Crescent moon glowing in the night sky, Quran placed beautifully with flowers, peaceful Mecca view with glowing lights, serene rainy night streets with trees and lamps, elegant roses in soft light, calm ocean waves near rocks. Minimalist, cinematic, spiritual and elegant style. High quality, atmospheric, no text, no calligraphy, no people, no faces, no animals, no statues."
     }
 
     const selectedPrompt = prompts[backgroundType as keyof typeof prompts] || prompts.mountain_valley
